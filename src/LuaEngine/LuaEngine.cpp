@@ -17,7 +17,6 @@
 #include "ElunaCreatureAI.h"
 #include "ElunaInstanceAI.h"
 
-#if AC_PLATFORM == AC_PLATFORM_WINDOWS
 extern "C"
 {
 // Base lua libraries
