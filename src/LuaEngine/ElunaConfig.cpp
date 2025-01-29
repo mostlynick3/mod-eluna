@@ -51,3 +51,45 @@ bool ElunaConfig::IsElunaEnabled()
 {
     return GetConfig(CONFIG_ELUNA_ENABLED);
 }
+
+bool ElunaConfig::IsElunaCompatibilityMode()
+{
+    return GetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE);
+}
+
+bool ElunaConfig::ShouldMapLoadEluna(uint32 id)
+{
+    // if the set is empty (all maps), return true
+    if (m_allowedMaps.empty())
+        return true;
+
+    // Check if the map ID is in the set
+    return (m_allowedMaps.find(id) != m_allowedMaps.end());
+}
+
+void ElunaConfig::TokenizeAllowedMaps()
+{
+    // clear allowed maps
+    m_allowedMaps.clear();
+
+    // read the configuration value into stringstream
+    std::istringstream maps(GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
+
+    // tokenize maps and add to allowed maps
+    std::string mapIdStr;
+    while (std::getline(maps, mapIdStr, ','))
+    {
+        // remove spaces
+        mapIdStr.erase(std::remove_if(mapIdStr.begin(), mapIdStr.end(), [](char c) {
+            return std::isspace(static_cast<unsigned char>(c));
+            }), mapIdStr.end());
+
+        try {
+            uint32 mapId = std::stoul(mapIdStr);
+            m_allowedMaps.emplace(mapId);
+        }
+        catch (std::exception&) {
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", mapIdStr.c_str());
+        }
+    }
+}

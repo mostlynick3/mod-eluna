@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -23,7 +23,7 @@ extern "C"
  * A set of bindings from keys of type `K` to Lua references.
  */
 template<typename K>
-class BindingMap : public ElunaUtil::Lockable
+class BindingMap
 {
 private:
     lua_State* L;
@@ -41,7 +41,8 @@ private:
             L(L),
             remainingShots(remainingShots),
             functionReference(functionReference)
-        { }
+        {
+        }
 
         ~Binding()
         {
@@ -68,7 +69,8 @@ public:
     BindingMap(lua_State* L) :
         L(L),
         maxBindingID(0)
-    { }
+    {
+    }
 
     /*
      * Insert a new binding from `key` to `ref`, which lasts for `shots`-many pushes.
@@ -78,8 +80,6 @@ public:
      */
     uint64 Insert(const K& key, int ref, uint32 shots)
     {
-        Guard guard(GetLock());
-
         uint64 id = (++maxBindingID);
         BindingList& list = bindings[key];
         list.push_back(std::unique_ptr<Binding>(new Binding(L, id, ref, shots)));
@@ -92,8 +92,6 @@ public:
      */
     void Clear(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
@@ -118,8 +116,6 @@ public:
      */
     void Clear()
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
@@ -134,8 +130,6 @@ public:
      */
     void Remove(uint64 id)
     {
-        Guard guard(GetLock());
-
         auto iter = id_lookup_table.find(id);
         if (iter == id_lookup_table.end())
             return;
@@ -163,8 +157,6 @@ public:
      */
     bool HasBindingsFor(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return false;
 
@@ -181,8 +173,6 @@ public:
      */
     void PushRefsFor(const K& key)
     {
-        Guard guard(GetLock());
-
         if (bindings.empty())
             return;
 
@@ -224,7 +214,8 @@ struct EventKey
 
     EventKey(T event_id) :
         event_id(event_id)
-    { }
+    {
+    }
 };
 
 /*
@@ -240,7 +231,8 @@ struct EntryKey
     EntryKey(T event_id, uint32 entry) :
         event_id(event_id),
         entry(entry)
-    { }
+    {
+    }
 };
 
 /*
@@ -258,7 +250,8 @@ struct UniqueObjectKey
         event_id(event_id),
         guid(guid),
         instance_id(instance_id)
-    { }
+    {
+    }
 };
 
 class hash_helper
@@ -267,7 +260,7 @@ public:
     typedef std::size_t result_type;
 
     template <typename T1, typename T2, typename... T>
-    static inline result_type hash(T1 const & t1, T2 const & t2, T const &... t)
+    static inline result_type hash(T1 const& t1, T2 const& t2, T const &... t)
     {
         result_type seed = 0;
         _hash_combine(seed, t1, t2, t...);
@@ -275,27 +268,27 @@ public:
     }
 
     template <typename T, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr>
-    static inline result_type hash(T const & t)
+    static inline result_type hash(T const& t)
     {
         return std::hash<typename std::underlying_type<T>::type>()(t);
     }
-    
+
     template <typename T, typename std::enable_if<!std::is_enum<T>::value>::type* = nullptr>
-    static inline result_type hash(T const & t)
+    static inline result_type hash(T const& t)
     {
         return std::hash<T>()(t);
     }
 
 private:
     template <typename T>
-    static inline void _hash_combine(result_type& seed, T const & v)
+    static inline void _hash_combine(result_type& seed, T const& v)
     {
         // from http://www.boost.org/doc/libs/1_40_0/boost/functional/hash/hash.hpp
         seed ^= hash(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
     template <typename H, typename T1, typename... T>
-    static inline void _hash_combine(result_type& seed, H const & h, T1 const & t1, T const &... t)
+    static inline void _hash_combine(result_type& seed, H const& h, T1 const& t1, T const &... t)
     {
         _hash_combine(seed, h);
         _hash_combine(seed, t1, t...);
@@ -367,7 +360,7 @@ namespace std
 
         hash_helper::result_type operator()(argument_type const& k) const
         {
-            return hash_helper::hash(k.event_id, k.instance_id, k.guid.GetRawValue());
+            return hash_helper::hash(k.event_id, k.instance_id, k.guid);
         }
     };
 }
