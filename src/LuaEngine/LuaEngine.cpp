@@ -421,7 +421,7 @@ static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second
 void Eluna::RunScripts()
 {
     LOCK_ELUNA;
-    if (!IsEnabled())
+    if (!sElunaConfig->IsElunaEnabled())
         return;
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
@@ -1282,7 +1282,7 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
 
 CreatureAI* Eluna::GetAI(Creature* creature)
 {
-    if (!IsEnabled())
+    if (!sElunaConfig->IsElunaEnabled())
         return NULL;
 
     for (int i = 1; i < Hooks::CREATURE_EVENT_COUNT; ++i)
@@ -1302,7 +1302,7 @@ CreatureAI* Eluna::GetAI(Creature* creature)
 
 InstanceData* Eluna::GetInstanceData(Map* map)
 {
-    if (!IsEnabled())
+    if (!sElunaConfig->IsElunaEnabled())
         return NULL;
 
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
@@ -1368,7 +1368,7 @@ void Eluna::FreeInstanceId(uint32 instanceId)
 {
     LOCK_ELUNA;
 
-    if (!IsEnabled())
+    if (!sElunaConfig->IsElunaEnabled())
         return;
 
     for (int i = 1; i < Hooks::INSTANCE_EVENT_COUNT; ++i)
