@@ -12,6 +12,7 @@
 enum ElunaConfigBoolValues
 {
     CONFIG_ELUNA_ENABLED,
+    CONFIG_ELUNA_COMPATIBILITY_MODE,
     CONFIG_ELUNA_TRACEBACK,
     CONFIG_ELUNA_PLAYER_RELOAD_ANNOUNCE,
     CONFIG_ELUNA_BOOL_COUNT
@@ -20,6 +21,7 @@ enum ElunaConfigBoolValues
 enum ElunaConfigStringValues
 {
     CONFIG_ELUNA_SCRIPT_PATH,
+    CONFIG_ELUNA_ONLY_ON_MAPS,
     CONFIG_ELUNA_REQUIRE_PATH_EXTRA,
     CONFIG_ELUNA_REQUIRE_CPATH_EXTRA,
     CONFIG_ELUNA_STRING_COUNT
@@ -44,6 +46,8 @@ public:
     void SetConfig(ElunaConfigStringValues index, std::string value) { _configStringValues[index] = value; }
 
     bool IsElunaEnabled();
+    bool IsElunaCompatibilityMode();
+    bool ShouldMapLoadEluna(uint32 mapId);
 
 private:
     bool _configBoolValues[CONFIG_ELUNA_BOOL_COUNT];
@@ -51,6 +55,10 @@ private:
 
     void SetConfig(ElunaConfigBoolValues index, std::string const& fieldname, bool defvalue);
     void SetConfig(ElunaConfigStringValues index, std::string const& fieldname, std::string defvalue);
+
+    void TokenizeAllowedMaps();
+
+    std::unordered_set<uint32> m_allowedMaps;
 };
 
 #define sElunaConfig ElunaConfig::instance()

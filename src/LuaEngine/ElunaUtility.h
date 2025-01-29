@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -16,6 +16,12 @@
 #include "ObjectGuid.h"
 #include "Database/QueryResult.h"
 #include "Log.h"
+
+#define USING_BOOST
+
+#if AC_PLATFORM == AC_PLATFORM_WINDOWS
+#define ELUNA_WINDOWS
+#endif
 
 typedef QueryResult ElunaQuery;
 #define GET_GUID                GetGUID
@@ -49,6 +55,8 @@ typedef QueryResult ElunaQuery;
 #ifndef GUID_HIPART
 #define GUID_HIPART(guid)       ObjectGuid(guid).GetHigh()
 #endif
+
+typedef std::vector<uint8> BytecodeBuffer;
 
 class Unit;
 class WorldObject;
@@ -98,25 +106,6 @@ namespace ElunaUtil
         uint16 const i_typeMask;
         uint32 const i_dead; // 0 both, 1 alive, 2 dead
         bool const i_nearest;
-    };
-
-    /*
-     * Usage:
-     * Inherit this class, then when needing lock, use
-     * Guard guard(GetLock());
-     *
-     * The lock is automatically released at end of scope
-     */
-    class Lockable
-    {
-    public:
-        typedef std::mutex LockType;
-        typedef std::lock_guard<LockType> Guard;
-
-        LockType& GetLock() { return _lock; }
-
-    private:
-        LockType _lock;
     };
 
     /*

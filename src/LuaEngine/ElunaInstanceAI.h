@@ -9,6 +9,7 @@
 
 #include "LuaEngine.h"
 #include "InstanceScript.h"
+#include "Map.h"
 
 /*
  * This class is a small wrapper around `InstanceData`,
@@ -60,15 +61,15 @@ public:
     {
     }
 
-    void Initialize() override;
+    void Initialize();
 
     /*
      * These are responsible for serializing/deserializing the instance's
      *   data table to/from the core.
      */
-    void Load(const char* data) override;
+    void Load(const char* data);
     // Simply calls Save, since the functions are a bit different in name and data types on different cores
-    std::string GetSaveData() override
+    std::string GetSaveData()
     {
         return Save();
     }
@@ -89,44 +90,44 @@ public:
     /*
      * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
      */
-    uint32 GetData(uint32 key) const override;
-    void SetData(uint32 key, uint32 value) override;
+    uint32 GetData(uint32 key) const;
+    void SetData(uint32 key, uint32 value);
 
-    uint64 GetData64(uint32 key) const override;
-    void SetData64(uint32 key, uint64 value) override;
+    uint64 GetData64(uint32 key) const;
+    void SetData64(uint32 key, uint64 value);
 
     /*
      * These methods are just thin wrappers around Eluna.
      */
-    void Update(uint32 diff) override
+    void Update(uint32 diff)
     {
         // If Eluna is reloaded, it will be missing our instance data.
         // Reload here instead of waiting for the next hook call (possibly never).
         // This avoids having to have an empty Update hook handler just to trigger the reload.
-        if (!sEluna->HasInstanceData(instance))
+        if (!instance->GetEluna()->HasInstanceData(instance))
             Reload();
 
-        sEluna->OnUpdateInstance(this, diff);
+        instance->GetEluna()->OnUpdateInstance(this, diff);
     }
 
-    bool IsEncounterInProgress() const override
+    bool IsEncounterInProgress() const
     {
-        return sEluna->OnCheckEncounterInProgress(const_cast<ElunaInstanceAI*>(this));
+        return instance->GetEluna()->OnCheckEncounterInProgress(const_cast<ElunaInstanceAI*>(this));
     }
 
-    void OnPlayerEnter(Player* player) override
+    void OnPlayerEnter(Player* player)
     {
-        sEluna->OnPlayerEnterInstance(this, player);
+        instance->GetEluna()->OnPlayerEnterInstance(this, player);
     }
 
-    void OnGameObjectCreate(GameObject* gameobject) override
+    void OnGameObjectCreate(GameObject* gameobject)
     {
-        sEluna->OnGameObjectCreate(this, gameobject);
+        instance->GetEluna()->OnGameObjectCreate(this, gameobject);
     }
 
-    void OnCreatureCreate(Creature* creature) override
+    void OnCreatureCreate(Creature* creature)
     {
-        sEluna->OnCreatureCreate(this, creature);
+        instance->GetEluna()->OnCreatureCreate(this, creature);
     }
 };
 
