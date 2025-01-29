@@ -14,16 +14,12 @@
 using namespace Hooks;
 
 #define START_HOOK_SERVER(EVENT) \
-    if (!IsEnabled())\
-        return;\
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
         return;\
     LOCK_ELUNA
 
 #define START_HOOK_PACKET(EVENT, OPCODE) \
-    if (!IsEnabled())\
-        return;\
     auto key = EntryKey<PacketEvents>(EVENT, OPCODE);\
     if (!PacketEventBindings->HasBindingsFor(key))\
         return;\
