@@ -9,6 +9,7 @@
 #include "BindingMap.h"
 #include "Chat.h"
 #include "ElunaCompat.h"
+#include "ElunaConfig.h"
 #include "ElunaEventMgr.h"
 #include "ElunaIncludes.h"
 #include "ElunaTemplate.h"
@@ -57,6 +58,8 @@ void Eluna::Initialize()
     // so we change it to TEXT automatically on startup
     CharacterDatabase.DirectExecute("ALTER TABLE `instance` CHANGE COLUMN `data` `data` TEXT NOT NULL");
 
+    sElunaConfig->Initialize();
+
     LoadScriptPaths();
 
     // Must be before creating GEluna
@@ -88,9 +91,9 @@ void Eluna::LoadScriptPaths()
     lua_scripts.clear();
     lua_extensions.clear();
 
-    lua_folderpath = eConfigMgr->GetOption<std::string>("Eluna.ScriptPath", "lua_scripts");
-    const std::string& lua_path_extra = eConfigMgr->GetOption<std::string>("Eluna.RequirePaths", "");
-    const std::string& lua_cpath_extra = eConfigMgr->GetOption<std::string>("Eluna.RequireCPaths", "");
+    lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+    const std::string& lua_path_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA);
+    const std::string& lua_cpath_extra = sElunaConfig->GetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA);
 
 #ifndef ELUNA_WINDOWS
     if (lua_folderpath[0] == '~')
@@ -127,7 +130,7 @@ void Eluna::_ReloadEluna()
     LOCK_ELUNA;
     ASSERT(IsInitialized());
 
-    if (eConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
+    if (sElunaConfig->GetConfig(CONFIG_ELUNA_PLAYER_RELOAD_ANNOUNCE))
         eWorld->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
     else
         ChatHandler(nullptr).SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
@@ -137,6 +140,9 @@ void Eluna::_ReloadEluna()
 
     // Close lua
     sEluna->CloseLua();
+
+    // Reload config
+    sElunaConfig->Initialize();
 
     // Reload script paths
     LoadScriptPaths();
@@ -153,7 +159,6 @@ void Eluna::_ReloadEluna()
 Eluna::Eluna() :
 event_level(0),
 push_counter(0),
-enabled(false),
 
 L(NULL),
 eventMgr(NULL),
@@ -219,9 +224,7 @@ void Eluna::CloseLua()
 
 void Eluna::OpenLua()
 {
-    enabled = eConfigMgr->GetOption<bool>("Eluna.Enabled", true);
-
-    if (!IsEnabled())
+    if (!sElunaConfig->IsElunaEnabled())
     {
         ELUNA_LOG_INFO("[Eluna]: Eluna is disabled in config");
         return;
@@ -567,7 +570,7 @@ bool Eluna::ExecuteCall(int params, int res)
         ASSERT(false); // stack probably corrupt
     }
 
-    bool usetrace = eConfigMgr->GetOption<bool>("Eluna.TraceBack", false);
+    bool usetrace = sElunaConfig->GetConfig(CONFIG_ELUNA_TRACEBACK);
     if (usetrace)
     {
         lua_pushcfunction(L, &StackTrace);
