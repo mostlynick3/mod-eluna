@@ -14,11 +14,6 @@ else()
   MESSAGE(STATUS "Lua linking: dynamic")
 endif()
 
-option(LUA_USE_SCRIPT_RELOADER "Enable Lua script hot-reloading functionality" OFF)
-if(LUA_USE_SCRIPT_RELOADER)
-    add_definitions(-DLUA_USE_SCRIPT_RELOADER=1)
-endif()
-
 if (LUA_VERSION MATCHES "luajit")
   add_subdirectory(src/lualib/luajit)
   set(LUAJIT_VERSION true)

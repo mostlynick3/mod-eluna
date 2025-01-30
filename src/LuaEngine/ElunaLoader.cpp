@@ -21,10 +21,6 @@ namespace fs = boost::filesystem;
 #include <Windows.h>
 #endif
 
-#if defined LUA_USE_SCRIPT_RELOADER
-#define ELUNA_SCRIPT_RELOADER_ENABLED
-#endif
-
 #include "Map.h"
 
 extern "C" {
@@ -33,28 +29,8 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
-void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir, std::string const& filename, efsw::Action /*action*/, std::string /*oldFilename*/)
-{
-    auto const path = fs::absolute(filename, dir);
-    if (!path.has_extension())
-        return;
-
-    std::string ext = path.extension().string();
-    std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) { return std::tolower(c); });
-
-    if (ext != ".lua" && ext != ".ext")
-        return;
-
-    sElunaLoader->ReloadElunaForMap(RELOAD_ALL_STATES);
-}
-#endif
-
 ElunaLoader::ElunaLoader() : m_cacheState(SCRIPT_CACHE_NONE)
 {
-#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
-    lua_scriptWatcher = -1;
-#endif
 }
 
 ElunaLoader* ElunaLoader::instance()
@@ -68,14 +44,6 @@ ElunaLoader::~ElunaLoader()
     // join any previously created reload thread so it can exit cleanly
     if (m_reloadThread.joinable())
         m_reloadThread.join();
-
-#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
-    if (lua_scriptWatcher >= 0)
-    {
-        lua_fileWatcher.removeWatch(lua_scriptWatcher);
-        lua_scriptWatcher = -1;
-    }
-#endif
 }
 
 void ElunaLoader::ReloadScriptCache()
@@ -302,26 +270,6 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
 
     ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `{}` successfully", fullpath.c_str());
 }
-
-
-#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
-void ElunaLoader::InitializeFileWatcher()
-{
-    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
-
-    lua_scriptWatcher = lua_fileWatcher.addWatch(lua_folderpath, &elunaUpdateListener, true);
-    if (lua_scriptWatcher >= 0)
-    {
-        ELUNA_LOG_INFO("[Eluna]: Script reloader is listening on `{}`.", lua_folderpath.c_str());
-    }
-    else
-    {
-        ELUNA_LOG_INFO("[Eluna]: Failed to initialize the script reloader on `{}`.", lua_folderpath.c_str());
-    }
-
-    lua_fileWatcher.watch();
-}
-#endif
 
 static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
 {
