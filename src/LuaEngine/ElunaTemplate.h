@@ -304,7 +304,7 @@ public:
         ElunaObjectType* elunaObject = static_cast<ElunaObjectType*>(lua_newuserdata(L, sizeof(ElunaObjectType)));
         if (!elunaObject)
         {
-            ELUNA_LOG_ERROR("%s could not create new userdata", tname);
+            ELUNA_LOG_ERROR("{} could not create new userdata", tname);
             lua_pushnil(L);
             return 1;
         }
@@ -336,7 +336,7 @@ public:
         if (!obj)
         {
             char buff[256];
-            snprintf(buff, 256, "{} expected, got pointer to nonexisting (invalidated) object (%s). Check your code.", tname, luaL_typename(L, narg));
+            snprintf(buff, 256, "%s expected, got pointer to nonexisting (invalidated) object (%s). Check your code.", tname, luaL_typename(L, narg));
             if (error)
             {
                 luaL_argerror(L, narg, buff);
@@ -384,7 +384,7 @@ public:
         int args = lua_gettop(L) - top;
         if (args < 0 || args > expected)
         {
-            ELUNA_LOG_ERROR("[Eluna]: %s returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
+            ELUNA_LOG_ERROR("[Eluna]: {} returned unexpected amount of arguments %i out of %i. Report to devs", l->name, args, expected);
             ASSERT(false);
         }
         lua_settop(L, top + expected);
@@ -480,3 +480,4 @@ public:
 };
 
 #endif
+
