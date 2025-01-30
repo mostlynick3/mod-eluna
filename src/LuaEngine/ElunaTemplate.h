@@ -315,7 +315,7 @@ public:
         lua_rawget(L, LUA_REGISTRYINDEX);
         if (!lua_istable(L, -1))
         {
-            ELUNA_LOG_ERROR("%s missing metatable", tname);
+            ELUNA_LOG_ERROR("{} missing metatable", tname);
             lua_pop(L, 2);
             lua_pushnil(L);
             return 1;
@@ -336,14 +336,14 @@ public:
         if (!obj)
         {
             char buff[256];
-            snprintf(buff, 256, "%s expected, got pointer to nonexisting (invalidated) object (%s). Check your code.", tname, luaL_typename(L, narg));
+            snprintf(buff, 256, "{} expected, got pointer to nonexisting (invalidated) object (%s). Check your code.", tname, luaL_typename(L, narg));
             if (error)
             {
                 luaL_argerror(L, narg, buff);
             }
             else
             {
-                ELUNA_LOG_ERROR("%s", buff);
+                ELUNA_LOG_ERROR("{}", buff);
             }
             return NULL;
         }
