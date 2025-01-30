@@ -34,53 +34,63 @@ public:
     // Creature
     bool CanCreatureGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetEluna()->OnGossipHello(player, creature))
-            return true;
+        if (Eluna* e = creature->GetEluna())
+            if (e->OnGossipHello(player, creature))
+                return true;
 
         return false;
     }
 
     bool CanCreatureGossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action) override
     {
-        if (player->GetEluna()->OnGossipSelect(player, creature, sender, action))
-            return true;
+        if (Eluna* e = creature->GetEluna())
+            if (e->OnGossipSelect(player, creature, sender, action))
+                return true;
 
         return false;
     }
 
     bool CanCreatureGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code) override
     {
-        if (player->GetEluna()->OnGossipSelectCode(player, creature, sender, action, code))
-            return true;
+        if (Eluna* e = creature->GetEluna())
+            if (e->OnGossipSelectCode(player, creature, sender, action, code))
+                return true;
 
         return false;
     }
 
     void OnCreatureAddWorld(Creature* creature) override
     {
-        creature->GetEluna()->OnAddToWorld(creature);
-
-        if (creature->IsGuardian() && creature->ToTempSummon() && creature->ToTempSummon()->GetSummonerGUID().IsPlayer())
-            creature->GetEluna()->OnPetAddedToWorld(creature->ToTempSummon()->GetSummonerUnit()->ToPlayer(), creature);
+        if (Eluna* e = creature->GetEluna())
+        {
+            e->OnAddToWorld(creature);
+            if (creature->IsGuardian() && creature->ToTempSummon() && creature->ToTempSummon()->GetSummonerGUID().IsPlayer())
+                e->OnPetAddedToWorld(creature->ToTempSummon()->GetSummonerUnit()->ToPlayer(), creature);
+        }
     }
 
     void OnCreatureRemoveWorld(Creature* creature) override
     {
-        creature->GetEluna()->OnRemoveFromWorld(creature);
+        if (Eluna* e = creature->GetEluna())
+            e->OnRemoveFromWorld(creature);
     }
 
     bool CanCreatureQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
-        player->GetEluna()->OnQuestAccept(player, creature, quest);
-        return false;
+        if(Eluna * e = creature->GetEluna())
+            if (e->OnQuestAccept(player, creature, quest))
+                return false;
     }
 
     bool CanCreatureQuestReward(Player* player, Creature* creature, Quest const* quest, uint32 opt) override
     {
-        if (player->GetEluna()->OnQuestReward(player, creature, quest, opt))
+        if (Eluna* e = creature->GetEluna())
         {
-            ClearGossipMenuFor(player);
-            return true;
+            if(e->OnQuestReward(player, creature, quest, opt))
+            {
+                ClearGossipMenuFor(player);
+                return true;
+            }
         }
 
         return false;
@@ -88,8 +98,9 @@ public:
 
     CreatureAI* GetCreatureAI(Creature* creature) const override
     {
-        if (CreatureAI* luaAI = creature->GetEluna()->GetAI(creature))
-            return luaAI;
+        if(Eluna * e = creature->GetEluna())
+            if (CreatureAI* luaAI = e->GetAI(creature))
+                return luaAI;
 
         return nullptr;
     }
@@ -102,86 +113,103 @@ public:
 
     void OnGameObjectAddWorld(GameObject* go) override
     {
-        go->GetEluna()->OnAddToWorld(go);
+        if(Eluna * e = go->GetEluna())
+            e->OnAddToWorld(go);
     }
 
     void OnGameObjectRemoveWorld(GameObject* go) override
     {
-        go->GetEluna()->OnRemoveFromWorld(go);
+        if(Eluna * e = go->GetEluna())
+            e->OnRemoveFromWorld(go);
     }
 
     void OnGameObjectUpdate(GameObject* go, uint32 diff) override
     {
-        go->GetEluna()->UpdateAI(go, diff);
+        if(Eluna * e = go->GetEluna())
+            e->UpdateAI(go, diff);
     }
 
     bool CanGameObjectGossipHello(Player* player, GameObject* go) override
     {
-        if (player->GetEluna()->OnGossipHello(player, go))
-            return true;
+        if(Eluna * e = go->GetEluna())
+        {
+            if(e->OnGossipHello(player, go))
+                return true;
 
-        if (player->GetEluna()->OnGameObjectUse(player, go))
-            return true;
-
+            if (e->OnGameObjectUse(player, go))
+                return true;
+        }
+        
         return false;
     }
 
     void OnGameObjectDamaged(GameObject* go, Player* player) override
     {
-        player->GetEluna()->OnDamaged(go, player);
+        if(Eluna * e = go->GetEluna())
+            e->OnDamaged(go, player);
     }
 
     void OnGameObjectDestroyed(GameObject* go, Player* player) override
     {
-        player->GetEluna()->OnDestroyed(go, player);
+        if(Eluna * e = go->GetEluna())
+            e->OnDestroyed(go, player);
     }
 
     void OnGameObjectLootStateChanged(GameObject* go, uint32 state, Unit* /*unit*/) override
     {
-        go->GetEluna()->OnLootStateChanged(go, state);
+        if(Eluna * e = go->GetEluna())
+            e->OnGameObjectStateChanged(go, state);
     }
 
     void OnGameObjectStateChanged(GameObject* go, uint32 state) override
     {
-        go->GetEluna()->OnGameObjectStateChanged(go, state);
+        if(Eluna * e = go->GetEluna())
+            e->OnGameObjectStateChanged(go, state);
     }
 
     bool CanGameObjectQuestAccept(Player* player, GameObject* go, Quest const* quest) override
     {
-        player->GetEluna()->OnQuestAccept(player, go, quest);
-        return false;
+        if(Eluna * e = player->GetEluna())
+            if (e->OnQuestAccept(player, go, quest))
+                return false;
     }
 
     bool CanGameObjectGossipSelect(Player* player, GameObject* go, uint32 sender, uint32 action) override
     {
-        if (player->GetEluna()->OnGossipSelect(player, go, sender, action))
-            return true;
+        if(Eluna * e = go->GetEluna())
+            if(e->OnGossipSelect(player, go, sender, action))
+                return true;
 
         return false;
     }
 
     bool CanGameObjectGossipSelectCode(Player* player, GameObject* go, uint32 sender, uint32 action, const char* code) override
     {
-        if (player->GetEluna()->OnGossipSelectCode(player, go, sender, action, code))
-            return true;
+        if(Eluna * e = go->GetEluna())
+            if(e->OnGossipSelectCode(player, go, sender, action, code))
+                return true;
 
         return false;
     }
 
     bool CanGameObjectQuestReward(Player* player, GameObject* go, Quest const* quest, uint32 opt) override
     {
-        if (player->GetEluna()->OnQuestAccept(player, go, quest))
-            return false;
+        if(Eluna * e = player->GetEluna())
+        {
+            if (e->OnQuestAccept(player, go, quest))
+                return false;
 
-        if (player->GetEluna()->OnQuestReward(player, go, quest, opt))
-            return false;
+            if (e->OnQuestReward(player, go, quest, opt))
+                return false;
+        }
 
         return true;
     }
 
     GameObjectAI* GetGameObjectAI(GameObject* go) const override
     {
-        go->GetEluna()->OnSpawn(go);
+        if(Eluna * e = go->GetEluna())
+            e->OnSpawn(go);
         return nullptr;
     }
 };
@@ -193,44 +221,50 @@ public:
 
     bool CanItemQuestAccept(Player* player, Item* item, Quest const* quest) override
     {
-        if (player->GetEluna()->OnQuestAccept(player, item, quest))
-            return false;
+        if (Eluna* e = player->GetEluna())
+            if (e->OnQuestAccept(player, item, quest))
+                return false;
 
         return true;
     }
 
     bool CanItemUse(Player* player, Item* item, SpellCastTargets const& targets) override
     {
-        if (!player->GetEluna()->OnUse(player, item, targets))
-            return true;
+        if (Eluna* e = player->GetEluna())
+            if (!e->OnUse(player, item, targets))
+                return true;
 
         return false;
     }
 
     bool CanItemExpire(Player* player, ItemTemplate const* proto) override
     {
-        if (player->GetEluna()->OnExpire(player, proto))
-            return false;
+        if (Eluna* e = player->GetEluna())
+            if (e->OnExpire(player, proto))
+                return false;
 
         return true;
     }
 
     bool CanItemRemove(Player* player, Item* item) override
     {
-        if (player->GetEluna()->OnRemove(player, item))
-            return false;
+        if (Eluna* e = player->GetEluna())
+            if (e->OnRemove(player, item))
+                return false;
 
         return true;
     }
 
     void OnItemGossipSelect(Player* player, Item* item, uint32 sender, uint32 action) override
     {
-        player->GetEluna()->HandleGossipSelectOption(player, item, sender, action, "");
+        if (Eluna* e = player->GetEluna())
+            e->HandleGossipSelectOption(player, item, sender, action, "");
     }
 
     void OnItemGossipSelectCode(Player* player, Item* item, uint32 sender, uint32 action, const char* code) override
     {
-        player->GetEluna()->HandleGossipSelectOption(player, item, sender, action, code);
+        if (Eluna* e = player->GetEluna())
+            e->HandleGossipSelectOption(player, item, sender, action, code);
     }
 };
 
@@ -242,12 +276,14 @@ public:
     void OnBeforeCreateInstanceScript(InstanceMap* instanceMap, InstanceScript** instanceData, bool /*load*/, std::string /*data*/, uint32 /*completedEncounterMask*/) override
     {
         if (instanceData)
-            *instanceData = instanceMap->GetEluna()->GetInstanceData(instanceMap);
+            if(Eluna * e = instanceMap->GetEluna())
+                *instanceData = e->GetInstanceData(instanceMap);
     }
 
     void OnDestroyInstance(MapInstanced* /*mapInstanced*/, Map* map) override
     {
-        map->GetEluna()->FreeInstanceId(map->GetInstanceId());
+        if(Eluna * e = map->GetEluna())
+            e->FreeInstanceId(map->GetInstanceId());
     }
 
     void OnCreateMap(Map* map) override
@@ -258,17 +294,20 @@ public:
 
     void OnDestroyMap(Map* map) override
     {
-        map->GetEluna()->OnDestroy(map);
+        if (Eluna* e = map->GetEluna())
+            e->OnDestroy(map);
     }
 
     void OnPlayerEnterAll(Map* map, Player* player) override
     {
-        map->GetEluna()->OnPlayerEnter(map, player);
+        if (Eluna* e = map->GetEluna())
+            e->OnPlayerEnter(map, player);
     }
 
     void OnPlayerLeaveAll(Map* map, Player* player) override
     {
-        map->GetEluna()->OnPlayerLeave(map, player);
+        if (Eluna* e = map->GetEluna())
+            e->OnPlayerLeave(map, player);
     }
 
     void OnMapUpdate(Map* map, uint32 diff) override
@@ -290,22 +329,26 @@ public:
 
     void OnAuctionAdd(AuctionHouseObject* ah, AuctionEntry* entry) override
     {
-        sWorld->GetEluna()->OnAdd(ah, entry);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnAdd(ah, entry);
     }
 
     void OnAuctionRemove(AuctionHouseObject* ah, AuctionEntry* entry) override
     {
-        sWorld->GetEluna()->OnRemove(ah, entry);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnRemove(ah, entry);
     }
 
     void OnAuctionSuccessful(AuctionHouseObject* ah, AuctionEntry* entry) override
     {
-        sWorld->GetEluna()->OnSuccessful(ah, entry);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnSuccessful(ah, entry);
     }
 
     void OnAuctionExpire(AuctionHouseObject* ah, AuctionEntry* entry) override
     {
-        sWorld->GetEluna()->OnExpire(ah, entry);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnExpire(ah, entry);
     }
 };
 
@@ -316,22 +359,26 @@ public:
 
     void OnBattlegroundStart(Battleground* bg) override
     {
-        bg->GetBgMap()->GetEluna()->OnBGStart(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if (Eluna* e = bg->GetBgMap()->GetEluna())
+            e->OnBGStart(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 
     void OnBattlegroundEnd(Battleground* bg, TeamId winnerTeam) override
     {
-        bg->GetBgMap()->GetEluna()->OnBGEnd(bg, bg->GetBgTypeID(), bg->GetInstanceID(), winnerTeam);
+        if (Eluna* e = bg->GetBgMap()->GetEluna())
+            e->OnBGEnd(bg, bg->GetBgTypeID(), bg->GetInstanceID(), winnerTeam);
     }
 
     void OnBattlegroundDestroy(Battleground* bg) override
     {
-        bg->GetBgMap()->GetEluna()->OnBGDestroy(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if (Eluna* e = bg->GetBgMap()->GetEluna())
+            e->OnBGDestroy(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 
     void OnBattlegroundCreate(Battleground* bg) override
     {
-        bg->GetBgMap()->GetEluna()->OnBGCreate(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if (Eluna* e = bg->GetBgMap()->GetEluna())
+            e->OnBGCreate(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 };
 
@@ -342,10 +389,9 @@ public:
 
     bool OnTryExecuteCommand(ChatHandler& handler, std::string_view cmdStr) override
     {
-        if (!sWorld->GetEluna()->OnCommand(handler, std::string(cmdStr).c_str()))
-        {
-            return false;
-        }
+        if (Eluna* e = sWorld->GetEluna())
+            if(!e->OnCommand(handler, std::string(cmdStr).c_str()))
+                return false;
 
         return true;
     }
@@ -359,14 +405,16 @@ public:
     // Weather
     void OnWeatherChange(Weather* weather, WeatherState state, float grade) override
     {
-        sWorld->GetEluna()->OnChange(weather, weather->GetZone(), state, grade);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnChange(weather, weather->GetZone(), state, grade);
     }
 
     // AreaTriger
     bool CanAreaTrigger(Player* player, AreaTrigger const* trigger) override
     {
-        if (player->GetEluna()->OnAreaTrigger(player, trigger))
-            return true;
+        if (Eluna* e = player->GetEluna())
+            if (e->OnAreaTrigger(player, trigger))
+                return true;
 
         return false;
     }
@@ -379,12 +427,14 @@ public:
 
     void OnStart(uint16 eventID) override
     {
-        sWorld->GetEluna()->OnGameEventStart(eventID);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnGameEventStart(eventID);
     }
 
     void OnStop(uint16 eventID) override
     {
-        sWorld->GetEluna()->OnGameEventStop(eventID);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnGameEventStop(eventID);
     }
 };
 
@@ -395,32 +445,38 @@ public:
 
     void OnAddMember(Group* group, ObjectGuid guid) override
     {
-        sWorld->GetEluna()->OnAddMember(group, guid);
+        if (Eluna* e = group->GetLeader()->GetEluna())
+            e->OnAddMember(group, guid);
     }
 
     void OnInviteMember(Group* group, ObjectGuid guid) override
     {
-        sWorld->GetEluna()->OnInviteMember(group, guid);
+        if (Eluna* e = group->GetLeader()->GetEluna())
+            e->OnInviteMember(group, guid);
     }
 
     void OnRemoveMember(Group* group, ObjectGuid guid, RemoveMethod method, ObjectGuid /* kicker */, const char* /* reason */) override
     {
-        sWorld->GetEluna()->OnRemoveMember(group, guid, method);
+        if (Eluna* e = group->GetLeader()->GetEluna())
+            e->OnRemoveMember(group, guid, method);
     }
 
     void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid) override
     {
-        sWorld->GetEluna()->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
+        if (Eluna* e = group->GetLeader()->GetEluna())
+            e->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
     }
 
     void OnDisband(Group* group) override
     {
-        sWorld->GetEluna()->OnDisband(group);
+        if (Eluna* e = group->GetLeader()->GetEluna())
+            e->OnDisband(group);
     }
 
     void OnCreate(Group* group, Player* leader) override
     {
-        sWorld->GetEluna()->OnCreate(group, leader->GetGUID(), group->GetGroupType());
+        if (Eluna* e = leader->GetEluna())
+            e->OnCreate(group, leader->GetGUID(), group->GetGroupType());
     }
 };
 
@@ -431,58 +487,69 @@ public:
 
     void OnAddMember(Guild* guild, Player* player, uint8& plRank) override
     {
-        sWorld->GetEluna()->OnAddMember(guild, player, plRank);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnAddMember(guild, player, plRank);
     }
 
     void OnRemoveMember(Guild* guild, Player* player, bool isDisbanding, bool /*isKicked*/) override
     {
-        sWorld->GetEluna()->OnRemoveMember(guild, player, isDisbanding);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnRemoveMember(guild, player, isDisbanding);
     }
 
     void OnMOTDChanged(Guild* guild, const std::string& newMotd) override
     {
-        sWorld->GetEluna()->OnMOTDChanged(guild, newMotd);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnMOTDChanged(guild, newMotd);
     }
 
     void OnInfoChanged(Guild* guild, const std::string& newInfo) override
     {
-        sWorld->GetEluna()->OnInfoChanged(guild, newInfo);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnInfoChanged(guild, newInfo);
     }
 
     void OnCreate(Guild* guild, Player* leader, const std::string& name) override
     {
-        sWorld->GetEluna()->OnCreate(guild, leader, name);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnCreate(guild, leader, name);
     }
 
     void OnDisband(Guild* guild) override
     {
-        sWorld->GetEluna()->OnDisband(guild);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnDisband(guild);
     }
 
     void OnMemberWitdrawMoney(Guild* guild, Player* player, uint32& amount, bool isRepair) override
     {
-        sWorld->GetEluna()->OnMemberWitdrawMoney(guild, player, amount, isRepair);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnMemberWitdrawMoney(guild, player, amount, isRepair);
     }
 
     void OnMemberDepositMoney(Guild* guild, Player* player, uint32& amount) override
     {
-        sWorld->GetEluna()->OnMemberDepositMoney(guild, player, amount);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnMemberDepositMoney(guild, player, amount);
     }
 
     void OnItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId,
         bool isDestBank, uint8 destContainer, uint8 destSlotId) override
     {
-        sWorld->GetEluna()->OnItemMove(guild, player, pItem, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnItemMove(guild, player, pItem, isSrcBank, srcContainer, srcSlotId, isDestBank, destContainer, destSlotId);
     }
 
     void OnEvent(Guild* guild, uint8 eventType, ObjectGuid::LowType playerGuid1, ObjectGuid::LowType playerGuid2, uint8 newRank) override
     {
-        sWorld->GetEluna()->OnEvent(guild, eventType, playerGuid1, playerGuid2, newRank);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnEvent(guild, eventType, playerGuid1, playerGuid2, newRank);
     }
 
     void OnBankEvent(Guild* guild, uint8 eventType, uint8 tabId, ObjectGuid::LowType playerGuid, uint32 itemOrMoney, uint16 itemStackCount, uint8 destTabId) override
     {
-        sWorld->GetEluna()->OnBankEvent(guild, eventType, tabId, playerGuid, itemOrMoney, itemStackCount, destTabId);
+        if (Eluna* e = sWorld->GetEluna())
+            e->OnBankEvent(guild, eventType, tabId, playerGuid, itemOrMoney, itemStackCount, destTabId);
     }
 };
 
@@ -493,7 +560,8 @@ public:
 
     void OnLootMoney(Player* player, uint32 gold) override
     {
-        sWorld->GetEluna()->OnLootMoney(player, gold);
+        if (Eluna* e = player->GetEluna())
+            e->OnLootMoney(player, gold);
     }
 };
 
@@ -504,10 +572,14 @@ public:
 
     void GetDialogStatus(Player* player, Object* questgiver) override
     {
-        if (questgiver->GetTypeId() == TYPEID_GAMEOBJECT)
-            player->GetEluna()->GetDialogStatus(player, questgiver->ToGameObject());
-        else if (questgiver->GetTypeId() == TYPEID_UNIT)
-            player->GetEluna()->GetDialogStatus(player, questgiver->ToCreature());
+        if (Eluna* e = player->GetEluna())
+        {
+            if (questgiver->GetTypeId() == TYPEID_GAMEOBJECT)
+                e->GetDialogStatus(player, questgiver->ToGameObject());
+            else if (questgiver->GetTypeId() == TYPEID_UNIT)
+                e->GetDialogStatus(player, questgiver->ToCreature());
+        }
+
     }
 };
 
@@ -518,7 +590,8 @@ public:
 
     void OnPetAddToWorld(Pet* pet) override
     {
-        pet->GetOwner()->GetEluna()->OnPetAddedToWorld(pet->GetOwner(), pet);
+        if (Eluna* e = pet->GetOwner()->GetEluna())
+            e->OnPetAddedToWorld(pet->GetOwner(), pet);
     }
 };
 
@@ -529,7 +602,8 @@ public:
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
     {
-        player->GetEluna()->OnResurrect(player);
+        if (Eluna* e = player->GetEluna())
+            e->OnResurrect(player);
     }
 
     bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg) override
@@ -537,24 +611,27 @@ public:
         if (type != CHAT_MSG_SAY && type != CHAT_MSG_YELL && type != CHAT_MSG_EMOTE)
             return true;
 
-        if (!player->GetEluna()->OnChat(player, type, lang, msg))
-            return false;
+        if (Eluna* e = player->GetEluna())
+            if (!e->OnChat(player, type, lang, msg))
+                return false;
 
         return true;
     }
 
     bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Player* target) override
     {
-        if (!player->GetEluna()->OnChat(player, type, lang, msg, target))
-            return false;
+        if (Eluna* e = player->GetEluna())
+            if (!e->OnChat(player, type, lang, msg, target))
+                return false;
 
         return true;
     }
 
     bool CanPlayerUseChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group) override
     {
-        if (!player->GetEluna()->OnChat(player, type, lang, msg, group))
-            return false;
+        if (Eluna* e = player->GetEluna())           
+            if (!e->OnChat(player, type, lang, msg, group))
+                return false;
 
         return true;
     }
@@ -634,12 +711,14 @@ public:
 
     void OnPVPKill(Player* killer, Player* killed) override
     {
-        killer->GetEluna()->OnPVPKill(killer, killed);
+        if (Eluna* e = killer->GetEluna())
+            e->OnPVPKill(killer, killed);
     }
 
     void OnCreatureKill(Player* killer, Creature* killed) override
     {
-        killer->GetEluna()->OnCreatureKill(killer, killed);
+        if (Eluna* e = killer->GetEluna())
+            e->OnCreatureKill(killer, killed);
     }
 
     void OnPlayerKilledByCreature(Creature* killer, Player* killed) override
