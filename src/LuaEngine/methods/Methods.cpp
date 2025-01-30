@@ -33,6 +33,9 @@
 #include "SpellMethods.h"
 #include "SpellInfoMethods.h"
 #include "UnitMethods.h"
+#include "VehicleMethods.h"
+#include "WorldObjectMethods.h"
+#include "WorldPacketMethods.h"
 
 // Custom methods
 #include "CustomMethods.h"
@@ -54,12 +57,12 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<Corpse>::Register(E, "Corpse");
     ElunaTemplate<Corpse>::SetMethods(E, LuaObject::ObjectMethods);
-    // ElunaTemplate<Corpse>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
+    ElunaTemplate<Corpse>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Corpse>::SetMethods(E, LuaCorpse::CorpseMethods);
 
     ElunaTemplate<Creature>::Register(E, "Creature");
     ElunaTemplate<Creature>::SetMethods(E, LuaObject::ObjectMethods);
-    // ElunaTemplate<Creature>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
+    ElunaTemplate<Creature>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaCreature::CreatureMethods);
 
@@ -68,7 +71,7 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<GameObject>::Register(E, "GameObject");
     ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
-    //ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
+    ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
 
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
@@ -94,7 +97,7 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<Player>::Register(E, "Player");
     ElunaTemplate<Player>::SetMethods(E, LuaObject::ObjectMethods);
-    // ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
+    ElunaTemplate<Player>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaPlayer::PlayerMethods);
 
@@ -112,9 +115,18 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<Unit>::Register(E, "Unit");
     ElunaTemplate<Unit>::SetMethods(E, LuaObject::ObjectMethods);
-    // ElunaTemplate<Unit>::SetMethods(E, WorldObjectMethods);
+    ElunaTemplate<Unit>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Unit>::SetMethods(E, LuaUnit::UnitMethods);
 
+    ElunaTemplate<Vehicle>::Register(E, "Vehicle");
+    ElunaTemplate<Vehicle>::SetMethods(E, LuaVehicle::VehicleMethods);
+
+    ElunaTemplate<WorldObject>::Register(E, "WorldObject");
+    ElunaTemplate<WorldObject>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<WorldObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
+
+    ElunaTemplate<WorldPacket>::Register(E, "WorldPacket");
+    ElunaTemplate<WorldPacket>::SetMethods(E, LuaPacket::PacketMethods);
 
     ElunaTemplate<long long>::Register(E, "long long");
 

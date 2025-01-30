@@ -7,8 +7,6 @@
 #ifndef ROLLMETHODS_H
 #define ROLLMETHODS_H
 
-#include "Group.h"
-
 namespace LuaRoll
 {
     /**
