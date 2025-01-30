@@ -21,6 +21,10 @@ namespace fs = boost::filesystem;
 #include <Windows.h>
 #endif
 
+#if defined LUA_USE_SCRIPT_RELOADER
+#define ELUNA_SCRIPT_RELOADER_ENABLED
+#endif
+
 #include "Map.h"
 
 extern "C" {
@@ -29,9 +33,26 @@ extern "C" {
 #include <lauxlib.h>
 }
 
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+void ElunaUpdateListener::handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir, std::string const& filename, efsw::Action /*action*/, std::string /*oldFilename*/)
+{
+    auto const path = fs::absolute(filename, dir);
+    if (!path.has_extension())
+        return;
+
+    std::string ext = path.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c) { return std::tolower(c); });
+
+    if (ext != ".lua" && ext != ".ext")
+        return;
+
+    sElunaLoader->ReloadElunaForMap(RELOAD_ALL_STATES);
+}
+#endif
+
 ElunaLoader::ElunaLoader() : m_cacheState(SCRIPT_CACHE_NONE)
 {
-#if defined ELUNA_TRINITY
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
     lua_scriptWatcher = -1;
 #endif
 }
@@ -47,6 +68,14 @@ ElunaLoader::~ElunaLoader()
     // join any previously created reload thread so it can exit cleanly
     if (m_reloadThread.joinable())
         m_reloadThread.join();
+
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+    if (lua_scriptWatcher >= 0)
+    {
+        lua_fileWatcher.removeWatch(lua_scriptWatcher);
+        lua_scriptWatcher = -1;
+    }
+#endif
 }
 
 void ElunaLoader::ReloadScriptCache()
@@ -91,7 +120,7 @@ void ElunaLoader::LoadScripts()
             lua_folderpath.replace(0, 1, home);
 #endif
 
-    ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `{}`", lua_folderpath.c_str());
+    ELUNA_LOG_INFO("[Eluna]: Searching for scripts in `%s`", lua_folderpath.c_str());
 
     // open a new temporary Lua state to compile bytecode in
     lua_State* L = luaL_newstate();
@@ -124,7 +153,7 @@ void ElunaLoader::LoadScripts()
     if (!m_requirecPath.empty())
         m_requirecPath.erase(m_requirecPath.end() - 1);
 
-    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled {} scripts in {} ms", uint32(m_scriptCache.size()), ElunaUtil::GetTimeDiff(oldMSTime));
+    ELUNA_LOG_INFO("[Eluna]: Loaded and precompiled %u scripts in %u ms", uint32(m_scriptCache.size()), ElunaUtil::GetTimeDiff(oldMSTime));
 
     // set the cache state to ready
     m_cacheState = SCRIPT_CACHE_READY;
@@ -143,7 +172,7 @@ void ElunaLoader::ReadFiles(lua_State* L, std::string path)
 {
     std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
 
-    ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `{}`", path.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: ReadFiles from path `%s`", path.c_str());
 
     fs::path someDir(path);
     fs::directory_iterator end_iter;
@@ -218,21 +247,21 @@ bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
     // If something bad happened, try to find an error.
     if (err != 0)
     {
-        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to load the Lua script `{}`.", script.filename.c_str());
+        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to load the Lua script `%s`.", script.filename.c_str());
         Eluna::Report(L);
         return false;
     }
-    ELUNA_LOG_DEBUG("[Eluna]: CompileScript loaded Lua script `{}`", script.filename.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: CompileScript loaded Lua script `%s`", script.filename.c_str());
 
     // Everything's OK so far, the script has been loaded, now we need to start dumping it to bytecode.
     err = lua_dump(L, (lua_Writer)LoadBytecodeChunk, &script.bytecode);
     if (err || script.bytecode.empty())
     {
-        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to dump the Lua script `{}` to bytecode.", script.filename.c_str());
+        ELUNA_LOG_ERROR("[Eluna]: CompileScript failed to dump the Lua script `%s` to bytecode.", script.filename.c_str());
         Eluna::Report(L);
         return false;
     }
-    ELUNA_LOG_DEBUG("[Eluna]: CompileScript dumped Lua script `{}` to bytecode.", script.filename.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: CompileScript dumped Lua script `%s` to bytecode.", script.filename.c_str());
 
     // pop the loaded function from the stack
     lua_pop(L, 1);
@@ -241,7 +270,7 @@ bool ElunaLoader::CompileScript(lua_State* L, LuaScript& script)
 
 void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::string& fullpath, int32 mapId)
 {
-    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript checking file `{}`", fullpath.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript checking file `%s`", fullpath.c_str());
 
     // split file name
     std::size_t extDot = filename.find_last_of('.');
@@ -271,8 +300,28 @@ void ElunaLoader::ProcessScript(lua_State* L, std::string filename, const std::s
     else
         m_scripts.push_back(script);
 
-    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `{}` successfully", fullpath.c_str());
+    ELUNA_LOG_DEBUG("[Eluna]: ProcessScript processed `%s` successfully", fullpath.c_str());
 }
+
+
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+void ElunaLoader::InitializeFileWatcher()
+{
+    std::string lua_folderpath = sElunaConfig->GetConfig(CONFIG_ELUNA_SCRIPT_PATH);
+
+    lua_scriptWatcher = lua_fileWatcher.addWatch(lua_folderpath, &elunaUpdateListener, true);
+    if (lua_scriptWatcher >= 0)
+    {
+        ELUNA_LOG_INFO("[Eluna]: Script reloader is listening on `%s`.", lua_folderpath.c_str());
+    }
+    else
+    {
+        ELUNA_LOG_INFO("[Eluna]: Failed to initialize the script reloader on `%s`.", lua_folderpath.c_str());
+    }
+
+    lua_fileWatcher.watch();
+}
+#endif
 
 static bool ScriptPathComparator(const LuaScript& first, const LuaScript& second)
 {
@@ -313,3 +362,4 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
         );
     }
 }
+

@@ -186,3 +186,4 @@ unsigned char* ElunaUtil::DecodeData(const char *data, size_t *output_length)
 
     return decoded_data;
 }
+

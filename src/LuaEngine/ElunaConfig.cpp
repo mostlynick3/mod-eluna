@@ -27,6 +27,7 @@ void ElunaConfig::Initialize()
     SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
     SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", false);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
+    SetConfig(CONFIG_ELUNA_PLAYER_RELOAD_ANNOUNCE, "Eluna.PlayerAnnounceReload", false);
 
     // Load strings
     SetConfig(CONFIG_ELUNA_SCRIPT_PATH, "Eluna.ScriptPath", "lua_scripts");
@@ -90,7 +91,7 @@ void ElunaConfig::TokenizeAllowedMaps()
             m_allowedMaps.emplace(mapId);
         }
         catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", mapIdStr.c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
         }
     }
 }

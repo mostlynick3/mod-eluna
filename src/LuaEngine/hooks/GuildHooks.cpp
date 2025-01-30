@@ -17,7 +17,7 @@ using namespace Hooks;
     if (!GuildEventBindings->HasBindingsFor(key))\
         return;
 
-void Eluna::OnAddMember(Guild* guild, Player* player, uint32 plRank)
+void Eluna::OnAddMember(Guild * guild, Player * player, uint32 plRank)
 {
     START_HOOK(GUILD_EVENT_ON_ADD_MEMBER);
     HookPush(guild);

@@ -40,3 +40,4 @@ template<> inline int ElunaTemplate<ObjectGuid>::ToString(lua_State* L)
     E->Push(E->CHECKVAL<ObjectGuid>(1).ToString());
     return 1;
 }
+

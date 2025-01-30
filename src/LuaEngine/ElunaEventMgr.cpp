@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -16,7 +16,6 @@ extern "C"
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    // can be called from multiple threads
     if (obj)
         E->eventMgr->processors.insert(this);
 }
@@ -140,3 +139,4 @@ void EventMgr::SetState(int eventId, LuaEventState state)
             (*it)->SetState(eventId, state);
     globalProcessor->SetState(eventId, state);
 }
+

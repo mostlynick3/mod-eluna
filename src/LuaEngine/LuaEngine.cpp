@@ -250,7 +250,7 @@ void Eluna::RunScripts()
 {
     int32 const boundMapId = GetBoundMapId();
     uint32 const boundInstanceId = GetBoundInstanceId();
-    ELUNA_LOG_INFO("[Eluna]: Running scripts for state: {}, instance: {}", boundMapId, boundInstanceId);
+    ELUNA_LOG_DEBUG("[Eluna]: Running scripts for state: %i, instance: %u", boundMapId, boundInstanceId);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
     uint32 count = 0;
@@ -270,7 +270,7 @@ void Eluna::RunScripts()
             // check that the script file is either global or meant to be loaded for this map
             if (it->mapId != -1 && it->mapId != boundMapId)
             {
-                ELUNA_LOG_INFO("[Eluna]: `{}` is tagged {} and will not load for map: {}", it->filename.c_str(), it->mapId, boundMapId);
+                ELUNA_LOG_DEBUG("[Eluna]: `%s` is tagged %i and will not load for map: %i", it->filename.c_str(), it->mapId, boundMapId);
                 continue;
             }
         }
@@ -278,7 +278,7 @@ void Eluna::RunScripts()
         // Check that no duplicate names exist
         if (loaded.find(it->filename) != loaded.end())
         {
-            ELUNA_LOG_INFO("[Eluna]: Error loading `{}`. File with same name already loaded from `{}`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`. File with same name already loaded from `%s`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
             continue;
         }
         loaded[it->filename] = it->filepath;
@@ -291,7 +291,7 @@ void Eluna::RunScripts()
         if (ExecuteCall(1, 0))
         {
             // Successfully called require on the script
-            ELUNA_LOG_INFO("[Eluna]: Successfully loaded `{}`", it->filepath.c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
             ++count;
             continue;
         }
@@ -299,23 +299,21 @@ void Eluna::RunScripts()
     }
     // Stack: require
     lua_pop(L, 1);
-    ELUNA_LOG_INFO("[Eluna]: Executed {} Lua scripts in {} ms for map: {}, instance: {}", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
+    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms for map: %i, instance: %u", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
 
     OnLuaStateOpen();
 }
 
-#if !defined TRACKABLE_PTR_NAMESPACE
 void Eluna::InvalidateObjects()
 {
     ++callstackid;
     ASSERT(callstackid && "Callstackid overflow");
 }
-#endif
 
 void Eluna::Report(lua_State* _L)
 {
     const char* msg = lua_tostring(_L, -1);
-    ELUNA_LOG_INFO("{}", msg);
+    ELUNA_LOG_ERROR("%s", msg);
     lua_pop(_L, 1);
 }
 
@@ -360,7 +358,7 @@ bool Eluna::ExecuteCall(int params, int res)
     // Check function type
     if (!lua_isfunction(L, base))
     {
-        ELUNA_LOG_INFO("[Eluna]: Cannot execute call: registered value is {}, not a function.", luaL_tolstring(L, base, NULL));
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", luaL_tolstring(L, base, NULL));
         ASSERT(false); // stack probably corrupt
     }
 
@@ -463,14 +461,6 @@ void Eluna::Push(Pet const* pet)
 void Eluna::Push(TempSummon const* summon)
 {
     Push<Creature>(summon);
-}
-void Eluna::Push(GemPropertiesEntry const& gemProperties)
-{
-    Push(&gemProperties);
-}
-void Eluna::Push(SpellEntry const& spell)
-{
-    Push(&spell);
 }
 void Eluna::Push(Unit const* unit)
 {
@@ -740,6 +730,7 @@ static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bind
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
+// Saves the function reference ID given to the register type's store for given entry under the given event
 int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
 {
     uint64 bindingID;
@@ -982,11 +973,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
     luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
     std::ostringstream oss;
     oss << "regtype " << static_cast<uint32>(regtype) << ", event " << event_id << ", entry " << entry << ", guid " <<
-#if defined ELUNA_TRINITY
-        guid.ToHexString()
-#else
         guid.GetRawValue()
-#endif
         << ", instance " << instanceId;
     luaL_error(L, "Unknown event type (%s)", oss.str().c_str());
     return 0;
@@ -995,15 +982,10 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 void Eluna::UpdateEluna(uint32 diff)
 {
     if (reload && sElunaLoader->GetCacheState() == SCRIPT_CACHE_READY)
-#if defined ELUNA_TRINITY
-        if(!GetQueryProcessor().HasPendingCallbacks())
-#endif
-            _ReloadEluna();
+        _ReloadEluna();
 
     eventMgr->globalProcessor->Update(diff);
-#if defined ELUNA_TRINITY
     GetQueryProcessor().ProcessReadyCallbacks();
-#endif
 }
 
 /*
@@ -1016,10 +998,8 @@ void Eluna::CleanUpStack(int number_of_arguments)
     lua_pop(L, number_of_arguments + 1); // Add 1 because the caller doesn't know about `event_id`.
     // Stack: (empty)
 
-#if !defined TRACKABLE_PTR_NAMESPACE
     if (event_level == 0)
         InvalidateObjects();
-#endif
 }
 
 /*
@@ -1168,44 +1148,3 @@ void Eluna::PushInstanceData(ElunaInstanceAI* ai, bool incrementCounter)
         ++push_counter;
 }
 
-std::string Eluna::FormatQuery(lua_State* L, const char* query)
-{
-    int numArgs = lua_gettop(L);
-    std::string formattedQuery = query;
-
-    size_t position = 0;
-    for (int i = 2; i <= numArgs; ++i) 
-    {
-        std::string arg;
-
-        if (lua_isnumber(L, i)) 
-        {
-            arg = std::to_string(lua_tonumber(L, i));
-        } 
-        else if (lua_isstring(L, i)) 
-        {
-            std::string value = lua_tostring(L, i);
-            for (size_t pos = 0; (pos = value.find('\'', pos)) != std::string::npos; pos += 2)
-            {
-                value.insert(pos, "'");
-            }
-            arg = "'" + value + "'";
-        } 
-        else 
-        {
-            luaL_error(L, "Unsupported argument type. Only numbers and strings are supported.");
-            return "";
-        }
-
-        position = formattedQuery.find("?", position);
-        if (position == std::string::npos) 
-        {
-            luaL_error(L, "Mismatch between placeholders and arguments.");
-            return "";
-        }
-        formattedQuery.replace(position, 1, arg);
-        position += arg.length();
-    }
-
-    return formattedQuery;
-}
