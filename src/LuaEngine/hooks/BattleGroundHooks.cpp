@@ -4,7 +4,6 @@
  * Please see the included DOCS/LICENSE.md for more information
  */
 
-#include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
 #include "BindingMap.h"

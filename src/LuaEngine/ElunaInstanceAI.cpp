@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+ * Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
@@ -7,7 +7,6 @@
 #include "ElunaInstanceAI.h"
 #include "ElunaUtility.h"
 #include "lmarshal.h"
-
 
 void ElunaInstanceAI::Initialize()
 {
@@ -74,7 +73,7 @@ void ElunaInstanceAI::Load(const char* data)
             }
             else
             {
-                ELUNA_LOG_ERROR("Error while loading instance data: Expected data to be a table (type 5), got type {} instead", lua_type(L, -1));
+                ELUNA_LOG_ERROR("Error while loading instance data: Expected data to be a table (type 5), got type %d instead", lua_type(L, -1));
                 lua_pop(L, 1);
                 // Stack: (empty)
 
@@ -84,7 +83,7 @@ void ElunaInstanceAI::Load(const char* data)
         else
         {
             // Stack: error_message
-            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal: {}", lua_tostring(L, -1));
+            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal: %s", lua_tostring(L, -1));
             lua_pop(L, 1);
             // Stack: (empty)
 
@@ -122,7 +121,7 @@ const char* ElunaInstanceAI::Save() const
     if (lua_pcall(L, 1, 1, 0) != 0)
     {
         // Stack: error_message
-        ELUNA_LOG_ERROR("Error while saving: {}", lua_tostring(L, -1));
+        ELUNA_LOG_ERROR("Error while saving: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
         return NULL;
     }
@@ -221,3 +220,4 @@ void ElunaInstanceAI::SetData64(uint32 key, uint64 value)
     lua_pop(L, 1);
     // Stack: (empty)
 }
+

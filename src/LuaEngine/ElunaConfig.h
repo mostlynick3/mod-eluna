@@ -64,3 +64,4 @@ private:
 #define sElunaConfig ElunaConfig::instance()
 
 #endif //_ELUNACONFIG_H
+

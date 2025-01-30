@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
+* Copyright (C) 2010 - 2024 Eluna Lua Engine <https://elunaluaengine.github.io/>
 * This program is free software licensed under GPL version 3
 * Please see the included DOCS/LICENSE.md for more information
 */
@@ -57,24 +57,18 @@ private:
     std::string lastSaveData;
 
 public:
-    ElunaInstanceAI(Map* map) : InstanceData(map)
+    ElunaInstanceAI(Map* map) : InstanceData(map->ToInstanceMap())
     {
     }
 
-    void Initialize();
+    void Initialize() override;
 
     /*
      * These are responsible for serializing/deserializing the instance's
      *   data table to/from the core.
      */
-    void Load(const char* data);
-    // Simply calls Save, since the functions are a bit different in name and data types on different cores
-    std::string GetSaveData()
-    {
-        return Save();
-    }
+    void Load(const char* data) override;
     const char* Save() const;
-
 
     /*
      * Calls `Load` with the last save data that was passed to
@@ -90,16 +84,16 @@ public:
     /*
      * These methods allow non-Lua scripts (e.g. DB, C++) to get/set instance data.
      */
-    uint32 GetData(uint32 key) const;
-    void SetData(uint32 key, uint32 value);
+    uint32 GetData(uint32 key) const override;
+    void SetData(uint32 key, uint32 value) override;
 
-    uint64 GetData64(uint32 key) const;
-    void SetData64(uint32 key, uint64 value);
+    uint64 GetData64(uint32 key) const override;
+    void SetData64(uint32 key, uint64 value) override;
 
     /*
      * These methods are just thin wrappers around Eluna.
      */
-    void Update(uint32 diff)
+    void Update(uint32 diff) override
     {
         // If Eluna is reloaded, it will be missing our instance data.
         // Reload here instead of waiting for the next hook call (possibly never).
@@ -110,25 +104,26 @@ public:
         instance->GetEluna()->OnUpdateInstance(this, diff);
     }
 
-    bool IsEncounterInProgress() const
+    bool IsEncounterInProgress() const override
     {
         return instance->GetEluna()->OnCheckEncounterInProgress(const_cast<ElunaInstanceAI*>(this));
     }
 
-    void OnPlayerEnter(Player* player)
+    void OnPlayerEnter(Player* player) override
     {
         instance->GetEluna()->OnPlayerEnterInstance(this, player);
     }
 
-    void OnGameObjectCreate(GameObject* gameobject)
+    void OnGameObjectCreate(GameObject* gameobject) override
     {
         instance->GetEluna()->OnGameObjectCreate(this, gameobject);
     }
 
-    void OnCreatureCreate(Creature* creature)
+    void OnCreatureCreate(Creature* creature) override
     {
         instance->GetEluna()->OnCreatureCreate(this, creature);
     }
 };
 
 #endif // _ELUNA_INSTANCE_DATA_H
+

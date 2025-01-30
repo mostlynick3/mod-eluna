@@ -10,9 +10,14 @@
 
 #include "LuaEngine.h"
 
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+#include <efsw/efsw.hpp>
+#endif
+
+
 extern "C"
 {
-#include "lua.hpp"
+#include "lua.h"
 };
 
 enum ElunaReloadActions
@@ -54,6 +59,13 @@ public:
     const std::string& GetRequirePath() const { return m_requirePath; }
     const std::string& GetRequireCPath() const { return m_requirecPath; }
 
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+    // efsw file watcher
+    void InitializeFileWatcher();
+    efsw::FileWatcher lua_fileWatcher;
+    efsw::WatchID lua_scriptWatcher;
+#endif
+
 private:
     void ReloadScriptCache();
     void ReadFiles(lua_State* L, std::string path);
@@ -71,6 +83,22 @@ private:
     std::thread m_reloadThread;
 };
 
+#ifdef ELUNA_SCRIPT_RELOADER_ENABLED
+/// File watcher responsible for watching lua scripts
+class ElunaUpdateListener : public efsw::FileWatchListener
+{
+public:
+    ElunaUpdateListener() { }
+    virtual ~ElunaUpdateListener() { }
+
+    void handleFileAction(efsw::WatchID /*watchid*/, std::string const& dir,
+        std::string const& filename, efsw::Action /*action*/, std::string oldFilename = "") final override;
+};
+
+static ElunaUpdateListener elunaUpdateListener;
+#endif
+
 #define sElunaLoader ElunaLoader::instance()
 
 #endif
+

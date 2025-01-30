@@ -51,12 +51,18 @@
 #                    "/usr/local/lib/lua/%s/?.so;/usr/lib/x86_64-linux-gnu/lua/%s/?.so;/usr/local/lib/lua/%s/loadall.so;"
 #       Default:     ""
 #
+#   Eluna.PlayerAnnounceReload
+#       Description: Enable or disable whether the reload announcement is sent to players (Lowest security level).
+#       Default:    false - (disabled)
+#                   true  - (enabled)
+#
 
 Eluna.Enabled = true
 Eluna.CompatibilityMode = false
 Eluna.ScriptReloader = false
-Eluna.OnlyOnMaps = ""
+Eluna.PlayerAnnounceReload = false
 Eluna.TraceBack = false
+Eluna.OnlyOnMaps = ""
 Eluna.ScriptPath = "lua_scripts"
 Eluna.RequirePaths = ""
 Eluna.RequireCPaths = ""

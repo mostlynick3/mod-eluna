@@ -119,3 +119,4 @@ bool Eluna::CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bind
 }
 
 #endif // _HOOK_HELPERS_H
+
