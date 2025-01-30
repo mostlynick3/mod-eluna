@@ -83,7 +83,7 @@ void ElunaInstanceAI::Load(const char* data)
         else
         {
             // Stack: error_message
-            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal: %s", lua_tostring(L, -1));
+            ELUNA_LOG_ERROR("Error while parsing instance data with lua-marshal: {}", lua_tostring(L, -1));
             lua_pop(L, 1);
             // Stack: (empty)
 
@@ -121,7 +121,7 @@ const char* ElunaInstanceAI::Save() const
     if (lua_pcall(L, 1, 1, 0) != 0)
     {
         // Stack: error_message
-        ELUNA_LOG_ERROR("Error while saving: %s", lua_tostring(L, -1));
+        ELUNA_LOG_ERROR("Error while saving: {}", lua_tostring(L, -1));
         lua_pop(L, 1);
         return NULL;
     }

@@ -91,7 +91,7 @@ void ElunaConfig::TokenizeAllowedMaps()
             m_allowedMaps.emplace(mapId);
         }
         catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '%s'", mapIdStr.c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", mapIdStr.c_str());
         }
     }
 }
