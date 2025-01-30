@@ -250,7 +250,7 @@ void Eluna::RunScripts()
 {
     int32 const boundMapId = GetBoundMapId();
     uint32 const boundInstanceId = GetBoundInstanceId();
-    ELUNA_LOG_DEBUG("[Eluna]: Running scripts for state: %i, instance: %u", boundMapId, boundInstanceId);
+    ELUNA_LOG_DEBUG("[Eluna]: Running scripts for state: {}, instance: {}", boundMapId, boundInstanceId);
 
     uint32 oldMSTime = ElunaUtil::GetCurrTime();
     uint32 count = 0;
@@ -270,7 +270,7 @@ void Eluna::RunScripts()
             // check that the script file is either global or meant to be loaded for this map
             if (it->mapId != -1 && it->mapId != boundMapId)
             {
-                ELUNA_LOG_DEBUG("[Eluna]: `%s` is tagged %i and will not load for map: %i", it->filename.c_str(), it->mapId, boundMapId);
+                ELUNA_LOG_DEBUG("[Eluna]: `{}` is tagged {} and will not load for map: {}", it->filename.c_str(), it->mapId, boundMapId);
                 continue;
             }
         }
@@ -278,7 +278,7 @@ void Eluna::RunScripts()
         // Check that no duplicate names exist
         if (loaded.find(it->filename) != loaded.end())
         {
-            ELUNA_LOG_ERROR("[Eluna]: Error loading `%s`. File with same name already loaded from `%s`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error loading `{}`. File with same name already loaded from `{}`, rename either file", it->filepath.c_str(), loaded[it->filename].c_str());
             continue;
         }
         loaded[it->filename] = it->filepath;
@@ -291,7 +291,7 @@ void Eluna::RunScripts()
         if (ExecuteCall(1, 0))
         {
             // Successfully called require on the script
-            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `%s`", it->filepath.c_str());
+            ELUNA_LOG_DEBUG("[Eluna]: Successfully loaded `{}`", it->filepath.c_str());
             ++count;
             continue;
         }
@@ -299,7 +299,7 @@ void Eluna::RunScripts()
     }
     // Stack: require
     lua_pop(L, 1);
-    ELUNA_LOG_INFO("[Eluna]: Executed %u Lua scripts in %u ms for map: %i, instance: %u", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
+    ELUNA_LOG_INFO("[Eluna]: Executed {} Lua scripts in {} ms for map: {}, instance: {}", count, ElunaUtil::GetTimeDiff(oldMSTime), boundMapId, boundInstanceId);
 
     OnLuaStateOpen();
 }
@@ -313,7 +313,7 @@ void Eluna::InvalidateObjects()
 void Eluna::Report(lua_State* _L)
 {
     const char* msg = lua_tostring(_L, -1);
-    ELUNA_LOG_ERROR("%s", msg);
+    ELUNA_LOG_ERROR("{}", msg);
     lua_pop(_L, 1);
 }
 
@@ -358,7 +358,7 @@ bool Eluna::ExecuteCall(int params, int res)
     // Check function type
     if (!lua_isfunction(L, base))
     {
-        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is %s, not a function.", luaL_tolstring(L, base, NULL));
+        ELUNA_LOG_ERROR("[Eluna]: Cannot execute call: registered value is {}, not a function.", luaL_tolstring(L, base, NULL));
         ASSERT(false); // stack probably corrupt
     }
 
