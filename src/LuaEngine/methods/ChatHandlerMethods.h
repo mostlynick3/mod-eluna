@@ -7,8 +7,6 @@
 #ifndef CHATHANDLERMETHODS_H
 #define CHATHANDLERMETHODS_H
 
-#include "Chat.h"
-
 namespace LuaChatHandler
 {
     /**
