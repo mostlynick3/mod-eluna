@@ -17,6 +17,7 @@
 #include "Chat.h"
 #include "DBCStores.h"
 #include "GameEventMgr.h"
+#include "GameTime.h"
 #include "GossipDef.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
