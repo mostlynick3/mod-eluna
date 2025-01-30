@@ -364,26 +364,30 @@ public:
 
     void OnBattlegroundStart(Battleground* bg) override
     {
-        if (Eluna* e = bg->GetBgMap()->GetEluna())
-            e->OnBGStart(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if(Map* m = bg->FindBgMap())
+            if (Eluna* e = m->GetEluna())
+                e->OnBGStart(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 
     void OnBattlegroundEnd(Battleground* bg, TeamId winnerTeam) override
     {
-        if (Eluna* e = bg->GetBgMap()->GetEluna())
-            e->OnBGEnd(bg, bg->GetBgTypeID(), bg->GetInstanceID(), winnerTeam);
+        if (Map* m = bg->FindBgMap())
+            if (Eluna* e = m->GetEluna())
+                e->OnBGEnd(bg, bg->GetBgTypeID(), bg->GetInstanceID(), winnerTeam);
     }
 
     void OnBattlegroundDestroy(Battleground* bg) override
     {
-        if (Eluna* e = bg->GetBgMap()->GetEluna())
-            e->OnBGDestroy(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if (Map* m = bg->FindBgMap())
+            if (Eluna* e = m->GetEluna())
+                e->OnBGDestroy(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 
     void OnBattlegroundCreate(Battleground* bg) override
     {
-        if (Eluna* e = bg->GetBgMap()->GetEluna())
-            e->OnBGCreate(bg, bg->GetBgTypeID(), bg->GetInstanceID());
+        if (Map* m = bg->FindBgMap())
+            if (Eluna* e = m->GetEluna())
+                e->OnBGCreate(bg, bg->GetBgTypeID(), bg->GetInstanceID());
     }
 };
 
@@ -1205,7 +1209,7 @@ void AddSC_ElunaLuaEngine()
     new Eluna_AllItemScript();
     new Eluna_AllMapScript();
     new Eluna_AuctionHouseScript();
-    // new Eluna_BGScript();
+    new Eluna_BGScript();
     new Eluna_CommandSC();
     new Eluna_ElunaScript();
     new Eluna_GameEventScript();
