@@ -44,9 +44,13 @@ bool Eluna::OnCommand(ChatHandler& handler, const char* text)
     {
         std::string reload = text;
         std::transform(reload.begin(), reload.end(), reload.begin(), ::tolower);
-        if (reload.find("reload eluna") == 0)
+        const std::string reload_command = "reload eluna";
+        if (reload.find(reload_command) == 0)
         {
-            int mapId = -2;
+            int mapId = RELOAD_ALL_STATES;
+            std::string args = reload.substr(reload_command.length());
+            if (!args.empty())
+                mapId = strtol(args.c_str(), nullptr, 10);
 
             sElunaLoader->ReloadElunaForMap(mapId);
 

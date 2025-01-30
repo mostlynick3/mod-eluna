@@ -18,14 +18,19 @@
 #include "ChatHandlerMethods.h"
 #include "CorpseMethods.h"
 #include "CreatureMethods.h"
+#include "ElunaQueryMethods.h"
+#include "GameObjectMethods.h"
 #include "GlobalMethods.h"
+#include "GroupMethods.h"
+#include "GuildMethods.h"
+#include "ItemMethods.h"
+#include "PlayerMethods.h"
 
 // Custom methods
-// #include "CustomMethods.h"
+#include "CustomMethods.h"
 
 void RegisterMethods(Eluna* E)
 {
-    ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
 
     ElunaTemplate<AchievementEntry>::Register(E, "AchievementEntry");
     ElunaTemplate<AchievementEntry>::SetMethods(E, LuaAchievement::AchievementMethods);
@@ -50,10 +55,40 @@ void RegisterMethods(Eluna* E)
     // ElunaTemplate<Creature>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaCreature::CreatureMethods);
 
+    ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery");
+    ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
+
+    ElunaTemplate<GameObject>::Register(E, "GameObject");
+    //ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
+    //ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
+    ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
+
+    ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
+
+    ElunaTemplate<Group>::Register(E, "Group");
+    ElunaTemplate<Group>::SetMethods(E, LuaGroup::GroupMethods);
+
+    ElunaTemplate<Guild>::Register(E, "Guild");
+    ElunaTemplate<Guild>::SetMethods(E, LuaGuild::GuildMethods);
+
+    ElunaTemplate<Item>::Register(E, "Item");
+    // ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
+
+    ElunaTemplate<Player>::Register(E, "Player");
+    // ElunaTemplate<Player>::SetMethods(E, ObjectMethods);
+    // ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
+    // ElunaTemplate<Player>::SetMethods(E, UnitMethods);
+    ElunaTemplate<Player>::SetMethods(E, LuaPlayer::PlayerMethods);
+
+
     ElunaTemplate<long long>::Register(E, "long long");
 
     ElunaTemplate<unsigned long long>::Register(E, "unsigned long long");
 
     ElunaTemplate<ObjectGuid>::Register(E, "ObjectGuid");
+
+    // Register custom methods
+    LuaCustom::RegisterCustomMethods(E);
 }
 
