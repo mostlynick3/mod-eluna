@@ -24,17 +24,18 @@ ElunaConfig::~ElunaConfig()
 void ElunaConfig::Initialize()
 {
     // Load bools
-    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", false);
+    SetConfig(CONFIG_ELUNA_ENABLED, "Eluna.Enabled", true);
+    SetConfig(CONFIG_ELUNA_COMPATIBILITY_MODE, "Eluna.CompatibilityMode", false);
     SetConfig(CONFIG_ELUNA_TRACEBACK, "Eluna.TraceBack", false);
-    SetConfig(CONFIG_ELUNA_PLAYER_RELOAD_ANNOUNCE, "Eluna.PlayerAnnounceReload", false);
 
     // Load strings
     SetConfig(CONFIG_ELUNA_SCRIPT_PATH, "Eluna.ScriptPath", "lua_scripts");
+    SetConfig(CONFIG_ELUNA_ONLY_ON_MAPS, "Eluna.OnlyOnMaps", "");
     SetConfig(CONFIG_ELUNA_REQUIRE_PATH_EXTRA, "Eluna.RequirePaths", "");
     SetConfig(CONFIG_ELUNA_REQUIRE_CPATH_EXTRA, "Eluna.RequireCPaths", "");
 
     // Call extra functions
-    // TokenizeAllowedMaps();
+    TokenizeAllowedMaps();
 }
 
 void ElunaConfig::SetConfig(ElunaConfigBoolValues index, std::string const& fieldname, bool defvalue)
