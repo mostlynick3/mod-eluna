@@ -24,7 +24,15 @@
 #include "GroupMethods.h"
 #include "GuildMethods.h"
 #include "ItemMethods.h"
+#include "ItemTemplateMethods.h"
+#include "MapMethods.h"
+#include "ObjectMethods.h"
 #include "PlayerMethods.h"
+#include "QuestMethods.h"
+#include "RollMethods.h"
+#include "SpellMethods.h"
+#include "SpellInfoMethods.h"
+#include "UnitMethods.h"
 
 // Custom methods
 #include "CustomMethods.h"
@@ -45,21 +53,21 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<ChatHandler>::SetMethods(E, LuaChatHandler::ChatHandlerMethods);
 
     ElunaTemplate<Corpse>::Register(E, "Corpse");
-    // ElunaTemplate<Corpse>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<Corpse>::SetMethods(E, LuaObject::ObjectMethods);
     // ElunaTemplate<Corpse>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<Corpse>::SetMethods(E, LuaCorpse::CorpseMethods);
 
     ElunaTemplate<Creature>::Register(E, "Creature");
-    // ElunaTemplate<Creature>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<Creature>::SetMethods(E, LuaObject::ObjectMethods);
     // ElunaTemplate<Creature>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
-    // ElunaTemplate<Creature>::SetMethods(E, LuaUnit::UnitMethods);
+    ElunaTemplate<Creature>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Creature>::SetMethods(E, LuaCreature::CreatureMethods);
 
     ElunaTemplate<ElunaQuery>::Register(E, "ElunaQuery");
     ElunaTemplate<ElunaQuery>::SetMethods(E, LuaQuery::QueryMethods);
 
     ElunaTemplate<GameObject>::Register(E, "GameObject");
-    //ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
     //ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
 
@@ -72,14 +80,40 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<Guild>::SetMethods(E, LuaGuild::GuildMethods);
 
     ElunaTemplate<Item>::Register(E, "Item");
-    // ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
+    ElunaTemplate<Item>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<Item>::SetMethods(E, LuaItem::ItemMethods);
 
+    ElunaTemplate<ItemTemplate>::Register(E, "ItemTemplate");
+    ElunaTemplate<ItemTemplate>::SetMethods(E, LuaItemTemplate::ItemTemplateMethods);
+
+    ElunaTemplate<Map>::Register(E, "Map");
+    ElunaTemplate<Map>::SetMethods(E, LuaMap::MapMethods);
+
+    ElunaTemplate<Object>::Register(E, "Object");
+    ElunaTemplate<Object>::SetMethods(E, LuaObject::ObjectMethods);
+
     ElunaTemplate<Player>::Register(E, "Player");
-    // ElunaTemplate<Player>::SetMethods(E, ObjectMethods);
+    ElunaTemplate<Player>::SetMethods(E, LuaObject::ObjectMethods);
     // ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
-    // ElunaTemplate<Player>::SetMethods(E, UnitMethods);
+    ElunaTemplate<Player>::SetMethods(E, LuaUnit::UnitMethods);
     ElunaTemplate<Player>::SetMethods(E, LuaPlayer::PlayerMethods);
+
+    ElunaTemplate<Quest>::Register(E, "Quest");
+    ElunaTemplate<Quest>::SetMethods(E, LuaQuest::QuestMethods);
+
+    ElunaTemplate<Roll>::Register(E, "Roll");
+    ElunaTemplate<Roll>::SetMethods(E, LuaRoll::RollMethods);
+
+    ElunaTemplate<Spell>::Register(E, "Spell");
+    ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);
+
+    ElunaTemplate<SpellInfo>::Register(E, "SpellInfo");
+    ElunaTemplate<SpellInfo>::SetMethods(E, LuaSpellInfo::SpellInfoMethods);
+
+    ElunaTemplate<Unit>::Register(E, "Unit");
+    ElunaTemplate<Unit>::SetMethods(E, LuaObject::ObjectMethods);
+    // ElunaTemplate<Unit>::SetMethods(E, WorldObjectMethods);
+    ElunaTemplate<Unit>::SetMethods(E, LuaUnit::UnitMethods);
 
 
     ElunaTemplate<long long>::Register(E, "long long");
