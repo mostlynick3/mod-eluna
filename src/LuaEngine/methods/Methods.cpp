@@ -37,6 +37,9 @@
 #include "WorldObjectMethods.h"
 #include "WorldPacketMethods.h"
 
+// DBCStores includes
+#include "GemPropertiesEntryMethods.h"
+
 // Custom methods
 #include "CustomMethods.h"
 
@@ -73,6 +76,9 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<GameObject>::SetMethods(E, LuaObject::ObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaWorldObject::WorldObjectMethods);
     ElunaTemplate<GameObject>::SetMethods(E, LuaGameObject::GameObjectMethods);
+
+    ElunaTemplate<GemPropertiesEntry>::Register(E, "GemPropertiesEntry");
+    ElunaTemplate<GemPropertiesEntry>::SetMethods(E, LuaGemPropertiesEntry::GemPropertiesEntryMethods);
 
     ElunaTemplate<>::SetMethods(E, LuaGlobalFunctions::GlobalMethods);
 

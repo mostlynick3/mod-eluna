@@ -3288,7 +3288,7 @@ namespace LuaGlobalFunctions
      *
      * @return [DBCStore] store : The requested DBC store instance.
      */
-    /*int LookupEntry(Eluna* E)
+    int LookupEntry(Eluna* E)
     {
         const char* dbcName = E->CHECKVAL<const char*>(1);
         uint32 id = E->CHECKVAL<uint32>(2);
@@ -3301,13 +3301,13 @@ namespace LuaGlobalFunctions
                 if (!entry)
                     return 0;
 
-                dbc.pushFunction(E->L, entry);
+                dbc.pushFunction(E, entry);
                 return 1;
             }
         }
 
         return luaL_error(E->L, "Invalid DBC name: %s", dbcName);
-    }*/
+    }
 
     ElunaRegister<> GlobalMethods[] =
     {
@@ -3425,7 +3425,8 @@ namespace LuaGlobalFunctions
         { "CreateInt64", &LuaGlobalFunctions::CreateLongLong },
         { "CreateUint64", &LuaGlobalFunctions::CreateULongLong },
         { "StartGameEvent", &LuaGlobalFunctions::StartGameEvent },
-        { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent }
+        { "StopGameEvent", &LuaGlobalFunctions::StopGameEvent },
+        { "LookupEntry", &LuaGlobalFunctions::LookupEntry }
     };
 }
 #endif

@@ -536,6 +536,14 @@ void Eluna::Push(ObjectGuid const guid)
     // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     ElunaTemplate<ObjectGuid>::Push(this, &guid);
 }
+void Eluna::Push(GemPropertiesEntry const& gemProperties)
+{
+    ElunaTemplate<GemPropertiesEntry>::Push(this, &gemProperties);
+}
+void Eluna::Push(SpellEntry const& spell)
+{
+    ElunaTemplate<SpellEntry>::Push(this, &spell);
+}
 
 static int CheckIntegerRange(lua_State* luastate, int narg, int min, int max)
 {
