@@ -36,6 +36,13 @@ namespace LuaGemPropertiesEntry
         E->Push(entry->spellitemenchantement);
         return 1;
     }
+
+    ElunaRegister<GemPropertiesEntry> GemPropertiesEntryMethods[] =
+    {
+        // Getters
+        { "GetId", &LuaGemPropertiesEntry::GetId },
+        { "GetSpellItemEnchantement", &LuaGemPropertiesEntry::GetSpellItemEnchantement }
+    };
 }
 #endif
 
