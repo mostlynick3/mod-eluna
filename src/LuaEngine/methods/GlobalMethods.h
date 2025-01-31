@@ -1302,6 +1302,9 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
+
         ElunaQuery result = WorldDatabase.Query(query);
         if (result)
             E->Push(new ElunaQuery(result));
@@ -1382,6 +1385,9 @@ namespace LuaGlobalFunctions
     {
         const char* query = E->CHECKVAL<const char*>(1);
 
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
+
         WorldDatabase.Execute(query);
         return 0;
     }
@@ -1401,6 +1407,9 @@ namespace LuaGlobalFunctions
     int CharDBQuery(Eluna* E)
     {
         const char* query = E->CHECKVAL<const char*>(1);
+
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
 
         QueryResult result = CharacterDatabase.Query(query);
         if (result)
@@ -1474,6 +1483,10 @@ namespace LuaGlobalFunctions
     int CharDBExecute(Eluna* E)
     {
         const char* query = E->CHECKVAL<const char*>(1);
+
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
+
         CharacterDatabase.Execute(query);
         return 0;
     }
@@ -1493,6 +1506,9 @@ namespace LuaGlobalFunctions
     int AuthDBQuery(Eluna* E)
     {
         const char* query = E->CHECKVAL<const char*>(1);
+
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
 
         QueryResult result = LoginDatabase.Query(query);
         if (result)
@@ -1566,6 +1582,9 @@ namespace LuaGlobalFunctions
     int AuthDBExecute(Eluna* E)
     {
         const char* query = E->CHECKVAL<const char*>(1);
+
+        if (lua_gettop(E->L) > 1)
+            query = E->FormatQuery(query).c_str();
             
         LoginDatabase.Execute(query);
         return 0;

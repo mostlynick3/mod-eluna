@@ -99,7 +99,7 @@ public:
     typedef std::list<LuaScript> ScriptList;
     typedef std::recursive_mutex LockType;
 
-    std::string FormatQuery(lua_State* L, const char* query);
+    std::string FormatQuery(const char* query);
 
     void ReloadEluna() { reload = true; }
     bool ExecuteCall(int params, int res);
