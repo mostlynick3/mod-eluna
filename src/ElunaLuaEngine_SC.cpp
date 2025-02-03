@@ -281,13 +281,13 @@ public:
     void OnBeforeCreateInstanceScript(InstanceMap* instanceMap, InstanceScript** instanceData, bool /*load*/, std::string /*data*/, uint32 /*completedEncounterMask*/) override
     {
         if (instanceData)
-            if(Eluna * e = instanceMap->GetEluna())
+            if(Eluna* e = instanceMap->GetEluna())
                 *instanceData = e->GetInstanceData(instanceMap);
     }
 
     void OnDestroyInstance(MapInstanced* /*mapInstanced*/, Map* map) override
     {
-        if(Eluna * e = map->GetEluna())
+        if(Eluna* e = map->GetEluna())
             e->FreeInstanceId(map->GetInstanceId());
     }
 
@@ -300,7 +300,9 @@ public:
     void OnDestroyMap(Map* map) override
     {
         if (Eluna* e = map->GetEluna())
+        {
             e->OnDestroy(map);
+        }
     }
 
     void OnPlayerEnterAll(Map* map, Player* player) override
@@ -1141,7 +1143,7 @@ public:
             if (sElunaConfig->IsElunaEnabled())
             {
                 ELUNA_LOG_INFO("Starting Eluna world state...");
-                sWorld->eluna = new Eluna(nullptr, sElunaConfig->IsElunaCompatibilityMode());
+                sWorld->eluna = std::make_unique<Eluna>(nullptr, sElunaConfig->IsElunaCompatibilityMode());
             }
         }
 
