@@ -47,7 +47,7 @@ namespace LuaCreature
      */
     int IsReputationGainDisabled(Eluna* E, Creature* creature)
     {
-        E->Push(creature->IsReputationGainDisabled());
+        E->Push(creature->IsReputationRewardDisabled());
         return 1;
     }
 
@@ -986,7 +986,7 @@ namespace LuaCreature
     {
         bool disable = E->CHECKVAL<bool>(2, true);
 
-        creature->SetDisableReputationGain(disable);
+        creature->SetReputationRewardDisabled(disable);
         return 0;
     }
 
