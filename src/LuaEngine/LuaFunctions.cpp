@@ -799,6 +799,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "SetNPCFlags", &LuaCreature::SetNPCFlags },
     { "SetUnitFlags", &LuaCreature::SetUnitFlags },
     { "SetUnitFlagsTwo", &LuaCreature::SetUnitFlagsTwo },
+    { "GetReactState", &LuaCreature::GetReactState },
     { "SetReactState", &LuaCreature::SetReactState },
     { "SetDeathState", &LuaCreature::SetDeathState },
     { "SetWalk", &LuaCreature::SetWalk },
