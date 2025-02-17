@@ -556,6 +556,8 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SetLifetimeKills", &LuaPlayer::SetLifetimeKills },
     { "SetGameMaster", &LuaPlayer::SetGameMaster },
     { "SetGMChat", &LuaPlayer::SetGMChat },
+    { "GetKnownTaxiNodes", &LuaPlayer::GetKnownTaxiNodes },
+    { "SetKnownTaxiNodes", &LuaPlayer::SetKnownTaxiNodes },
     { "SetTaxiCheat", &LuaPlayer::SetTaxiCheat },
     { "SetGMVisible", &LuaPlayer::SetGMVisible },
     { "SetPvPDeath", &LuaPlayer::SetPvPDeath },
