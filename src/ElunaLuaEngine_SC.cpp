@@ -813,6 +813,21 @@ public:
         sEluna->OnCreatureKilledByPet(player, killed);
     }
 
+    bool OnPlayerCanUpdateSkill(Player* player, uint32 skill_id) override
+    {
+        return sEluna->OnPlayerCanUpdateSkill(player, skill_id);
+    }
+
+    void OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& value, uint32 max, uint32 step) override
+    {
+        sEluna->OnPlayerBeforeUpdateSkill(player, skill_id, value, max, step);
+    }
+
+    void OnPlayerUpdateSkill(Player* player, uint32 skill_id, uint32 value, uint32 max, uint32 step, uint32 new_value) override
+    {
+        sEluna->OnPlayerUpdateSkill(player, skill_id, value, max, step, new_value);
+    }
+    
     bool OnPlayerCanResurrect(Player* player) override
     {
         return sEluna->CanPlayerResurrect(player);
@@ -1013,6 +1028,32 @@ public:
     }
 };
 
+class Eluna_TicketScript : public TicketScript
+{
+public:
+    Eluna_TicketScript() : TicketScript("Eluna_TicketScript") { }
+
+    void OnTicketCreate(GmTicket* ticket) override
+    {
+        sEluna->OnTicketCreate(ticket);
+    }
+
+    void OnTicketUpdateLastChange(GmTicket* ticket) override
+    {
+        sEluna->OnTicketUpdateLastChange(ticket);
+    }
+
+    void OnTicketClose(GmTicket* ticket) override
+    {
+        sEluna->OnTicketClose(ticket);
+    }
+
+    void OnTicketResolve(GmTicket* ticket) override
+    {
+        sEluna->OnTicketResolve(ticket);
+    }
+};
+
 // Group all custom scripts
 void AddSC_ElunaLuaEngine()
 {
@@ -1033,6 +1074,7 @@ void AddSC_ElunaLuaEngine()
     new Eluna_PlayerScript();
     new Eluna_ServerScript();
     new Eluna_SpellSC();
+    new Eluna_TicketScript();
     new Eluna_UnitScript();
     new Eluna_VehicleScript();
     new Eluna_WorldObjectScript();
