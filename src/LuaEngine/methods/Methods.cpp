@@ -115,7 +115,7 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<Roll>::SetMethods(E, LuaRoll::RollMethods);
 
     ElunaTemplate<GmTicket>::Register(E, "Ticket");
-    ElunaTemplate<GmTicket>::SetMethods(E, TicketMethods);
+    ElunaTemplate<GmTicket>::SetMethods(E, LuaTicket::TicketMethods);
 
     ElunaTemplate<Spell>::Register(E, "Spell");
     ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);

@@ -22,7 +22,7 @@ void Eluna::OnTicketCreate(GmTicket* ticket)
 {
     START_HOOK(TICKET_EVENT_ON_CREATE);
     ArgumentTracker tracker(L);
-    Push(ticket);
+    HookPush(ticket);
     int argument_count = tracker.GetArgumentCount();
     CallAllFunctions(TicketEventBindings, key, argument_count);
 }
@@ -31,7 +31,7 @@ void Eluna::OnTicketUpdateLastChange(GmTicket* ticket)
 {
     START_HOOK(TICKET_EVENT_UPDATE_LAST_CHANGE);
     ArgumentTracker tracker(L);
-    Push(ticket);
+    HookPush(ticket);
     int argument_count = tracker.GetArgumentCount();
     CallAllFunctions(TicketEventBindings, key, argument_count);
 }
@@ -40,7 +40,7 @@ void Eluna::OnTicketClose(GmTicket* ticket)
 {
     START_HOOK(TICKET_EVENT_ON_CLOSE);
     ArgumentTracker tracker(L);
-    Push(ticket);
+    HookPush(ticket);
     int argument_count = tracker.GetArgumentCount();
     CallAllFunctions(TicketEventBindings, key, argument_count);
 }
@@ -49,7 +49,7 @@ void Eluna::OnTicketResolve(GmTicket* ticket)
 {
     START_HOOK(TICKET_EVENT_ON_RESOLVE);
     ArgumentTracker tracker(L);
-    Push(ticket);
+    HookPush(ticket);
     int argument_count = tracker.GetArgumentCount();
     CallAllFunctions(TicketEventBindings, key, argument_count);
 }
