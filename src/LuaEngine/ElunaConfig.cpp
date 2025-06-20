@@ -73,25 +73,38 @@ void ElunaConfig::TokenizeAllowedMaps()
 {
     // clear allowed maps
     m_allowedMaps.clear();
+    std::string mapString = GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS);
+    size_t pos = 0;
+    std::string token;
 
-    // read the configuration value into stringstream
-    std::istringstream maps(GetConfig(CONFIG_ELUNA_ONLY_ON_MAPS));
-
-    // tokenize maps and add to allowed maps
-    std::string mapIdStr;
-    while (std::getline(maps, mapIdStr, ','))
-    {
-        // remove spaces
-        mapIdStr.erase(std::remove_if(mapIdStr.begin(), mapIdStr.end(), [](char c) {
+    while ((pos = mapString.find(',')) != std::string::npos) {
+        token = mapString.substr(0, pos);
+        token.erase(std::remove_if(token.begin(), token.end(), [](char c) {
             return std::isspace(static_cast<unsigned char>(c));
-            }), mapIdStr.end());
+        }), token.end());
+
+        if (!token.empty()) {
+            try {
+                m_allowedMaps.emplace(std::stoul(token));
+            }
+            catch (std::exception&) {
+                ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", token.c_str());
+            }
+        }
+        mapString.erase(0, pos + 1);
+    }
+
+    if (!mapString.empty()) {
+        mapString.erase(std::remove_if(mapString.begin(), mapString.end(), [](char c) {
+            return std::isspace(static_cast<unsigned char>(c));
+        }), mapString.end());
 
         try {
-            uint32 mapId = std::stoul(mapIdStr);
-            m_allowedMaps.emplace(mapId);
+            m_allowedMaps.emplace(std::stoul(mapString));
         }
         catch (std::exception&) {
-            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", mapIdStr.c_str());
+            ELUNA_LOG_ERROR("[Eluna]: Error tokenizing Eluna.OnlyOnMaps, invalid config value '{}'", mapString.c_str());
         }
     }
 }
+

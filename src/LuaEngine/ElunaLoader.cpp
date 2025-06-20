@@ -9,6 +9,8 @@
 #include "ElunaConfig.h"
 #include "ElunaLoader.h"
 #include "ElunaUtility.h"
+#include "WorldSessionMgr.h"
+#include <memory>
 #include <fstream>
 #include <sstream>
 #include <thread>
@@ -298,7 +300,7 @@ void ElunaLoader::ReloadElunaForMap(int mapId)
     if (mapId != RELOAD_CACHE_ONLY)
     {
         if (mapId == RELOAD_GLOBAL_STATE || mapId == RELOAD_ALL_STATES)
-            if (Eluna* e = sWorld->GetEluna())
+            if (Eluna* e = sWorldSessionMgr->GetEluna())
                 e->ReloadEluna();
 
         sMapMgr->DoForAllMaps([&](Map* map)

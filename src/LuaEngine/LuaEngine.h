@@ -93,6 +93,27 @@ enum MethodRegisterState
 
 #define ELUNA_GAME_API AC_GAME_API
 
+class ArgumentTracker {
+private:
+    int initial_stack_size;
+    lua_State* L;
+    
+public:
+    ArgumentTracker(lua_State* state) : L(state) {
+        if (!L) {
+            ELUNA_LOG_ERROR("[Eluna]: ArgumentTracker: NULL Lua state passed!");
+            initial_stack_size = 0;
+            return;
+        }
+        initial_stack_size = lua_gettop(L);
+    }
+
+    int GetArgumentCount() const { 
+        if (!L) return 0;
+        return lua_gettop(L) - initial_stack_size; 
+    }
+};
+
 class ELUNA_GAME_API Eluna
 {
 public:
@@ -103,6 +124,9 @@ public:
 
     void ReloadEluna() { reload = true; }
     bool ExecuteCall(int params, int res);
+    // When a hook pushes arguments to be passed to event handlers,
+    //  this is used to keep track of how many arguments were pushed.
+    uint8 push_counter;
 
 private:
 
@@ -119,9 +143,6 @@ private:
     // reaches 0 we are about to return back to C++. At this point the
     // objects used during the event stack are invalidated.
     uint32 event_level;
-    // When a hook pushes arguments to be passed to event handlers,
-    //  this is used to keep track of how many arguments were pushed.
-    uint8 push_counter;
 
     Map* const boundMap;
 
@@ -132,6 +153,9 @@ private:
     std::unordered_map<uint32, int> instanceDataRefs;
     // Map from map ID -> Lua table ref
     std::unordered_map<uint32, int> continentDataRefs;
+    
+    // Mutex to protect the Lua stack
+    std::recursive_mutex luaStackMutex;
 
     void OpenLua();
     void CloseLua();
@@ -148,9 +172,9 @@ private:
     template<typename K1, typename K2> int SetupStack(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
                                        int CallOneFunction(int number_of_functions, int number_of_arguments, int number_of_results);
                                        void CleanUpStack(int number_of_arguments);
-    template<typename T>               void ReplaceArgument(T value, uint8 index);
-    template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2);
-    template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, bool default_value = false);
+    template<typename T>               void ReplaceArgument(T value, uint8 index, int current_argument_count);
+    template<typename K1, typename K2> void CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments);
+    template<typename K1, typename K2> bool CallAllFunctionsBool(BindingMap<K1>* bindings1, BindingMap<K2>* bindings2, const K1& key1, const K2& key2, int number_of_arguments, bool default_value = false);
 
     // Same as above but for only one binding instead of two.
     // `key` is passed twice because there's no NULL for references, but it's not actually used if `bindings2` is NULL.
@@ -158,32 +182,89 @@ private:
     {
         return SetupStack<K, K>(bindings, NULL, key, key, number_of_arguments);
     }
-    template<typename K> void CallAllFunctions(BindingMap<K>* bindings, const K& key)
+    template<typename K> void CallAllFunctions(BindingMap<K>* bindings, const K& key, int number_of_arguments)
     {
-        CallAllFunctions<K, K>(bindings, NULL, key, key);
+        CallAllFunctions<K, K>(bindings, NULL, key, key, number_of_arguments);
     }
-    template<typename K> bool CallAllFunctionsBool(BindingMap<K>* bindings, const K& key, bool default_value = false)
+    template<typename K> bool CallAllFunctionsBool(BindingMap<K>* bindings, const K& key, int number_of_arguments, bool default_value = false)
     {
-        return CallAllFunctionsBool<K, K>(bindings, NULL, key, key, default_value);
+        return CallAllFunctionsBool<K, K>(bindings, NULL, key, key, number_of_arguments, default_value);
     }
 
     // Non-static pushes, to be used in hooks.
     // They up the pushed value counter for hook helper functions.
-    void HookPush()                                 { Push(); ++push_counter; }
-    void HookPush(const long long value)            { Push(value); ++push_counter; }
-    void HookPush(const unsigned long long value)   { Push(value); ++push_counter; }
-    void HookPush(const long value)                 { Push(value); ++push_counter; }
-    void HookPush(const unsigned long value)        { Push(value); ++push_counter; }
-    void HookPush(const int value)                  { Push(value); ++push_counter; }
-    void HookPush(const unsigned int value)         { Push(value); ++push_counter; }
-    void HookPush(const bool value)                 { Push(value); ++push_counter; }
-    void HookPush(const float value)                { Push(value); ++push_counter; }
-    void HookPush(const double value)               { Push(value); ++push_counter; }
-    void HookPush(const std::string& value)         { Push(value); ++push_counter; }
-    void HookPush(const char* value)                { Push(value); ++push_counter; }
-    void HookPush(ObjectGuid const value)           { Push(value); ++push_counter; }
+    void HookPush() {
+        Push();
+        ++push_counter;
+    }
+
+    void HookPush(const long long value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const unsigned long long value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const long value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const unsigned long value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const int value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const unsigned int value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const bool value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const float value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const double value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const std::string& value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(const char* value) {
+        Push(value);
+        ++push_counter;
+    }
+
+    void HookPush(ObjectGuid const value) {
+        Push(value);
+        ++push_counter;
+    }
+
     template<typename T>
-    void HookPush(T const* ptr)                     { Push(ptr); ++push_counter; }
+    void HookPush(T const* ptr) {
+        Push(ptr);
+        ++push_counter;
+    }
+
+
 
 public:
 

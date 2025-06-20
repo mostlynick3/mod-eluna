@@ -3,7 +3,6 @@
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
@@ -16,12 +15,13 @@ using namespace Hooks;
 #define START_HOOK_SERVER(EVENT) \
     auto key = EventKey<ServerEvents>(EVENT);\
     if (!ServerEventBindings->HasBindingsFor(key))\
-        return;
-
+        return;\
+    ArgumentTracker tracker(L);
 #define START_HOOK_PACKET(EVENT, OPCODE) \
     auto key = EntryKey<PacketEvents>(EVENT, OPCODE);\
     if (!PacketEventBindings->HasBindingsFor(key))\
-        return;
+        return;\
+    ArgumentTracker tracker(L);
 
 bool Eluna::OnPacketSend(WorldSession* session, const WorldPacket& packet)
 {
@@ -38,11 +38,12 @@ void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& res
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_SEND);
     HookPush(new WorldPacket(packet));
     HookPush(player);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(ServerEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -50,7 +51,7 @@ void Eluna::OnPacketSendAny(Player* player, const WorldPacket& packet, bool& res
         lua_pop(L, 1);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
 }
 
 void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& result)
@@ -58,11 +59,12 @@ void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& res
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_SEND, packet.GetOpcode());
     HookPush(new WorldPacket(packet));
     HookPush(player);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -70,7 +72,7 @@ void Eluna::OnPacketSendOne(Player* player, const WorldPacket& packet, bool& res
         lua_pop(L, 1);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
 }
 
 bool Eluna::OnPacketReceive(WorldSession* session, WorldPacket& packet)
@@ -89,11 +91,12 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
     START_HOOK_SERVER(SERVER_EVENT_ON_PACKET_RECEIVE);
     HookPush(new WorldPacket(packet));
     HookPush(player);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(ServerEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -105,7 +108,7 @@ void Eluna::OnPacketReceiveAny(Player* player, WorldPacket& packet, bool& result
         lua_pop(L, 2);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
 }
 
 void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result)
@@ -113,11 +116,12 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
     START_HOOK_PACKET(PACKET_EVENT_ON_PACKET_RECEIVE, packet.GetOpcode());
     HookPush(new WorldPacket(packet));
     HookPush(player);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PacketEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -129,5 +133,5 @@ void Eluna::OnPacketReceiveOne(Player* player, WorldPacket& packet, bool& result
         lua_pop(L, 2);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
 }

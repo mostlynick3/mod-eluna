@@ -748,28 +748,25 @@ namespace LuaWorldObject
         uint32 min, max;
         if (lua_istable(E->L, 3))
         {
-            E->Push(1);
-            lua_gettable(E->L, 3);
+            lua_rawgeti(E->L, 3, 1);
             min = E->CHECKVAL<uint32>(-1);
-            E->Push(2);
-            lua_gettable(E->L, 3);
+            lua_rawgeti(E->L, 3, 2);
             max = E->CHECKVAL<uint32>(-1);
             lua_pop(E->L, 2);
         }
         else
             min = max = E->CHECKVAL<uint32>(3);
         uint32 repeats = E->CHECKVAL<uint32>(4, 1);
-
         if (min > max)
             return luaL_argerror(E->L, 3, "min is bigger than max delay");
 
+        // Create reference to function
         lua_pushvalue(E->L, 2);
-        int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
-        if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
-        {
-            obj->elunaEvents->AddEvent(functionRef, min, max, repeats);
-            E->Push(functionRef);
-        }
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        int eventId = GlobalEventMgr::AddEvent(E->L, funcRef);
+        obj->elunaEvents->AddEvent(eventId, min, max, repeats);
+        E->Push(eventId);
         return 1;
     }
 
@@ -782,6 +779,7 @@ namespace LuaWorldObject
     {
         int eventId = E->CHECKVAL<int>(2);
         obj->elunaEvents->SetState(eventId, LUAEVENT_STATE_ABORT);
+        GlobalEventMgr::RemoveEvent(eventId);
         return 0;
     }
 
@@ -791,6 +789,18 @@ namespace LuaWorldObject
      */
     int RemoveEvents(Eluna* /*E*/, WorldObject* obj)
     {
+        std::vector<int> eventIds;
+        for (const auto& pair : obj->elunaEvents->eventMap)
+        {
+            eventIds.push_back(pair.first);
+        }
+
+        // Remove from GlobalEventMgr
+        for (int eventId : eventIds)
+        {
+            GlobalEventMgr::RemoveEvent(eventId);
+        }
+
         obj->elunaEvents->SetStates(LUAEVENT_STATE_ABORT);
         return 0;
     }
@@ -1150,4 +1160,3 @@ namespace LuaWorldObject
     };
 };
 #endif
-

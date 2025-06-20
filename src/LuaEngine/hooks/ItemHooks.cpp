@@ -3,7 +3,6 @@
  * This program is free software licensed under GPL version 3
  * Please see the included DOCS/LICENSE.md for more information
  */
-
 #include "Hooks.h"
 #include "HookHelpers.h"
 #include "LuaEngine.h"
@@ -16,12 +15,13 @@ using namespace Hooks;
 #define START_HOOK(EVENT, ENTRY) \
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
     if (!ItemEventBindings->HasBindingsFor(key))\
-        return;
-
+        return;\
+    ArgumentTracker tracker(L);
 #define START_HOOK_WITH_RETVAL(EVENT, ENTRY, RETVAL) \
     auto key = EntryKey<ItemEvents>(EVENT, ENTRY);\
     if (!ItemEventBindings->HasBindingsFor(key))\
-        return RETVAL;
+        return RETVAL;\
+    ArgumentTracker tracker(L);
 
 void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex effIndex, Item* pTarget)
 {
@@ -30,7 +30,8 @@ void Eluna::OnDummyEffect(WorldObject* pCaster, uint32 spellId, SpellEffIndex ef
     HookPush(spellId);
     HookPush(effIndex);
     HookPush(pTarget);
-    CallAllFunctions(ItemEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(ItemEventBindings, key, argument_count);
 }
 
 bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
@@ -39,7 +40,8 @@ bool Eluna::OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest)
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(pQuest);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(ItemEventBindings, key, argument_count);
 }
 
 bool Eluna::OnUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
@@ -91,7 +93,8 @@ bool Eluna::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targ
     else
         HookPush();
 
-    return CallAllFunctionsBool(ItemEventBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(ItemEventBindings, key, argument_count, true);
 }
 
 bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
@@ -99,7 +102,8 @@ bool Eluna::OnExpire(Player* pPlayer, ItemTemplate const* pProto)
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_EXPIRE, pProto->ItemId, false);
     HookPush(pPlayer);
     HookPush(pProto->ItemId);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(ItemEventBindings, key, argument_count);
 }
 
 bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
@@ -107,5 +111,6 @@ bool Eluna::OnRemove(Player* pPlayer, Item* pItem)
     START_HOOK_WITH_RETVAL(ITEM_EVENT_ON_REMOVE, pItem->GetEntry(), false);
     HookPush(pPlayer);
     HookPush(pItem);
-    return CallAllFunctionsBool(ItemEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(ItemEventBindings, key, argument_count);
 }

@@ -10,6 +10,8 @@ extern "C"
 #include "libs/httplib.h"
 #include "HttpManager.h"
 #include "LuaEngine.h"
+#include "WorldSessionMgr.h"
+#include <memory>
 
 HttpWorkItem::HttpWorkItem(int funcRef, const std::string& httpVerb, const std::string& url, const std::string& body, const std::string& contentType, const httplib::Headers& headers)
     : funcRef(funcRef),
@@ -248,7 +250,7 @@ void HttpManager::HandleHttpResponses()
             continue;
         }
 
-        Eluna* E = sWorld->GetEluna();
+        Eluna* E = sWorldSessionMgr->GetEluna();
 
         // Get function
         lua_rawgeti(E->L, LUA_REGISTRYINDEX, res->funcRef);
@@ -264,7 +266,7 @@ void HttpManager::HandleHttpResponses()
         //}
 
         // Call function
-        sWorld->GetEluna()->ExecuteCall(3, 0);
+        sWorldSessionMgr->GetEluna()->ExecuteCall(3, 0);
 
         luaL_unref(E->L, LUA_REGISTRYINDEX, res->funcRef);
 

@@ -48,7 +48,6 @@ void Eluna::_ReloadEluna()
 
 Eluna::Eluna(Map* map, bool compatMode) :
 event_level(0),
-push_counter(0),
 boundMap(map),
 compatibilityMode(compatMode),
 
@@ -349,6 +348,7 @@ int Eluna::StackTrace(lua_State* _L)
 
 bool Eluna::ExecuteCall(int params, int res)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     int top = lua_gettop(L);
     int base = top - params;
 
@@ -369,101 +369,128 @@ bool Eluna::ExecuteCall(int params, int res)
         // Stack: function, [parameters], traceback
         lua_insert(L, base);
         // Stack: traceback, function, [parameters]
+        base++; // Function moved up one position
     }
 
     // Objects are invalidated when event_level hits 0
     ++event_level;
-    int result = lua_pcall(L, params, res, usetrace ? base : 0);
+    int result = lua_pcall(L, params, res, usetrace ? base - 1 : 0);
     --event_level;
 
     if (usetrace)
     {
         // Stack: traceback, [results or errmsg]
-        lua_remove(L, base);
+        lua_remove(L, base - 1);
     }
     // Stack: [results or errmsg]
-
     // lua_pcall returns 0 on success.
     // On error print the error and push nils for expected amount of returned values
     if (result)
     {
         // Stack: errmsg
         Report(L);
-
         // Force garbage collect
         lua_gc(L, LUA_GCCOLLECT, 0);
-
         // Push nils for expected amount of results
         for (int i = 0; i < res; ++i)
             lua_pushnil(L);
         // Stack: [nils]
+        ELUNA_LOG_DEBUG("[Eluna]: ExecuteCall: lua_pcall failed! Forcing garbage collection... Pushed {} nils to stack", res);
         return false;
     }
-
     // Stack: [results]
     return true;
 }
 
 void Eluna::Push()
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushnil(L);
 }
+
 void Eluna::Push(const long long l)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     ElunaTemplate<long long>::Push(this, &l);
 }
+
 void Eluna::Push(const unsigned long long l)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     ElunaTemplate<unsigned long long>::Push(this, &l);
 }
+
 void Eluna::Push(const long l)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     Push(static_cast<long long>(l));
 }
+
 void Eluna::Push(const unsigned long l)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     Push(static_cast<unsigned long long>(l));
 }
+
 void Eluna::Push(const int i)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushinteger(L, i);
 }
+
 void Eluna::Push(const unsigned int u)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushunsigned(L, u);
 }
+
 void Eluna::Push(const double d)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushnumber(L, d);
 }
+
 void Eluna::Push(const float f)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushnumber(L, f);
 }
+
 void Eluna::Push(const bool b)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushboolean(L, b);
 }
+
 void Eluna::Push(const std::string& str)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushstring(L, str.c_str());
 }
+
 void Eluna::Push(const char* str)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     lua_pushstring(L, str);
 }
+
 void Eluna::Push(Pet const* pet)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     Push<Creature>(pet);
 }
+
 void Eluna::Push(TempSummon const* summon)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     Push<Creature>(summon);
 }
+
 void Eluna::Push(Unit const* unit)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     if (!unit)
     {
         Push();
@@ -481,8 +508,10 @@ void Eluna::Push(Unit const* unit)
             ElunaTemplate<Unit>::Push(this, unit);
     }
 }
+
 void Eluna::Push(WorldObject const* obj)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     if (!obj)
     {
         Push();
@@ -506,8 +535,10 @@ void Eluna::Push(WorldObject const* obj)
             ElunaTemplate<WorldObject>::Push(this, obj);
     }
 }
+
 void Eluna::Push(Object const* obj)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     if (!obj)
     {
         Push();
@@ -531,17 +562,23 @@ void Eluna::Push(Object const* obj)
             ElunaTemplate<Object>::Push(this, obj);
     }
 }
+
 void Eluna::Push(ObjectGuid const guid)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     // pushing pointer to local is fine, a copy of value will be stored, not pointer itself
     ElunaTemplate<ObjectGuid>::Push(this, &guid);
 }
+
 void Eluna::Push(GemPropertiesEntry const& gemProperties)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     ElunaTemplate<GemPropertiesEntry>::Push(this, &gemProperties);
 }
+
 void Eluna::Push(SpellEntry const& spell)
 {
+    std::lock_guard<std::recursive_mutex> lock(luaStackMutex); // Lock the mutex
     ElunaTemplate<SpellEntry>::Push(this, &spell);
 }
 
@@ -1026,6 +1063,13 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
     int arguments_top        = first_function_index - 1;
     int first_argument_index = arguments_top - number_of_arguments + 1;
 
+    if (first_argument_index < 1 || first_argument_index > arguments_top)
+    {
+        ELUNA_LOG_ERROR("[Eluna]: CallOneFunction: Invalid argument range - first_argument_index ({}) out of bounds [1, {}]", 
+            first_argument_index, arguments_top);
+        return -1; // Stop processing
+    }
+
     // Copy the arguments from the bottom of the stack to the top.
     for (int argument_index = first_argument_index; argument_index <= arguments_top; ++argument_index)
     {
@@ -1037,7 +1081,9 @@ int Eluna::CallOneFunction(int number_of_functions, int number_of_arguments, int
     --functions_top;
     // Stack: event_id, [arguments], [functions - 1], [results]
 
-    return functions_top + 1; // Return the location of the first result (if any exist).
+    int first_result_index = functions_top + 1;
+
+    return first_result_index; // Return the location of the first result (if any exist).
 }
 
 CreatureAI* Eluna::GetAI(Creature* creature)

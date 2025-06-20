@@ -19,36 +19,44 @@ using namespace Hooks;
 void Eluna::OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_START);
+    ArgumentTracker tracker(L);
     HookPush(bg);
     HookPush(bgId);
     HookPush(instanceId);
-    CallAllFunctions(BGEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(BGEventBindings, key, argument_count);
 }
 
 void Eluna::OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, TeamId winner)
 {
     START_HOOK(BG_EVENT_ON_END);
+    ArgumentTracker tracker(L);
     HookPush(bg);
     HookPush(bgId);
     HookPush(instanceId);
     HookPush(winner);
-    CallAllFunctions(BGEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(BGEventBindings, key, argument_count);
 }
 
 void Eluna::OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_CREATE);
+    ArgumentTracker tracker(L);
     HookPush(bg);
     HookPush(bgId);
     HookPush(instanceId);
-    CallAllFunctions(BGEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(BGEventBindings, key, argument_count);
 }
 
 void Eluna::OnBGDestroy(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId)
 {
     START_HOOK(BG_EVENT_ON_PRE_DESTROY);
+    ArgumentTracker tracker(L);
     HookPush(bg);
     HookPush(bgId);
     HookPush(instanceId);
-    CallAllFunctions(BGEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(BGEventBindings, key, argument_count);
 }
