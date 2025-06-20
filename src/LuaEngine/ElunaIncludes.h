@@ -52,6 +52,7 @@
 #include "WeatherMgr.h"
 #include "ArenaTeam.h"
 #include "Vehicle.h"
+#include "WorldSessionMgr.h"
 
 typedef Opcodes                 OpcodesList;
 
@@ -69,6 +70,7 @@ typedef Opcodes                 OpcodesList;
 #define eAccountMgr             (sAccountMgr)
 #define eAuctionMgr             (sAuctionMgr)
 #define eGameEventMgr           (sGameEventMgr)
+#define eWorldSessionMgr        (sWorldSessionMgr)
 #define eObjectAccessor()       ObjectAccessor::
 
 #endif // _ELUNA_INCLUDES_H

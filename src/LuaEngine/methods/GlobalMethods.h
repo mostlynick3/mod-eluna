@@ -282,7 +282,7 @@ namespace LuaGlobalFunctions
      */
     int GetPlayerCount(Eluna* E)
     {
-        E->Push(eWorld->GetActiveSessionCount());
+        E->Push(eWorldSessionMgr->GetActiveSessionCount());
         return 1;
     }
 
@@ -549,7 +549,6 @@ namespace LuaGlobalFunctions
         uint32 ev = E->CHECKVAL<uint32>(1);
         luaL_checktype(E->L, 2, LUA_TFUNCTION);
         uint32 shots = E->CHECKVAL<uint32>(3, 0);
-
         lua_pushvalue(E->L, 2);
         int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
@@ -1258,7 +1257,7 @@ namespace LuaGlobalFunctions
     {
         const char* command = E->CHECKVAL<const char*>(1);
 
-        eWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view view)
+        sWorld->QueueCliCommand(new CliCommandHolder(nullptr, command, [](void*, std::string_view view)
         {
             std::string str = { view.begin(), view.end() };
             str.erase(std::find_if(str.rbegin(), str.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), str.end()); // Remove trailing spaces and line breaks
@@ -1276,7 +1275,7 @@ namespace LuaGlobalFunctions
     int SendWorldMessage(Eluna* E)
     {
         const char* message = E->CHECKVAL<const char*>(1);
-        eWorld->SendServerMessage(SERVER_MSG_STRING, message);
+        eWorldSessionMgr->SendServerMessage(SERVER_MSG_STRING, message);
         return 0;
     }
 
@@ -1348,23 +1347,38 @@ namespace LuaGlobalFunctions
             return 0;
         }
 
+        // Store Eluna instance pointer to avoid marshalling issues
+        Eluna* elunaPtr = E;
+
         // Add an asynchronous query callback
-        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        E->GetQueryProcessor().AddCallback(WorldDatabase.AsyncQuery(query).WithCallback([elunaPtr, funcRef](QueryResult result)
+        {
+            lua_State* L = elunaPtr->L;
+            ElunaQuery* eq = result ? &result : nullptr;
+
+            // Retrieve function from registry
+            lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+            if (!lua_isfunction(L, -1))
             {
-                ElunaQuery* eq = result ? &result : nullptr;
+                lua_pop(L, 1);
+                luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+                return;
+            }
 
-                // Get the Lua function from the registry
-                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+            // Push query result
+            elunaPtr->Push(eq);
 
-                // Push the query results as a parameter
-                E->Push(eq);
+            // Execute the callback
+            if (lua_pcall(L, 1, 0, 0) != LUA_OK)
+            {
+                ELUNA_LOG_ERROR("Error in WorldDBQueryAsync callback: {}", lua_tostring(L, -1));
+                lua_pop(L, 1);
+            }
 
-                // Call the Lua function
-                E->ExecuteCall(1, 0);
+            // Clean up function reference
+            luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+        }));
 
-                // Unreference the Lua function
-                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
-            }));
         return 0;
     }
 
@@ -1447,23 +1461,34 @@ namespace LuaGlobalFunctions
             return 0;
         }
 
+        // Store Eluna instance pointer to avoid marshalling issues
+        Eluna* elunaPtr = E;
+
         // Add an asynchronous query callback
-        E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        E->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(query).WithCallback([elunaPtr, funcRef](QueryResult result)
+        {
+            lua_State* L = elunaPtr->L;
+            ElunaQuery* eq = result ? &result : nullptr;
+
+            lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+            if (!lua_isfunction(L, -1))
             {
-                ElunaQuery* eq = result ? &result : nullptr;
+                lua_pop(L, 1);
+                luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+                return;
+            }
 
-                // Get the Lua function from the registry
-                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+            elunaPtr->Push(eq);
 
-                // Push the query results as a parameter
-                E->Push(eq);
+            if (lua_pcall(L, 1, 0, 0) != LUA_OK)
+            {
+                ELUNA_LOG_ERROR("Error in CharDBQueryAsync callback: {}", lua_tostring(L, -1));
+                lua_pop(L, 1);
+            }
 
-                // Call the Lua function
-                E->ExecuteCall(1, 0);
+            luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+        }));
 
-                // Unreference the Lua function
-                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
-            }));
         return 0;
     }
 
@@ -1542,27 +1567,38 @@ namespace LuaGlobalFunctions
         // Validate the function reference
         if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
         {
-            luaL_argerror(E->L, 2, "unable to make a ref to function");
+            luaL_argerror(E->L, 2, "unable to create function reference");
             return 0;
         }
 
+        // Store Eluna instance pointer to avoid marshalling issues
+        Eluna* elunaPtr = E;
+
         // Add an asynchronous query callback
-        E->GetQueryProcessor().AddCallback(LoginDatabase.AsyncQuery(query).WithCallback([E, funcRef](QueryResult result)
+        E->GetQueryProcessor().AddCallback(LoginDatabase.AsyncQuery(query).WithCallback([elunaPtr, funcRef](QueryResult result)
+        {
+            lua_State* L = elunaPtr->L;
+            ElunaQuery* eq = result ? &result : nullptr;
+
+            lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
+            if (!lua_isfunction(L, -1))
             {
-                ElunaQuery* eq = result ? &result : nullptr;
+                lua_pop(L, 1);
+                luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+                return;
+            }
 
-                // Get the Lua function from the registry
-                lua_rawgeti(E->L, LUA_REGISTRYINDEX, funcRef);
+            elunaPtr->Push(eq);
 
-                // Push the query results as a parameter
-                E->Push(eq);
+            if (lua_pcall(L, 1, 0, 0) != LUA_OK)
+            {
+                ELUNA_LOG_ERROR("Error in AuthDBQueryAsync callback: {}", lua_tostring(L, -1));
+                lua_pop(L, 1);
+            }
 
-                // Call the Lua function
-                E->ExecuteCall(1, 0);
+            luaL_unref(L, LUA_REGISTRYINDEX, funcRef);
+        }));
 
-                // Unreference the Lua function
-                luaL_unref(E->L, LUA_REGISTRYINDEX, funcRef);
-            }));
         return 0;
     }
 
@@ -1611,31 +1647,41 @@ namespace LuaGlobalFunctions
     int CreateLuaEvent(Eluna* E)
     {
         luaL_checktype(E->L, 1, LUA_TFUNCTION);
+
+        int argCount = lua_gettop(E->L);
         uint32 min, max;
-        if (lua_istable(E->L, 2))
-        {
-            E->Push(1);
-            lua_gettable(E->L, 2);
-            min = E->CHECKVAL<uint32>(-1);
-            E->Push(2);
-            lua_gettable(E->L, 2);
-            max = E->CHECKVAL<uint32>(-1);
-            lua_pop(E->L, 2);
+        uint32 repeats = 1;
+
+        if (argCount >= 2) {
+            if (lua_istable(E->L, 2)) {
+                lua_rawgeti(E->L, 2, 1);
+                min = E->CHECKVAL<uint32>(-1);
+                lua_rawgeti(E->L, 2, 2);
+                max = E->CHECKVAL<uint32>(-1);
+                lua_pop(E->L, 2);
+            }
+            else {
+                min = max = E->CHECKVAL<uint32>(2);
+            }
+
+            if (argCount >= 3) {
+                repeats = E->CHECKVAL<uint32>(3);
+            }
         }
-        else
-            min = max = E->CHECKVAL<uint32>(2);
-        uint32 repeats = E->CHECKVAL<uint32>(3, 1);
+        else {
+            min = max = 1;
+        }
 
         if (min > max)
             return luaL_argerror(E->L, 2, "min is bigger than max delay");
 
+        // Create reference to function
         lua_pushvalue(E->L, 1);
-        int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
-        if (functionRef != LUA_REFNIL && functionRef != LUA_NOREF)
-        {
-            E->eventMgr->globalProcessor->AddEvent(functionRef, min, max, repeats);
-            E->Push(functionRef);
-        }
+        int funcRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+
+        int eventId = GlobalEventMgr::AddEvent(E->L, funcRef);
+        E->eventMgr->globalProcessor->AddEvent(eventId, min, max, repeats);
+        E->Push(eventId);
         return 1;
     }
 
@@ -1649,6 +1695,9 @@ namespace LuaGlobalFunctions
     {
         int eventId = E->CHECKVAL<int>(1);
         bool all_Events = E->CHECKVAL<bool>(1, false);
+
+        // Remove from GlobalEventMgr first
+        GlobalEventMgr::RemoveEvent(eventId);
 
         // not thread safe
         if (all_Events)
@@ -1666,6 +1715,9 @@ namespace LuaGlobalFunctions
     int RemoveEvents(Eluna* E)
     {
         bool all_Events = E->CHECKVAL<bool>(1, false);
+
+        // Clear all events from GlobalEventMgr
+        GlobalEventMgr::ClearAllEvents();
 
         // not thread safe
         if (all_Events)

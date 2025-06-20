@@ -26,42 +26,49 @@ using namespace Hooks;
 bool Eluna::OnGossipHello(Player* pPlayer, GameObject* pGameObject)
 {
     START_HOOK_WITH_RETVAL(GameObjectGossipBindings, GOSSIP_EVENT_ON_HELLO, pGameObject->GetEntry(), false);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pGameObject);
-    return CallAllFunctionsBool(GameObjectGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(GameObjectGossipBindings, key, argument_count, true);
 }
 
 bool Eluna::OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action)
 {
     START_HOOK_WITH_RETVAL(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pGameObject);
     HookPush(sender);
     HookPush(action);
-    return CallAllFunctionsBool(GameObjectGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(GameObjectGossipBindings, key, argument_count, true);
 }
 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code)
 {
     START_HOOK_WITH_RETVAL(GameObjectGossipBindings, GOSSIP_EVENT_ON_SELECT, pGameObject->GetEntry(), false);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pGameObject);
     HookPush(sender);
     HookPush(action);
     HookPush(code);
-    return CallAllFunctionsBool(GameObjectGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(GameObjectGossipBindings, key, argument_count, true);
 }
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code)
 {
     START_HOOK(PlayerGossipBindings, GOSSIP_EVENT_ON_SELECT, menuId);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
 
-    HookPush(pPlayer); // receiver
-    HookPush(pPlayer); // sender, just not to mess up the amount of args.
+    HookPush(pPlayer);
+    HookPush(pPlayer);
     HookPush(sender);
     HookPush(action);
     if (code.empty())
@@ -69,21 +76,25 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 send
     else
         HookPush(code);
 
-    CallAllFunctions(PlayerGossipBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerGossipBindings, key, argument_count);
 }
 
 bool Eluna::OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& /*targets*/)
 {
     START_HOOK_WITH_RETVAL(ItemGossipBindings, GOSSIP_EVENT_ON_HELLO, pItem->GetEntry(), true);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pItem);
-    return CallAllFunctionsBool(ItemGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(ItemGossipBindings, key, argument_count, true);
 }
 
 void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* pItem, uint32 sender, uint32 action, const std::string& code)
 {
     START_HOOK(ItemGossipBindings, GOSSIP_EVENT_ON_SELECT, pItem->GetEntry());
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
 
     HookPush(pPlayer);
@@ -95,28 +106,33 @@ void Eluna::HandleGossipSelectOption(Player* pPlayer, Item* pItem, uint32 sender
     else
         HookPush(code);
 
-    CallAllFunctions(ItemGossipBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(ItemGossipBindings, key, argument_count);
 }
 
 bool Eluna::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
     START_HOOK_WITH_RETVAL(CreatureGossipBindings, GOSSIP_EVENT_ON_HELLO, pCreature->GetEntry(), false);
+    ArgumentTracker tracker(L);
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pCreature);
-    return CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(CreatureGossipBindings, key, argument_count, true);
 }
 
 bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     START_HOOK_WITH_RETVAL(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
+    ArgumentTracker tracker(L);
     auto originalMenu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
     HookPush(pCreature);
     HookPush(sender);
     HookPush(action);
-    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, argument_count, true);
     if (!preventDefault) {
         *pPlayer->PlayerTalkClass = originalMenu;
     }
@@ -126,6 +142,7 @@ bool Eluna::OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, 
 bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code)
 {
     START_HOOK_WITH_RETVAL(CreatureGossipBindings, GOSSIP_EVENT_ON_SELECT, pCreature->GetEntry(), false);
+    ArgumentTracker tracker(L);
     auto originalMenu = *pPlayer->PlayerTalkClass;
     pPlayer->PlayerTalkClass->ClearMenus();
     HookPush(pPlayer);
@@ -133,7 +150,8 @@ bool Eluna::OnGossipSelectCode(Player* pPlayer, Creature* pCreature, uint32 send
     HookPush(sender);
     HookPush(action);
     HookPush(code);
-    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    auto preventDefault = CallAllFunctionsBool(CreatureGossipBindings, key, argument_count, true);
     if (!preventDefault) {
         *pPlayer->PlayerTalkClass = originalMenu;
     }

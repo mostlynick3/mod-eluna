@@ -26,29 +26,35 @@ using namespace Hooks;
 void Eluna::OnSpellCastCancel(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool bySelf)
 {
     START_HOOK(SPELL_EVENT_ON_CAST_CANCEL, spellInfo->Id);
+    ArgumentTracker tracker(L);
     HookPush(caster);
     HookPush(spell);
     HookPush(bySelf);
 
-    CallAllFunctions(SpellEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(SpellEventBindings, key, argument_count);
 }
 
 void Eluna::OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool skipCheck)
 {
     START_HOOK(SPELL_EVENT_ON_CAST, spellInfo->Id);
+    ArgumentTracker tracker(L);
     HookPush(caster);
     HookPush(spell);
     HookPush(skipCheck);
 
-    CallAllFunctions(SpellEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(SpellEventBindings, key, argument_count);
 }
 
 void Eluna::OnSpellPrepare(Unit* caster, Spell* spell, SpellInfo const* spellInfo)
 {
     START_HOOK(SPELL_EVENT_ON_PREPARE, spellInfo->Id);
+    ArgumentTracker tracker(L);
     HookPush(caster);
     HookPush(spell);
 
-    CallAllFunctions(SpellEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(SpellEventBindings, key, argument_count);
 }
 

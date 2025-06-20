@@ -45,7 +45,7 @@ namespace LuaCreature
      *
      * @return bool reputationDisabled
      */
-    int IsReputationGainDisabled(Eluna* E, Creature* creature)
+    int IsReputationRewardDisabled(Eluna* E, Creature* creature)
     {
         E->Push(creature->IsReputationRewardDisabled());
         return 1;
@@ -982,7 +982,7 @@ namespace LuaCreature
      *
      * @param bool disable = true : `true` to disable reputation, `false` to enable
      */
-    int SetDisableReputationGain(Eluna* E, Creature* creature)
+    int SetDisableReputationReward(Eluna* E, Creature* creature)
     {
         bool disable = E->CHECKVAL<bool>(2, true);
 
@@ -1345,7 +1345,7 @@ namespace LuaCreature
         { "SetRespawnDelay", &LuaCreature::SetRespawnDelay },
         { "SetWanderRadius", &LuaCreature::SetWanderRadius },
         { "SetInCombatWithZone", &LuaCreature::SetInCombatWithZone },
-        { "SetDisableReputationGain", &LuaCreature::SetDisableReputationGain },
+        { "SetDisableReputationReward", &LuaCreature::SetDisableReputationReward },
         { "SetLootMode", &LuaCreature::SetLootMode },
         { "SetNPCFlags", &LuaCreature::SetNPCFlags },
         { "SetUnitFlags", &LuaCreature::SetUnitFlags },
@@ -1377,7 +1377,7 @@ namespace LuaCreature
         { "CanAssistTo", &LuaCreature::CanAssistTo },
         { "IsTargetableForAttack", &LuaCreature::IsTargetableForAttack },
         { "CanCompleteQuest", &LuaCreature::CanCompleteQuest },
-        { "IsReputationGainDisabled", &LuaCreature::IsReputationGainDisabled },
+        { "IsReputationRewardDisabled", &LuaCreature::IsReputationRewardDisabled },
         { "IsDamageEnoughForLootingAndReward", &LuaCreature::IsDamageEnoughForLootingAndReward },
         { "HasLootMode", &LuaCreature::HasLootMode },
         { "HasSpell", &LuaCreature::HasSpell },

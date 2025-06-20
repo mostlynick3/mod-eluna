@@ -14,6 +14,50 @@ extern "C"
 #include "lauxlib.h"
 };
 
+std::unordered_map<int, GlobalEventMgr::EventData> GlobalEventMgr::globalEvents;
+std::mutex GlobalEventMgr::eventMutex;
+int GlobalEventMgr::nextEventId = 0;
+
+int GlobalEventMgr::AddEvent(lua_State* L, int funcRef)
+{
+    std::lock_guard<std::mutex> lock(eventMutex);
+    int eventId = ++nextEventId;
+    globalEvents[eventId] = EventData{funcRef, L};
+    return eventId;
+}
+
+bool GlobalEventMgr::GetEvent(int eventId, lua_State*& L, int& funcRef)
+{
+    std::lock_guard<std::mutex> lock(eventMutex);
+    auto it = globalEvents.find(eventId);
+    if (it != globalEvents.end()) {
+        L = it->second.L;
+        funcRef = it->second.funcRef;
+        return true;
+    }
+    ELUNA_LOG_ERROR("[Eluna]: Global event ID {} called but not found!", eventId);
+    return false;
+}
+
+void GlobalEventMgr::RemoveEvent(int eventId)
+{
+    std::lock_guard<std::mutex> lock(eventMutex);
+    auto it = globalEvents.find(eventId);
+    if (it != globalEvents.end()) {
+        luaL_unref(it->second.L, LUA_REGISTRYINDEX, it->second.funcRef);
+        globalEvents.erase(it);
+    }
+}
+
+void GlobalEventMgr::ClearAllEvents()
+{
+    std::lock_guard<std::mutex> lock(eventMutex);
+    for (auto& pair : globalEvents) {
+        luaL_unref(pair.second.L, LUA_REGISTRYINDEX, pair.second.funcRef);
+    }
+    globalEvents.clear();
+}
+
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
     if (obj)
@@ -39,7 +83,7 @@ void ElunaEventProcessor::Update(uint32 diff)
         eventList.erase(it);
 
         if (luaEvent->state != LUAEVENT_STATE_ERASE)
-            eventMap.erase(luaEvent->funcRef);
+            eventMap.erase(luaEvent->eventId);
 
         if (luaEvent->state == LUAEVENT_STATE_RUN)
         {
@@ -48,8 +92,8 @@ void ElunaEventProcessor::Update(uint32 diff)
             if (!remove)
                 AddEvent(luaEvent); // Reschedule before calling incase RemoveEvents used
 
-            // Call the timed event
-            E->OnTimedEvent(luaEvent->funcRef, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
+            ELUNA_LOG_INFO("[Eluna]: Executing timed event ID {}", luaEvent->eventId);
+            E->OnTimedEvent(luaEvent->eventId, delay, luaEvent->repeats ? luaEvent->repeats-- : luaEvent->repeats, obj);
 
             if (!remove)
                 continue;
@@ -89,22 +133,19 @@ void ElunaEventProcessor::AddEvent(LuaEvent* luaEvent)
 {
     luaEvent->GenerateDelay();
     eventList.insert(std::pair<uint64, LuaEvent*>(m_time + luaEvent->delay, luaEvent));
-    eventMap[luaEvent->funcRef] = luaEvent;
+    eventMap[luaEvent->eventId] = luaEvent;
 }
 
-void ElunaEventProcessor::AddEvent(int funcRef, uint32 min, uint32 max, uint32 repeats)
+void ElunaEventProcessor::AddEvent(int eventId, uint32 min, uint32 max, uint32 repeats)
 {
-    AddEvent(new LuaEvent(funcRef, min, max, repeats));
+    AddEvent(new LuaEvent(eventId, min, max, repeats));
 }
 
 void ElunaEventProcessor::RemoveEvent(LuaEvent* luaEvent)
 {
     // Unreference if should and if Eluna was not yet uninitialized and if the lua state still exists
     if (luaEvent->state != LUAEVENT_STATE_ERASE && E->HasLuaState())
-    {
-        // Free lua function ref
-        luaL_unref(E->L, LUA_REGISTRYINDEX, luaEvent->funcRef);
-    }
+        GlobalEventMgr::RemoveEvent(luaEvent->eventId);
     delete luaEvent;
 }
 

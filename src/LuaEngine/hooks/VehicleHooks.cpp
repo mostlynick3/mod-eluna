@@ -20,38 +20,48 @@ using namespace Hooks;
 void Eluna::OnInstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL);
+    ArgumentTracker tracker(L);
     HookPush(vehicle);
-    CallAllFunctions(VehicleEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(VehicleEventBindings, key, argument_count);
 }
 
 void Eluna::OnUninstall(Vehicle* vehicle)
 {
     START_HOOK(VEHICLE_EVENT_ON_UNINSTALL);
+    ArgumentTracker tracker(L);
     HookPush(vehicle);
-    CallAllFunctions(VehicleEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(VehicleEventBindings, key, argument_count);
 }
 
 void Eluna::OnInstallAccessory(Vehicle* vehicle, Creature* accessory)
 {
     START_HOOK(VEHICLE_EVENT_ON_INSTALL_ACCESSORY);
+    ArgumentTracker tracker(L);
     HookPush(vehicle);
     HookPush(accessory);
-    CallAllFunctions(VehicleEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(VehicleEventBindings, key, argument_count);
 }
 
 void Eluna::OnAddPassenger(Vehicle* vehicle, Unit* passenger, int8 seatId)
 {
     START_HOOK(VEHICLE_EVENT_ON_ADD_PASSENGER);
+    ArgumentTracker tracker(L);
     HookPush(vehicle);
     HookPush(passenger);
     HookPush(seatId);
-    CallAllFunctions(VehicleEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(VehicleEventBindings, key, argument_count);
 }
 
 void Eluna::OnRemovePassenger(Vehicle* vehicle, Unit* passenger)
 {
     START_HOOK(VEHICLE_EVENT_ON_REMOVE_PASSENGER);
+    ArgumentTracker tracker(L);
     HookPush(vehicle);
     HookPush(passenger);
-    CallAllFunctions(VehicleEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(VehicleEventBindings, key, argument_count);
 }

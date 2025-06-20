@@ -29,11 +29,13 @@ using namespace Hooks;
 void Eluna::OnLearnTalents(Player* pPlayer, uint32 talentId, uint32 talentRank, uint32 spellid)
 {
     START_HOOK(PLAYER_EVENT_ON_LEARN_TALENTS);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(talentId);
     HookPush(talentRank);
     HookPush(spellid);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnCommand(ChatHandler& handler, const char* text)
@@ -59,80 +61,98 @@ bool Eluna::OnCommand(ChatHandler& handler, const char* text)
     }
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_COMMAND, true);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(text);
     HookPush(&handler);
-    return CallAllFunctionsBool(PlayerEventBindings, key, true);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count, true);
 }
 
 void Eluna::OnLootItem(Player* pPlayer, Item* pItem, uint32 count, ObjectGuid guid)
 {
     START_HOOK(PLAYER_EVENT_ON_LOOT_ITEM);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(count);
     HookPush(guid);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnLootMoney(Player* pPlayer, uint32 amount)
 {
     START_HOOK(PLAYER_EVENT_ON_LOOT_MONEY);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(amount);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnFirstLogin(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_FIRST_LOGIN);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnRepop(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_REPOP);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnResurrect(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_RESURRECT);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnQuestAbandon(Player* pPlayer, uint32 questId)
 {
     START_HOOK(PLAYER_EVENT_ON_QUEST_ABANDON);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(questId);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnEquip(Player* pPlayer, Item* pItem, uint8 bag, uint8 slot)
 {
     START_HOOK(PLAYER_EVENT_ON_EQUIP);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(pItem);
     HookPush(bag);
     HookPush(slot);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_USE_ITEM, EQUIP_ERR_OK);
     InventoryResult result = EQUIP_ERR_OK;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(itemEntry);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isnumber(L, r))
             result = (InventoryResult)CHECKVAL<uint32>(r);
@@ -140,138 +160,158 @@ InventoryResult Eluna::OnCanUseItem(const Player* pPlayer, uint32 itemEntry)
         lua_pop(L, 1);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
     return result;
 }
 void Eluna::OnPlayerEnterCombat(Player* pPlayer, Unit* pEnemy)
 {
     START_HOOK(PLAYER_EVENT_ON_ENTER_COMBAT);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(pEnemy);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPlayerLeaveCombat(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LEAVE_COMBAT);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPVPKill(Player* pKiller, Player* pKilled)
 {
     START_HOOK(PLAYER_EVENT_ON_KILL_PLAYER);
+    ArgumentTracker tracker(L);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnCreatureKill(Player* pKiller, Creature* pKilled)
 {
     START_HOOK(PLAYER_EVENT_ON_KILL_CREATURE);
+    ArgumentTracker tracker(L);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
 {
     START_HOOK(PLAYER_EVENT_ON_KILLED_BY_CREATURE);
+    ArgumentTracker tracker(L);
     HookPush(pKiller);
     HookPush(pKilled);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 {
     START_HOOK(PLAYER_EVENT_ON_LEVEL_CHANGE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(oldLevel);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints)
 {
     START_HOOK(PLAYER_EVENT_ON_TALENTS_CHANGE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(newPoints);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnTalentsReset(Player* pPlayer, bool noCost)
 {
     START_HOOK(PLAYER_EVENT_ON_TALENTS_RESET);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(noCost);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnMoneyChanged(Player* pPlayer, int32& amount)
 {
     START_HOOK(PLAYER_EVENT_ON_MONEY_CHANGE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(amount);
-    int amountIndex = lua_gettop(L);
+    int amountIndex = 1;
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 2);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 2, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isnumber(L, r))
         {
             amount = CHECKVAL<int32>(r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, amountIndex);
+            ReplaceArgument(amount, amountIndex, argument_count);
         }
 
         lua_pop(L, 1);
     }
 
-    CleanUpStack(2);
+    CleanUpStack(argument_count);
 }
 
 void Eluna::OnGiveXP(Player* pPlayer, uint32& amount, Unit* pVictim, uint8 xpSource)
 {
     START_HOOK(PLAYER_EVENT_ON_GIVE_XP);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(amount);
     HookPush(pVictim);
     HookPush(xpSource);
-    int amountIndex = lua_gettop(L) - 1;
+    int amountIndex = 1;
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 4);
-
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 4, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isnumber(L, r))
         {
             amount = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(amount, amountIndex);
+            ReplaceArgument(amount, amountIndex, argument_count);
         }
 
         lua_pop(L, 1);
     }
 
-    CleanUpStack(4);
+    CleanUpStack(argument_count);
 }
 
 bool Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standing, bool incremental)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_REPUTATION_CHANGE, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(factionID);
     HookPush(standing);
     HookPush(incremental);
-    int standingIndex = lua_gettop(L) - 1;
+    int standingIndex = 2;
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 4);
-
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 4, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
 
         if (lua_isnumber(L, r))
         {
@@ -279,136 +319,166 @@ bool Eluna::OnReputationChange(Player* pPlayer, uint32 factionID, int32& standin
             if (standing == -1)
                 result = false;
             // Update the stack for subsequent calls.
-            ReplaceArgument(standing, standingIndex);
+            ReplaceArgument(standing, standingIndex, argument_count);
         }
 
         lua_pop(L, 1);
     }
 
-    CleanUpStack(4);
+    CleanUpStack(argument_count);
     return result;
 }
 
 void Eluna::OnDuelRequest(Player* pTarget, Player* pChallenger)
 {
     START_HOOK(PLAYER_EVENT_ON_DUEL_REQUEST);
+    ArgumentTracker tracker(L);
     HookPush(pTarget);
     HookPush(pChallenger);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnDuelStart(Player* pStarter, Player* pChallenger)
 {
     START_HOOK(PLAYER_EVENT_ON_DUEL_START);
+    ArgumentTracker tracker(L);
     HookPush(pStarter);
     HookPush(pChallenger);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnDuelEnd(Player* pWinner, Player* pLoser, DuelCompleteType type)
 {
     START_HOOK(PLAYER_EVENT_ON_DUEL_END);
+    ArgumentTracker tracker(L);
     HookPush(pWinner);
     HookPush(pLoser);
     HookPush(type);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnEmote(Player* pPlayer, uint32 emote)
 {
     START_HOOK(PLAYER_EVENT_ON_EMOTE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(emote);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnTextEmote(Player* pPlayer, uint32 textEmote, uint32 emoteNum, ObjectGuid guid)
 {
     START_HOOK(PLAYER_EVENT_ON_TEXT_EMOTE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(textEmote);
     HookPush(emoteNum);
     HookPush(guid);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPlayerSpellCast(Player* pPlayer, Spell* pSpell, bool skipCheck)
 {
     START_HOOK(PLAYER_EVENT_ON_SPELL_CAST);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(pSpell);
     HookPush(skipCheck);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnLogin(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LOGIN);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnLogout(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_LOGOUT);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnCreate(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_CHARACTER_CREATE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnDelete(uint32 guidlow)
 {
     START_HOOK(PLAYER_EVENT_ON_CHARACTER_DELETE);
+    ArgumentTracker tracker(L);
     HookPush(guidlow);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnSave(Player* pPlayer)
 {
     START_HOOK(PLAYER_EVENT_ON_SAVE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnBindToInstance(Player* pPlayer, Difficulty difficulty, uint32 mapid, bool permanent)
 {
     START_HOOK(PLAYER_EVENT_ON_BIND_TO_INSTANCE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(difficulty);
     HookPush(mapid);
     HookPush(permanent);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnUpdateArea(Player* pPlayer, uint32 oldArea, uint32 newArea)
 {
     START_HOOK(PLAYER_EVENT_ON_UPDATE_AREA);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(oldArea);
     HookPush(newArea);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea)
 {
     START_HOOK(PLAYER_EVENT_ON_UPDATE_ZONE);
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(newZone);
     HookPush(newArea);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnMapChanged(Player* player)
 {
     START_HOOK(PLAYER_EVENT_ON_MAP_CHANGE);
+    ArgumentTracker tracker(L);
     HookPush(player);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
@@ -418,15 +488,17 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CHAT, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 4);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 4, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -437,7 +509,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg)
         lua_pop(L, 2);
     }
 
-    CleanUpStack(4);
+    CleanUpStack(argument_count);
     return result;
 }
 
@@ -448,16 +520,18 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_GROUP_CHAT, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
     HookPush(pGroup);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 5, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -468,7 +542,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         lua_pop(L, 2);
     }
 
-    CleanUpStack(5);
+    CleanUpStack(argument_count);
     return result;
 }
 
@@ -479,16 +553,18 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_GUILD_CHAT, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
     HookPush(pGuild);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 5, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -499,7 +575,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         lua_pop(L, 2);
     }
 
-    CleanUpStack(5);
+    CleanUpStack(argument_count);
     return result;
 }
 
@@ -510,16 +586,18 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CHANNEL_CHAT, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
     HookPush(pChannel->IsConstant() ? static_cast<int32>(pChannel->GetChannelId()) : -static_cast<int32>(pChannel->GetChannelDBId()));
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 5, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -530,7 +608,7 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         lua_pop(L, 2);
     }
 
-    CleanUpStack(5);
+    CleanUpStack(argument_count);
     return result;
 }
 
@@ -541,16 +619,18 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
 
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_WHISPER, true);
     bool result = true;
+    ArgumentTracker tracker(L);
     HookPush(pPlayer);
     HookPush(msg);
     HookPush(type);
     HookPush(lang);
     HookPush(pReceiver);
+    int argument_count = tracker.GetArgumentCount();
     int n = SetupStack(PlayerEventBindings, key, 5);
 
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 5, 2);
+        int r = CallOneFunction(n--, argument_count, 2);
 
         if (lua_isboolean(L, r + 0) && !lua_toboolean(L, r + 0))
             result = false;
@@ -561,53 +641,64 @@ bool Eluna::OnChat(Player* pPlayer, uint32 type, uint32 lang, std::string& msg, 
         lua_pop(L, 2);
     }
 
-    CleanUpStack(5);
+    CleanUpStack(argument_count);
     return result;
 }
 
 void Eluna::OnPetAddedToWorld(Player* player, Creature* pet)
 {
     START_HOOK(PLAYER_EVENT_ON_PET_ADDED_TO_WORLD);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(pet);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnLearnSpell(Player* player, uint32 spellId)
 {
     START_HOOK(PLAYER_EVENT_ON_LEARN_SPELL);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(spellId);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnAchiComplete(Player* player, AchievementEntry const* achievement)
 {
     START_HOOK(PLAYER_EVENT_ON_ACHIEVEMENT_COMPLETE);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(achievement);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnFfaPvpStateUpdate(Player* player, bool hasFfaPvp)
 {
     START_HOOK(PLAYER_EVENT_ON_FFAPVP_CHANGE);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(hasFfaPvp);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnCanInitTrade(Player* player, Player* target)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_INIT_TRADE, true);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(target);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid mailbox, std::string& subject, std::string& body, uint32 money, uint32 cod, Item* item)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_SEND_MAIL, true);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(receiverGuid);
     HookPush(mailbox);
@@ -616,12 +707,14 @@ bool Eluna::OnCanSendMail(Player* player, ObjectGuid receiverGuid, ObjectGuid ma
     HookPush(money);
     HookPush(cod);
     HookPush(item);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeons, const std::string& comment)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_JOIN_LFG, true);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(roles);
 
@@ -635,78 +728,95 @@ bool Eluna::OnCanJoinLfg(Player* player, uint8 roles, lfg::LfgDungeonSet& dungeo
         ++counter;
     }
     lua_settop(L, table);
-    ++push_counter;
+    ++push_counter; // Increment push_counter for manual table creation
 
     HookPush(comment);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnQuestRewardItem(Player* player, Item* item, uint32 count)
 {
     START_HOOK(PLAYER_EVENT_ON_QUEST_REWARD_ITEM);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(item);
     HookPush(count);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnCreateItem(Player* player, Item* item, uint32 count)
 {
     START_HOOK(PLAYER_EVENT_ON_CREATE_ITEM);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(item);
     HookPush(count);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnStoreNewItem(Player* player, Item* item, uint32 count)
 {
     START_HOOK(PLAYER_EVENT_ON_STORE_NEW_ITEM);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(item);
     HookPush(count);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPlayerCompleteQuest(Player* player, Quest const* quest)
 {
     START_HOOK(PLAYER_EVENT_ON_COMPLETE_QUEST);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(quest);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 bool Eluna::OnCanGroupInvite(Player* player, std::string& memberName)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_GROUP_INVITE, true);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(memberName);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnGroupRollRewardItem(Player* player, Item* item, uint32 count, RollVote voteType, Roll* roll)
 {
     START_HOOK(PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(item);
     HookPush(count);
     HookPush(voteType);
     HookPush(roll);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnBattlegroundDesertion(Player* player, const BattlegroundDesertionType type)
 {
     START_HOOK(PLAYER_EVENT_ON_BG_DESERTION);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(type);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnCreatureKilledByPet(Player* player, Creature* killed)
 {
     START_HOOK(PLAYER_EVENT_ON_PET_KILL);
+    ArgumentTracker tracker(L);
     HookPush(player);
     HookPush(killed);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
