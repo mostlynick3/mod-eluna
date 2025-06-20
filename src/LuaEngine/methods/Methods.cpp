@@ -30,6 +30,7 @@
 #include "PlayerMethods.h"
 #include "QuestMethods.h"
 #include "RollMethods.h"
+#include "TicketMethods.h"
 #include "SpellMethods.h"
 #include "SpellInfoMethods.h"
 #include "UnitMethods.h"
@@ -112,6 +113,9 @@ void RegisterMethods(Eluna* E)
 
     ElunaTemplate<Roll>::Register(E, "Roll");
     ElunaTemplate<Roll>::SetMethods(E, LuaRoll::RollMethods);
+
+    ElunaTemplate<GmTicket>::Register(E, "Ticket");
+    ElunaTemplate<GmTicket>::SetMethods(E, TicketMethods);
 
     ElunaTemplate<Spell>::Register(E, "Spell");
     ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);
