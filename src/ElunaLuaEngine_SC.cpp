@@ -485,32 +485,42 @@ public:
 
     void OnAddMember(Group* group, ObjectGuid guid) override
     {
-        if (Eluna* e = group->GetLeader()->GetEluna())
+    Player* leader = group->GetLeader();
+    if (leader)
+        if (Eluna* e = leader->GetEluna())
             e->OnAddMember(group, guid);
     }
 
     void OnInviteMember(Group* group, ObjectGuid guid) override
     {
-        if (Eluna* e = group->GetLeader()->GetEluna())
-            e->OnInviteMember(group, guid);
+    	Player* leader = group->GetLeader();
+        if (leader)
+            if (Eluna* e = leader->GetEluna())
+                e->OnInviteMember(group, guid);
     }
 
     void OnRemoveMember(Group* group, ObjectGuid guid, RemoveMethod method, ObjectGuid /* kicker */, const char* /* reason */) override
     {
-        if (Eluna* e = group->GetLeader()->GetEluna())
-            e->OnRemoveMember(group, guid, method);
+    	Player* leader = group->GetLeader();
+        if (leader)
+            if (Eluna* e = leader->GetEluna())
+                e->OnRemoveMember(group, guid, method);
     }
 
     void OnChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid) override
     {
-        if (Eluna* e = group->GetLeader()->GetEluna())
-            e->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
+    	Player* leader = group->GetLeader();
+        if (leader)
+            if (Eluna* e = leader->GetEluna())
+                e->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
     }
 
     void OnDisband(Group* group) override
     {
-        if (Eluna* e = group->GetLeader()->GetEluna())
-            e->OnDisband(group);
+    	Player* leader = group->GetLeader();
+        if (leader)
+            if (Eluna* e = leader->GetEluna())
+                e->OnDisband(group);
     }
 
     void OnCreate(Group* group, Player* leader) override
