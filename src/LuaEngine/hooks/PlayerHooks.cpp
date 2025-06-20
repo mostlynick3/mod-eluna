@@ -824,14 +824,17 @@ void Eluna::OnCreatureKilledByPet(Player* player, Creature* killed)
 bool Eluna::OnPlayerCanUpdateSkill(Player* player, uint32 skill_id)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_UPDATE_SKILL, true);
+    ArgumentTracker tracker(L);
     Push(player);
     Push(skill_id);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
 
 void Eluna::OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& value, uint32 max, uint32 step)
 {
     START_HOOK(PLAYER_EVENT_ON_BEFORE_UPDATE_SKILL);
+    ArgumentTracker tracker(L);
     Push(player);
     Push(skill_id);
     Push(value);
@@ -853,25 +856,30 @@ void Eluna::OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& v
         lua_pop(L, 1);
     }
 
-    CleanUpStack(5);
+    int argument_count = tracker.GetArgumentCount();
+    CleanUpStack(argument_count);
 }
 
 void Eluna::OnPlayerUpdateSkill(Player* player, uint32 skill_id, uint32 value, uint32 max, uint32 step, uint32 new_value)
 {
     START_HOOK(PLAYER_EVENT_ON_UPDATE_SKILL);
+    ArgumentTracker tracker(L);
     Push(player);
     Push(skill_id);
     Push(value);
     Push(max);
     Push(step);
     Push(new_value);
-    CallAllFunctions(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    CallAllFunctions(PlayerEventBindings, key, argument_count);
 }
 
 
 bool Eluna::CanPlayerResurrect(Player* player)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_RESURRECT, true);
+    ArgumentTracker tracker(L);
     Push(player);
-    return CallAllFunctionsBool(PlayerEventBindings, key);
+    int argument_count = tracker.GetArgumentCount();
+    return CallAllFunctionsBool(PlayerEventBindings, key, argument_count);
 }
