@@ -3830,9 +3830,9 @@ namespace LuaPlayer
      *
      * @param uint32 value : bonus talent points
      */
-    int SetBonusTalentCount(lua_State* L, Player* player)
+    int SetBonusTalentCount(Eluna* E, Player* player)
     {
-        uint32 value = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 value = E->CHECKVAL<uint32>(2);
 
         player->SetBonusTalentCount(value);
         return 0;
@@ -3843,9 +3843,9 @@ namespace LuaPlayer
      *
      * @return uint32 bonusTalent
      */
-    int GetBonusTalentCount(lua_State* L, Player* player)
+    int GetBonusTalentCount(Eluna* E, Player* player)
     {
-        Eluna::Push(L, player->GetBonusTalentCount());
+        E->Push(player->GetBonusTalentCount());
         return 1;
     }
   
@@ -3854,22 +3854,21 @@ namespace LuaPlayer
      *
      * @return table playerSpells
      */
-    int GetSpells(lua_State* L, Player* player)
+    int GetSpells(Eluna* E, Player* player)
     {
-        std::list<uint32> list;
-        lua_createtable(L, list.size(), 0);
-        int tbl = lua_gettop(L);
+        PlayerSpellMap spellMap = player->GetSpellMap();
+        lua_createtable(E->L, spellMap.size(), 0);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
-        PlayerSpellMap spellMap = player->GetSpellMap();
         for (PlayerSpellMap::const_iterator itr = spellMap.begin(); itr != spellMap.end(); ++itr)
         {
             SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(itr->first);
-            Eluna::Push(L, spellInfo->Id);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(spellInfo->Id);
+            lua_rawseti(E->L, tbl, ++i);
         }
 
-        lua_settop(L, tbl);
+        lua_settop(E->L, tbl);
         return 1;
     }
 
@@ -3878,9 +3877,9 @@ namespace LuaPlayer
      *
      * @param uint32 count = count of bonus talent
      */
-    int AddBonusTalent(lua_State* L, Player* player)
+    int AddBonusTalent(Eluna* E, Player* player)
     {
-        uint32 count = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 count = E->CHECKVAL<uint32>(2);
 
         player->AddBonusTalent(count);
         return 0;
@@ -3891,9 +3890,9 @@ namespace LuaPlayer
      *
      * @param uint32 count = count of bonus talent
      */
-    int RemoveBonusTalent(lua_State* L, Player* player)
+    int RemoveBonusTalent(Eluna* E, Player* player)
     {
-        uint32 count = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 count = E->CHECKVAL<uint32>(2);
 
         player->RemoveBonusTalent(count);
         return 0;
@@ -3908,20 +3907,20 @@ namespace LuaPlayer
      *      - float y: The Y coordinate of the homebind location.
      *      - float z: The Z coordinate of the homebind location.
      */
-    int GetHomebind(lua_State* L, Player* player)
+    int GetHomebind(Eluna* E, Player* player)
     {
-        lua_newtable(L);
-        lua_pushinteger(L, player->m_homebindMapId);
-        lua_setfield(L, -2, "mapId");
+        lua_newtable(E->L);
+        lua_pushinteger(E->L, player->m_homebindMapId);
+        lua_setfield(E->L, -2, "mapId");
 
-        lua_pushnumber(L, player->m_homebindX);
-        lua_setfield(L, -2, "x");
+        lua_pushnumber(E->L, player->m_homebindX);
+        lua_setfield(E->L, -2, "x");
 
-        lua_pushnumber(L, player->m_homebindY);
-        lua_setfield(L, -2, "y");
+        lua_pushnumber(E->L, player->m_homebindY);
+        lua_setfield(E->L, -2, "y");
 
-        lua_pushnumber(L, player->m_homebindZ);
-        lua_setfield(L, -2, "z");
+        lua_pushnumber(E->L, player->m_homebindZ);
+        lua_setfield(E->L, -2, "z");
 
         return 1;
     }
@@ -3931,9 +3930,9 @@ namespace LuaPlayer
      *
      *  @param string tele : The name of the predefined teleport location.
      */
-    int TeleportTo(lua_State* L, Player* player)
+    int TeleportTo(Eluna* E, Player* player)
     {
-        std::string tele = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string tele = E->CHECKVAL<std::string>(2);
         const GameTele* game_tele = sObjectMgr->GetGameTele(tele);
 
         if (player->IsInFlight())
