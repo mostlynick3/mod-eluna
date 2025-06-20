@@ -31,6 +31,14 @@ extern void RegisterMethods(Eluna* E);
 
 void Eluna::_ReloadEluna()
 {
+    LOCK_ELUNA;
+    ASSERT(IsInitialized());
+
+    if (eConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
+        eWorldSessionMgr->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
+    else
+        ChatHandler(nullptr).SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
+
     // Remove all timed events
     eventMgr->SetStates(LUAEVENT_STATE_ERASE);
 
@@ -72,6 +80,7 @@ ItemGossipBindings(NULL),
 PlayerGossipBindings(NULL),
 MapEventBindings(NULL),
 InstanceEventBindings(NULL),
+TicketEventBindings(NULL),
 
 CreatureUniqueBindings(NULL)
 {
@@ -184,6 +193,7 @@ void Eluna::CreateBindStores()
     GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
     VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
     BGEventBindings          = new BindingMap< EventKey<Hooks::BGEvents> >(L);
+    TicketEventBindings      = new BindingMap< EventKey<Hooks::TicketEvents> >(L);
 
     PacketEventBindings      = new BindingMap< EntryKey<Hooks::PacketEvents> >(L);
     CreatureEventBindings    = new BindingMap< EntryKey<Hooks::CreatureEvents> >(L);
@@ -943,16 +953,6 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             }
             break;
 
-        case Hooks::REGTYPE_SPELL:
-            if (event_id < Hooks::SPELL_EVENT_COUNT)
-            {
-                auto key = EntryKey<Hooks::SpellEvents>((Hooks::SpellEvents)event_id, entry);
-                bindingID = SpellEventBindings->Insert(key, functionRef, shots);
-                createCancelCallback(this, bindingID, SpellEventBindings);
-                return 1; // Stack: callback
-            }
-            break;
-
         case Hooks::REGTYPE_ITEM:
             if (event_id < Hooks::ITEM_EVENT_COUNT)
             {
@@ -1011,6 +1011,31 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 auto key = EntryKey<Hooks::InstanceEvents>((Hooks::InstanceEvents)event_id, entry);
                 bindingID = InstanceEventBindings->Insert(key, functionRef, shots);
                 createCancelCallback(this, bindingID, InstanceEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+      case Hooks::REGTYPE_TICKET:
+            if (event_id < Hooks::TICKET_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::TicketEvents>((Hooks::TicketEvents)event_id);
+                bindingID = TicketEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(L, bindingID, TicketEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+        case Hooks::REGTYPE_SPELL:
+            if (event_id < Hooks::SPELL_EVENT_COUNT)
+            {
+                if (!sSpellMgr->GetSpellInfo(entry))
+                {
+                    luaL_unref(L, LUA_REGISTRYINDEX, functionRef);
+                    luaL_error(L, "Couldn't find a spell with (ID: %d)!", entry);
+                    return 0; // Stack: (empty)
+                }
+
+                auto key = EntryKey<Hooks::SpellEvents>((Hooks::SpellEvents)event_id, entry);
+                bindingID = SpellEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(L, bindingID, SpellEventBindings);
                 return 1; // Stack: callback
             }
             break;

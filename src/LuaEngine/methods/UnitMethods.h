@@ -2593,6 +2593,99 @@ namespace LuaUnit
         return 0;
     }
 
+    /*int RemoveCharmAuras(lua_State* L, Unit* unit)
+    {
+        unit->RemoveCharmAuras();
+        return 0;
+    }*/
+
+    /*int DisableMelee(lua_State* L, Unit* unit)
+    {
+    bool apply = Eluna::CHECKVAL<bool>(L, 2, true);
+
+    if (apply)
+    unit->AddUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
+    else
+    unit->ClearUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
+    return 0;
+    }*/
+
+    /*int SummonGuardian(lua_State* L, Unit* unit)
+    {
+    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+    float x = Eluna::CHECKVAL<float>(L, 3);
+    float y = Eluna::CHECKVAL<float>(L, 4);
+    float z = Eluna::CHECKVAL<float>(L, 5);
+    float o = Eluna::CHECKVAL<float>(L, 6);
+    uint32 desp = Eluna::CHECKVAL<uint32>(L, 7, 0);
+
+    SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
+    if (!properties)
+    return 1;
+    Position pos;
+    pos.Relocate(x,y,z,o);
+    TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
+
+    if (!summon)
+    return 1;
+
+    if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
+    ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
+
+    if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
+    summon->setFaction(unit->getFaction());
+    if (summon->GetEntry() == 27893)
+    {
+    if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))
+    {
+    summon->SetDisplayId(11686);
+    summon->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, weapon);
+    }
+    else
+    summon->SetDisplayId(1126);
+    }
+    summon->AI()->EnterEvadeMode();
+
+    Eluna::Push(L, summon);
+    return 1;
+    }*/
+
+    /**
+     * Clear the threat of a [Unit] in the threat list.
+     *
+     * @param [Unit] target
+     */
+    int ClearThreat(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+        unit->GetThreatMgr().ClearThreat(target);
+        return 0;
+    }
+
+    /**
+     * Resets the [Unit]'s threat list, setting all threat targets' threat to 0.
+     */
+    int ResetAllThreat(lua_State* /*L*/, Unit* unit)
+    {
+        unit->GetThreatMgr().ResetAllThreat();
+        return 0;
+    }
+
+    /**
+     * Returns the threat of a [Unit].
+     *
+     * @param [Unit] target
+     * @return float threat
+     */
+    int GetThreat(lua_State* L, Unit* unit)
+    {
+        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+
+        Eluna::Push(L, unit->GetThreatMgr().GetThreat(target));
+        return 1;
+    }
+
     ElunaRegister<Unit> UnitMethods[] =
     {
         // Getters
@@ -2639,6 +2732,7 @@ namespace LuaUnit
         { "GetVehicleKit", &LuaUnit::GetVehicleKit },
         { "GetMovementType", &LuaUnit::GetMovementType },
         { "GetAttackers", &LuaUnit::GetAttackers },
+        { "GetThreat", &LuaUnit::GetThreat },
 
         // Setters
         { "SetFaction", &LuaUnit::SetFaction },
@@ -2759,6 +2853,8 @@ namespace LuaUnit
         { "DealDamage", &LuaUnit::DealDamage },
         { "DealHeal", &LuaUnit::DealHeal },
         { "AddThreat", &LuaUnit::AddThreat },
+        { "ClearThreat", &LuaUnit::ClearThreat },
+        { "ResetAllThreat", &LuaUnit::ResetAllThreat },
         { "ModifyThreatPct", &LuaUnit::ModifyThreatPct }
     };
 };

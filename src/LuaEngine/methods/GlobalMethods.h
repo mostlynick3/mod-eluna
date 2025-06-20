@@ -715,6 +715,8 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_CAN_GROUP_INVITE        =     55,       // (event, player, memberName) - Can return false to prevent inviting
      *     PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM  =     56,       // (event, player, item, count, voteType, roll)
      *     PLAYER_EVENT_ON_BG_DESERTION            =     57,       // (event, player, type)
+     *     PLAYER_EVENT_ON_PET_KILL                =     58,       // (event, player, killer)
+     *     PLAYER_EVENT_ON_CAN_RESURRECT           =     59,       // (event, player)
      * };
      * </pre>
      *
@@ -1214,6 +1216,30 @@ namespace LuaGlobalFunctions
     int RegisterGameObjectEvent(Eluna* E)
     {
         return RegisterEntryHelper(E, Hooks::REGTYPE_GAMEOBJECT);
+    }
+
+    /**
+     * Registers a [Ticket] event handler.
+     *
+     * <pre>
+     * enum TicketEvents
+     * {
+     *     TICKET_EVENT_ON_CREATE                          = 1,    // (event, player, ticket)
+     *     TICKET_EVENT_ON_UPDATE                          = 2,    // (event, player, ticket, message)
+     *     TICKET_EVENT_ON_CLOSE                           = 3,    // (event, player, ticket)
+     *     TICKET_EVENT_STATUS_UPDATE                      = 4,    // (event, player, ticket)
+     *     TICKET_EVENT_ON_RESOLVE                         = 5,    // (event, player, ticket)
+     *     TICKET_EVENT_COUNT
+     * };
+     * </pre>
+     *
+     * @param uint32 event : event ID, refer to UnitEvents above
+     * @param function function : function to register
+     * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+     */
+    int RegisterTicketEvent(lua_State* L)
+    {
+        return RegisterEventHelper(L, Hooks::REGTYPE_TICKET);
     }
 
     /**
@@ -3250,6 +3276,33 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Unbinds event handlers for either all [Ticket] events, or one type of [Ticket] event.
+     *
+     * If `event_type` is `nil`, all [Ticket] event handlers are cleared.
+     *
+     * Otherwise, only event handlers for `event_type` are cleared.
+     *
+     * @proto ()
+     * @proto (event_type)
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterTicketEvent]
+     */
+    int ClearTicketEvents(lua_State* L)
+    {
+        typedef EventKey<Hooks::TicketEvents> Key;
+
+        if (lua_isnoneornil(L, 1))
+        {
+            Eluna::GetEluna(L)->TicketEventBindings->Clear();
+        }
+        else
+        {
+            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+            Eluna::GetEluna(L)->TicketEventBindings->Clear(Key((Hooks::TicketEvents)event_type));
+        }
+        return 0;
+    }
+
+    /**
      * Unbinds event handlers for either all of a [Spell]'s events, or one type of event.
      *
      * If `event_type` is `nil`, all the [Spell]'s event handlers are cleared.
@@ -3335,6 +3388,85 @@ namespace LuaGlobalFunctions
     }
 
     /**
+     * Gets the localized OptionText and BoxText for a specific gossip menu option.
+     * If the text for the specified locale is not found, it returns the default text.
+     *
+     * @param uint32 menuId : The ID of the gossip menu.
+     * @param uint32 optionId : The ID of the gossip menu option.
+     * @param uint8 locale : The locale to retrieve the text for. 0 represents the default locale.
+     *
+     * @return string, string : The localized OptionText and BoxText for the gossip menu option, or the default text if no localization is found.
+     */
+    int GetGossipMenuOptionLocale(lua_State* L)
+    {
+        uint32 menuId = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 optionId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint8 locale = Eluna::CHECKVAL<uint8>(L, 3);
+
+        std::string strOptionText;
+        std::string strBoxText;
+
+        if (locale != DEFAULT_LOCALE)
+        {
+            if (GossipMenuItemsLocale const* gossipMenuLocale = sObjectMgr->GetGossipMenuItemsLocale(MAKE_PAIR32(menuId, optionId)))
+            {
+                ObjectMgr::GetLocaleString(gossipMenuLocale->OptionText, LocaleConstant(locale), strOptionText);
+                ObjectMgr::GetLocaleString(gossipMenuLocale->BoxText, LocaleConstant(locale), strBoxText);
+            }
+        }
+
+        if (strOptionText.empty() || strBoxText.empty())
+        {
+            GossipMenuItemsMapBounds bounds = sObjectMgr->GetGossipMenuItemsMapBounds(menuId);
+            for (auto itr = bounds.first; itr != bounds.second; ++itr)
+            {
+                if (itr->second.OptionID == optionId)
+                {
+                    if (strOptionText.empty())
+                        strOptionText = itr->second.OptionText;
+                    if (strBoxText.empty())
+                        strBoxText = itr->second.BoxText;
+                    break;
+                }
+            }
+        }
+
+        Eluna::Push(L, strOptionText);
+        Eluna::Push(L, strBoxText);
+        return 2;
+    }
+
+    /**
+     * Return the entrance position (x, y, z, o) of the specified dungeon map id
+     *
+     * @param uint32 mapId
+     *
+     * return uint32 pos_x
+     * return uint32 pos_y
+     * return uint32 pos_z
+     * return uint32 pos_o
+     * 
+     */
+    int GetMapEntrance(lua_State* L)
+    {
+        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 1);
+        AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId);
+
+        if (!at)
+        {
+            lua_pushnil(L);
+            return 1;
+        }
+
+        Eluna::Push(L, at->target_X);
+        Eluna::Push(L, at->target_Y);
+        Eluna::Push(L, at->target_Z);
+        Eluna::Push(L, at->target_Orientation);
+
+        return 5;
+    }
+      
+    /**  
      * Get the [SpellInfo] for the specified [Spell] id
      *
      * @param uint32 spellId : the ID of the spell
