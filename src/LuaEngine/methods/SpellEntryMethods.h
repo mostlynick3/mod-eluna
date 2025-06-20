@@ -14,9 +14,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 id
      */
-    int GetId(lua_State* L, SpellEntry* entry)
+    int GetId(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Id);
+        E->Push(entry->Id);
         return 1;
     }
 
@@ -25,9 +25,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 categoryId
      */
-    int GetCategory(lua_State* L, SpellEntry* entry)
+    int GetCategory(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Category);
+        E->Push(entry->Category);
         return 1;
     }
 
@@ -36,9 +36,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 dispelId
      */
-    int GetDispel(lua_State* L, SpellEntry* entry)
+    int GetDispel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Dispel);
+        E->Push(entry->Dispel);
         return 1;
     }
 
@@ -47,9 +47,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 mechanicId
      */
-    int GetMechanic(lua_State* L, SpellEntry* entry)
+    int GetMechanic(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Mechanic);
+        E->Push(entry->Mechanic);
         return 1;
     }
 
@@ -58,9 +58,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attribute : bitmask, but returned as uint32
      */
-    int GetAttributes(lua_State* L, SpellEntry* entry)
+    int GetAttributes(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Attributes);
+        E->Push(entry->Attributes);
         return 1;
     }
 
@@ -69,9 +69,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx : bitmask, but returned as uint32
      */
-    int GetAttributesEx(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx);
+        E->Push(entry->AttributesEx);
         return 1;
     }
 
@@ -80,9 +80,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx2 : bitmask, but returned as uint32
      */
-    int GetAttributesEx2(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx2(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx2);
+        E->Push(entry->AttributesEx2);
         return 1;
     }
 
@@ -91,9 +91,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx3 : bitmask, but returned as uint32
      */
-    int GetAttributesEx3(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx3(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx3);
+        E->Push(entry->AttributesEx3);
         return 1;
     }
 
@@ -102,9 +102,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx4 : bitmask, but returned as uint32
      */
-    int GetAttributesEx4(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx4(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx4);
+        E->Push(entry->AttributesEx4);
         return 1;
     }
 
@@ -113,9 +113,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx5 : bitmask, but returned as uint32
      */
-    int GetAttributesEx5(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx5(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx5);
+        E->Push(entry->AttributesEx5);
         return 1;
     }
 
@@ -124,9 +124,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx6 : bitmask, but returned as uint32
      */
-    int GetAttributesEx6(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx6(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx6);
+        E->Push(entry->AttributesEx6);
         return 1;
     }
 
@@ -135,9 +135,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 attributeEx7 : bitmask, but returned as uint32
      */
-    int GetAttributesEx7(lua_State* L, SpellEntry* entry)
+    int GetAttributesEx7(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AttributesEx7);
+        E->Push(entry->AttributesEx7);
         return 1;
     }
 
@@ -146,15 +146,15 @@ namespace LuaSpellEntry
      *
      * @return uint32 stance : bitmask, but returned as uint32
      */
-    int GetStances(lua_State* L, SpellEntry* entry)
+    int GetStances(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Stances);
+        E->Push(entry->Stances);
         return 1;
     }
 
-    int GetStancesNot(lua_State* L, SpellEntry* entry)
+    int GetStancesNot(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->StancesNot);
+        E->Push(entry->StancesNot);
         return 1;
     }
 
@@ -163,9 +163,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 target : bitmasks, but returned as uint32.
      */
-    int GetTargets(lua_State* L, SpellEntry* entry)
+    int GetTargets(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Targets);
+        E->Push(entry->Targets);
         return 1;
     }
 
@@ -174,75 +174,75 @@ namespace LuaSpellEntry
      *
      * @return uint32 targetCreatureType : bitmasks, but returned as uint32.
      */
-    int GetTargetCreatureType(lua_State* L, SpellEntry* entry)
+    int GetTargetCreatureType(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->TargetCreatureType);
+        E->Push(entry->TargetCreatureType);
         return 1;
     }
 
-    int GetRequiresSpellFocus(lua_State* L, SpellEntry* entry)
+    int GetRequiresSpellFocus(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->RequiresSpellFocus);
+        E->Push(entry->RequiresSpellFocus);
         return 1;
     }
 
-    int GetFacingCasterFlags(lua_State* L, SpellEntry* entry)
+    int GetFacingCasterFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->FacingCasterFlags);
+        E->Push(entry->FacingCasterFlags);
         return 1;
     }
 
-    int GetCasterAuraState(lua_State* L, SpellEntry* entry)
+    int GetCasterAuraState(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->CasterAuraState);
+        E->Push(entry->CasterAuraState);
         return 1;
     }
 
-    int GetTargetAuraState(lua_State* L, SpellEntry* entry)
+    int GetTargetAuraState(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->TargetAuraState);
+        E->Push(entry->TargetAuraState);
         return 1;
     }
 
-    int GetCasterAuraStateNot(lua_State* L, SpellEntry* entry)
+    int GetCasterAuraStateNot(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->CasterAuraStateNot);
+        E->Push(entry->CasterAuraStateNot);
         return 1;
     }
 
-    int GetTargetAuraStateNot(lua_State* L, SpellEntry* entry)
+    int GetTargetAuraStateNot(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->TargetAuraStateNot);
+        E->Push(entry->TargetAuraStateNot);
         return 1;
     }
 
-    int GetCasterAuraSpell(lua_State* L, SpellEntry* entry)
+    int GetCasterAuraSpell(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->CasterAuraSpell);
+        E->Push(entry->CasterAuraSpell);
         return 1;
     }
 
-    int GetTargetAuraSpell(lua_State* L, SpellEntry* entry)
+    int GetTargetAuraSpell(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->TargetAuraSpell);
+        E->Push(entry->TargetAuraSpell);
         return 1;
     }
 
-    int GetExcludeCasterAuraSpell(lua_State* L, SpellEntry* entry)
+    int GetExcludeCasterAuraSpell(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ExcludeCasterAuraSpell);
+        E->Push(entry->ExcludeCasterAuraSpell);
         return 1;
     }
 
-    int GetExcludeTargetAuraSpell(lua_State* L, SpellEntry* entry)
+    int GetExcludeTargetAuraSpell(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ExcludeTargetAuraSpell);
+        E->Push(entry->ExcludeTargetAuraSpell);
         return 1;
     }
 
-    int GetCastingTimeIndex(lua_State* L, SpellEntry* entry)
+    int GetCastingTimeIndex(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->CastingTimeIndex);
+        E->Push(entry->CastingTimeIndex);
         return 1;
     }
 
@@ -251,9 +251,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 recoveryTime
      */
-    int GetRecoveryTime(lua_State* L, SpellEntry* entry)
+    int GetRecoveryTime(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->RecoveryTime);
+        E->Push(entry->RecoveryTime);
         return 1;
     }
 
@@ -262,33 +262,33 @@ namespace LuaSpellEntry
      *
      * @return uint32 categoryRecoveryTime : in milliseconds, returned as uint32
      */
-    int GetCategoryRecoveryTime(lua_State* L, SpellEntry* entry)
+    int GetCategoryRecoveryTime(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->CategoryRecoveryTime);
+        E->Push(entry->CategoryRecoveryTime);
         return 1;
     }
 
-    int GetInterruptFlags(lua_State* L, SpellEntry* entry)
+    int GetInterruptFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->InterruptFlags);
+        E->Push(entry->InterruptFlags);
         return 1;
     }
 
-    int GetAuraInterruptFlags(lua_State* L, SpellEntry* entry)
+    int GetAuraInterruptFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AuraInterruptFlags);
+        E->Push(entry->AuraInterruptFlags);
         return 1;
     }
 
-    int GetChannelInterruptFlags(lua_State* L, SpellEntry* entry)
+    int GetChannelInterruptFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ChannelInterruptFlags);
+        E->Push(entry->ChannelInterruptFlags);
         return 1;
     }
 
-    int GetProcFlags(lua_State* L, SpellEntry* entry)
+    int GetProcFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ProcFlags);
+        E->Push(entry->ProcFlags);
         return 1;
     }
 
@@ -297,9 +297,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 procChance
      */
-    int GetProcChance(lua_State* L, SpellEntry* entry)
+    int GetProcChance(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ProcChance);
+        E->Push(entry->ProcChance);
         return 1;
     }
 
@@ -308,9 +308,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 procCharges
      */
-    int GetProcCharges(lua_State* L, SpellEntry* entry)
+    int GetProcCharges(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ProcCharges);
+        E->Push(entry->ProcCharges);
         return 1;
     }
 
@@ -319,9 +319,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 maxLevel : the [SpellEntry] max level.
      */
-    int GetMaxLevel(lua_State* L, SpellEntry* entry)
+    int GetMaxLevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->MaxLevel);
+        E->Push(entry->MaxLevel);
         return 1;
     }
 
@@ -330,9 +330,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 baseLevel
      */
-    int GetBaseLevel(lua_State* L, SpellEntry* entry)
+    int GetBaseLevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->BaseLevel);
+        E->Push(entry->BaseLevel);
         return 1;
     }
 
@@ -341,9 +341,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 spellLevel
      */
-    int GetSpellLevel(lua_State* L, SpellEntry* entry)
+    int GetSpellLevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SpellLevel);
+        E->Push(entry->SpellLevel);
         return 1;
     }
 
@@ -352,9 +352,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 durationIndex
      */
-    int GetDurationIndex(lua_State* L, SpellEntry* entry)
+    int GetDurationIndex(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->DurationIndex);
+        E->Push(entry->DurationIndex);
         return 1;
     }
 
@@ -363,9 +363,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 powerTypeId
      */
-    int GetPowerType(lua_State* L, SpellEntry* entry)
+    int GetPowerType(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->PowerType);
+        E->Push(entry->PowerType);
         return 1;
     }
 
@@ -374,9 +374,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 manaCost
      */
-    int GetManaCost(lua_State* L, SpellEntry* entry)
+    int GetManaCost(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ManaCost);
+        E->Push(entry->ManaCost);
         return 1;
     }
 
@@ -385,9 +385,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 manaCostPerLevel
      */
-    int GetManaCostPerlevel(lua_State* L, SpellEntry* entry)
+    int GetManaCostPerlevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ManaCostPerlevel);
+        E->Push(entry->ManaCostPerlevel);
         return 1;
     }
 
@@ -396,9 +396,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 manaPerSecond
      */
-    int GetManaPerSecond(lua_State* L, SpellEntry* entry)
+    int GetManaPerSecond(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ManaPerSecond);
+        E->Push(entry->ManaPerSecond);
         return 1;
     }
 
@@ -407,9 +407,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 manaPerSecondPerLevel
      */
-    int GetManaPerSecondPerLevel(lua_State* L, SpellEntry* entry)
+    int GetManaPerSecondPerLevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ManaPerSecondPerLevel);
+        E->Push(entry->ManaPerSecondPerLevel);
         return 1;
     }
 
@@ -418,9 +418,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 rangeIndex
      */
-    int GetRangeIndex(lua_State* L, SpellEntry* entry)
+    int GetRangeIndex(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->RangeIndex);
+        E->Push(entry->RangeIndex);
         return 1;
     }
 
@@ -429,9 +429,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 speed
      */
-    int GetSpeed(lua_State* L, SpellEntry* entry)
+    int GetSpeed(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->Speed);
+        E->Push(entry->Speed);
         return 1;
     }
 
@@ -440,9 +440,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 stackAmount
      */
-    int GetStackAmount(lua_State* L, SpellEntry* entry)
+    int GetStackAmount(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->StackAmount);
+        E->Push(entry->StackAmount);
         return 1;
     }
 
@@ -451,19 +451,19 @@ namespace LuaSpellEntry
      *
      * @return table totem
      */
-    int GetTotem(lua_State* L, SpellEntry* entry)
+    int GetTotem(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->Totem.size(); ++index)
         {
-            Eluna::Push(L, entry->Totem[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->Totem[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -472,19 +472,19 @@ namespace LuaSpellEntry
      *
      * @return table reagent
      */
-    int GetReagent(lua_State* L, SpellEntry* entry)
+    int GetReagent(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->Reagent.size(); ++index)
         {
-            Eluna::Push(L, entry->Reagent[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->Reagent[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -493,19 +493,19 @@ namespace LuaSpellEntry
      *
      * @return table reagentCount
      */
-    int GetReagentCount(lua_State* L, SpellEntry* entry)
+    int GetReagentCount(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->ReagentCount.size(); ++index)
         {
-            Eluna::Push(L, entry->ReagentCount[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->ReagentCount[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -514,9 +514,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 equippedItemClassId
      */
-    int GetEquippedItemClass(lua_State* L, SpellEntry* entry)
+    int GetEquippedItemClass(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->EquippedItemClass);
+        E->Push(entry->EquippedItemClass);
         return 1;
     }
 
@@ -525,9 +525,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 equippedItemSubClassMasks : bitmasks, returned as uint32.
      */
-    int GetEquippedItemSubClassMask(lua_State* L, SpellEntry* entry)
+    int GetEquippedItemSubClassMask(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->EquippedItemSubClassMask);
+        E->Push(entry->EquippedItemSubClassMask);
         return 1;
     }
 
@@ -536,9 +536,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 equippedItemInventoryTypeMasks : bitmasks, returned as uint32.
      */
-    int GetEquippedItemInventoryTypeMask(lua_State* L, SpellEntry* entry)
+    int GetEquippedItemInventoryTypeMask(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->EquippedItemInventoryTypeMask);
+        E->Push(entry->EquippedItemInventoryTypeMask);
         return 1;
     }
 
@@ -547,19 +547,19 @@ namespace LuaSpellEntry
      *
      * @return table effect
      */
-    int GetEffect(lua_State* L, SpellEntry* entry)
+    int GetEffect(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->Effect.size(); ++index)
         {
-            Eluna::Push(L, entry->Effect[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->Effect[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -568,19 +568,19 @@ namespace LuaSpellEntry
      *
      * @return table effectDieSides
      */
-    int GetEffectDieSides(lua_State* L, SpellEntry* entry)
+    int GetEffectDieSides(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectDieSides.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectDieSides[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectDieSides[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -589,19 +589,19 @@ namespace LuaSpellEntry
      *
      * @return table effectRealPointsPerLevel
      */
-    int GetEffectRealPointsPerLevel(lua_State* L, SpellEntry* entry)
+    int GetEffectRealPointsPerLevel(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectRealPointsPerLevel.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectRealPointsPerLevel[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectRealPointsPerLevel[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -610,19 +610,19 @@ namespace LuaSpellEntry
      *
      * @return table effectBasePoints
      */
-    int GetEffectBasePoints(lua_State* L, SpellEntry* entry)
+    int GetEffectBasePoints(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectBasePoints.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectBasePoints[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectBasePoints[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -631,19 +631,19 @@ namespace LuaSpellEntry
      *
      * @return table effectMechanic
      */
-    int GetEffectMechanic(lua_State* L, SpellEntry* entry)
+    int GetEffectMechanic(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectMechanic.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMechanic[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectMechanic[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -652,19 +652,19 @@ namespace LuaSpellEntry
      *
      * @return table effectImplicitTargetA
      */
-    int GetEffectImplicitTargetA(lua_State* L, SpellEntry* entry)
+    int GetEffectImplicitTargetA(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectImplicitTargetA.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectImplicitTargetA[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectImplicitTargetA[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -673,19 +673,19 @@ namespace LuaSpellEntry
      *
      * @return table effectImplicitTargetB
      */
-    int GetEffectImplicitTargetB(lua_State* L, SpellEntry* entry)
+    int GetEffectImplicitTargetB(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectImplicitTargetB.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectImplicitTargetB[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectImplicitTargetB[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -694,19 +694,19 @@ namespace LuaSpellEntry
      *
      * @return table effectRadiusIndex
      */
-    int GetEffectRadiusIndex(lua_State* L, SpellEntry* entry)
+    int GetEffectRadiusIndex(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectRadiusIndex.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectRadiusIndex[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectRadiusIndex[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -715,19 +715,19 @@ namespace LuaSpellEntry
      *
      * @return table effectApplyAura
      */
-    int GetEffectApplyAuraName(lua_State* L, SpellEntry* entry)
+    int GetEffectApplyAuraName(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectApplyAuraName.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectApplyAuraName[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectApplyAuraName[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -736,19 +736,19 @@ namespace LuaSpellEntry
      *
      * @return table effectAmplitude
      */
-    int GetEffectAmplitude(lua_State* L, SpellEntry* entry)
+    int GetEffectAmplitude(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectAmplitude.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectAmplitude[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectAmplitude[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -757,19 +757,19 @@ namespace LuaSpellEntry
      *
      * @return table effectValueMultiplier
      */
-    int GetEffectValueMultiplier(lua_State* L, SpellEntry* entry)
+    int GetEffectValueMultiplier(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectValueMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectValueMultiplier[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectValueMultiplier[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -778,19 +778,19 @@ namespace LuaSpellEntry
      *
      * @return table effectChainTarget
      */
-    int GetEffectChainTarget(lua_State* L, SpellEntry* entry)
+    int GetEffectChainTarget(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectChainTarget.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectChainTarget[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectChainTarget[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -799,19 +799,19 @@ namespace LuaSpellEntry
      *
      * @return table effectItemType
      */
-    int GetEffectItemType(lua_State* L, SpellEntry* entry)
+    int GetEffectItemType(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectItemType.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectItemType[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectItemType[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -820,19 +820,19 @@ namespace LuaSpellEntry
      *
      * @return table effectMiscValueA
      */
-    int GetEffectMiscValue(lua_State* L, SpellEntry* entry)
+    int GetEffectMiscValue(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectMiscValue.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMiscValue[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectMiscValue[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -841,19 +841,19 @@ namespace LuaSpellEntry
      *
      * @return table effectMiscValueB
      */
-    int GetEffectMiscValueB(lua_State* L, SpellEntry* entry)
+    int GetEffectMiscValueB(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectMiscValueB.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectMiscValueB[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectMiscValueB[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -862,19 +862,19 @@ namespace LuaSpellEntry
      *
      * @return table effectTriggerSpell
      */
-    int GetEffectTriggerSpell(lua_State* L, SpellEntry* entry)
+    int GetEffectTriggerSpell(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectTriggerSpell.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectTriggerSpell[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectTriggerSpell[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -883,35 +883,35 @@ namespace LuaSpellEntry
      *
      * @return table effectPointsPerComboPoint : returns a table containing all the effect points per combo point values of [SpellEntry]
      */
-    int GetEffectPointsPerComboPoint(lua_State* L, SpellEntry* entry)
+    int GetEffectPointsPerComboPoint(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectPointsPerComboPoint.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectPointsPerComboPoint[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectPointsPerComboPoint[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
-    int GetEffectSpellClassMask(lua_State* L, SpellEntry* entry)
+    int GetEffectSpellClassMask(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectSpellClassMask.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectSpellClassMask[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectSpellClassMask[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -920,19 +920,19 @@ namespace LuaSpellEntry
      *
      * @return table spellVisuals : returns a table containing both spellVisuals for [SpellEntry].
      */
-    int GetSpellVisual(lua_State* L, SpellEntry* entry)
+    int GetSpellVisual(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->SpellVisual.size(); ++index)
         {
-            Eluna::Push(L, entry->SpellVisual[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->SpellVisual[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -941,9 +941,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 spellIconId
      */
-    int GetSpellIconID(lua_State* L, SpellEntry* entry)
+    int GetSpellIconID(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SpellIconID);
+        E->Push(entry->SpellIconID);
         return 1;
     }
 
@@ -952,9 +952,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 activeIconId
      */
-    int GetActiveIconID(lua_State* L, SpellEntry* entry)
+    int GetActiveIconID(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ActiveIconID);
+        E->Push(entry->ActiveIconID);
         return 1;
     }
 
@@ -963,9 +963,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 spellPriority
      */
-    int GetSpellPriority(lua_State* L, SpellEntry* entry)
+    int GetSpellPriority(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SpellPriority);
+        E->Push(entry->SpellPriority);
         return 1;
     }
 
@@ -974,19 +974,19 @@ namespace LuaSpellEntry
      *
      * @return table spellNames
      */
-    int GetSpellName(lua_State* L, SpellEntry* entry)
+    int GetSpellName(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->SpellName.size(); ++index)
         {
-            Eluna::Push(L, entry->SpellName[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->SpellName[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -995,19 +995,19 @@ namespace LuaSpellEntry
      *
      * @return table spellRanks
      */
-    int GetRank(lua_State* L, SpellEntry* entry)
+    int GetRank(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->Rank.size(); ++index)
         {
-            Eluna::Push(L, entry->Rank[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->Rank[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -1016,9 +1016,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 manaCostPercentage : the mana cost in percentage, returned as uint32.
      */
-    int GetManaCostPercentage(lua_State* L, SpellEntry* entry)
+    int GetManaCostPercentage(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->ManaCostPercentage);
+        E->Push(entry->ManaCostPercentage);
         return 1;
     }
 
@@ -1027,9 +1027,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 globalCooldownTime
      */
-    int GetStartRecoveryCategory(lua_State* L, SpellEntry* entry)
+    int GetStartRecoveryCategory(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->StartRecoveryCategory);
+        E->Push(entry->StartRecoveryCategory);
         return 1;
     }
 
@@ -1038,9 +1038,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 globalCooldownCategory
      */
-    int GetStartRecoveryTime(lua_State* L, SpellEntry* entry)
+    int GetStartRecoveryTime(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->StartRecoveryTime);
+        E->Push(entry->StartRecoveryTime);
         return 1;
     }
 
@@ -1049,22 +1049,22 @@ namespace LuaSpellEntry
      *
      * @return uint32 maxTargetLevel
      */
-    int GetMaxTargetLevel(lua_State* L, SpellEntry* entry)
+    int GetMaxTargetLevel(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->MaxTargetLevel);
+        E->Push(entry->MaxTargetLevel);
         return 1;
     }
 
 
-    int GetSpellFamilyName(lua_State* L, SpellEntry* entry)
+    int GetSpellFamilyName(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SpellFamilyName);
+        E->Push(entry->SpellFamilyName);
         return 1;
     }
 
-    int GetSpellFamilyFlags(lua_State* L, SpellEntry* entry)
+    int GetSpellFamilyFlags(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SpellFamilyFlags);
+        E->Push(entry->SpellFamilyFlags);
         return 1;
     }
 
@@ -1073,9 +1073,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 maxAffectedTargets
      */
-    int GetMaxAffectedTargets(lua_State* L, SpellEntry* entry)
+    int GetMaxAffectedTargets(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->MaxAffectedTargets);
+        E->Push(entry->MaxAffectedTargets);
         return 1;
     }
 
@@ -1084,9 +1084,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 spellDamageTypeId
      */
-    int GetDmgClass(lua_State* L, SpellEntry* entry)
+    int GetDmgClass(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->DmgClass);
+        E->Push(entry->DmgClass);
         return 1;
     }
 
@@ -1095,9 +1095,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 preventionTypeId
      */
-    int GetPreventionType(lua_State* L, SpellEntry* entry)
+    int GetPreventionType(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->PreventionType);
+        E->Push(entry->PreventionType);
         return 1;
     }
 
@@ -1106,19 +1106,19 @@ namespace LuaSpellEntry
      *
      * @return table effectDamageMultipliers
      */
-    int GetEffectDamageMultiplier(lua_State* L, SpellEntry* entry)
+    int GetEffectDamageMultiplier(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectDamageMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectDamageMultiplier[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectDamageMultiplier[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
@@ -1127,25 +1127,25 @@ namespace LuaSpellEntry
      *
      * @return table totemCategory
      */
-    int GetTotemCategory(lua_State* L, SpellEntry* entry)
+    int GetTotemCategory(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->TotemCategory.size(); ++index)
         {
-            Eluna::Push(L, entry->TotemCategory[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->TotemCategory[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
-    int GetAreaGroupId(lua_State* L, SpellEntry* entry)
+    int GetAreaGroupId(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->AreaGroupId);
+        E->Push(entry->AreaGroupId);
         return 1;
     }
 
@@ -1154,9 +1154,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 schoolMask : bitmask, returned as uint32.
      */
-    int GetSchoolMask(lua_State* L, SpellEntry* entry)
+    int GetSchoolMask(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->SchoolMask);
+        E->Push(entry->SchoolMask);
         return 1;
     }
 
@@ -1165,9 +1165,9 @@ namespace LuaSpellEntry
      *
      * @return uint32 runeCostId
      */
-    int GetRuneCostID(lua_State* L, SpellEntry* entry)
+    int GetRuneCostID(Eluna* E, SpellEntry* entry)
     {
-        Eluna::Push(L, entry->RuneCostID);
+        E->Push(entry->RuneCostID);
         return 1;
     }
 
@@ -1176,19 +1176,19 @@ namespace LuaSpellEntry
      *
      * @return table effectBonusMultipliers
      */
-    int GetEffectBonusMultiplier(lua_State* L, SpellEntry* entry)
+    int GetEffectBonusMultiplier(Eluna* E, SpellEntry* entry)
     {
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
+        lua_newtable(E->L);
+        int tbl = lua_gettop(E->L);
         uint32 i = 0;
 
         for (size_t index = 0; index < entry->EffectBonusMultiplier.size(); ++index)
         {
-            Eluna::Push(L, entry->EffectBonusMultiplier[index]);
-            lua_rawseti(L, tbl, ++i);
+            E->Push(entry->EffectBonusMultiplier[index]);
+            lua_rawseti(E->L, tbl, ++i);
         }
         
-        lua_settop(L, tbl); // push table to top of stack
+        lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 }
