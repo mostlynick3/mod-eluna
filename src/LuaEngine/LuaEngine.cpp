@@ -1016,7 +1016,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
             {
                 auto key = EventKey<Hooks::TicketEvents>((Hooks::TicketEvents)event_id);
                 bindingID = TicketEventBindings->Insert(key, functionRef, shots);
-                createCancelCallback(L, bindingID, TicketEventBindings);
+                createCancelCallback(this, bindingID, TicketEventBindings);
                 return 1; // Stack: callback
             }
             break;
@@ -1032,7 +1032,7 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
 
                 auto key = EntryKey<Hooks::SpellEvents>((Hooks::SpellEvents)event_id, entry);
                 bindingID = SpellEventBindings->Insert(key, functionRef, shots);
-                createCancelCallback(L, bindingID, SpellEventBindings);
+                createCancelCallback(this, bindingID, SpellEventBindings);
                 return 1; // Stack: callback
             }
             break;
