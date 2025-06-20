@@ -264,7 +264,7 @@ namespace LuaTicket
      */
     int SetPosition(Eluna* E, GmTicket* ticket)
     {
-        uint32 mapId = Eluna::CHECKVAL<uint32>(2);
+        uint32 mapId = E->CHECKVAL<uint32>(2);
         float x = E->CHECKVAL<float>(2);
         float y = E->CHECKVAL<float>(2);
         float z = E->CHECKVAL<float>(2);
@@ -318,6 +318,37 @@ namespace LuaTicket
         E->Push(ticket->GetChatLog());
         return 1;
     }
+	
+	ElunaRegister<GmTicket> TicketMethods[] =
+	{
+		{ "IsClosed", &LuaTicket::IsClosed },
+		{ "IsCompleted", &LuaTicket::IsCompleted },
+		{ "IsFromPlayer", &LuaTicket::IsFromPlayer },
+		{ "IsAssigned", &LuaTicket::IsAssigned },
+		{ "IsAssignedTo", &LuaTicket::IsAssignedTo },
+		{ "IsAssignedNotTo", &LuaTicket::IsAssignedNotTo },
+
+		{ "GetId", &LuaTicket::GetId },
+		{ "GetPlayer", &LuaTicket::GetPlayer },
+		{ "GetPlayerName", &LuaTicket::GetPlayerName },
+		{ "GetMessage", &LuaTicket::GetMessage },
+		{ "GetAssignedPlayer", &LuaTicket::GetAssignedPlayer },
+		{ "GetAssignedToGUID", &LuaTicket::GetAssignedToGUID },
+		{ "GetLastModifiedTime", &LuaTicket::GetLastModifiedTime },
+		{ "GetResponse", &LuaTicket::GetResponse },
+		{ "GetChatLog", &LuaTicket::GetChatLog },
+
+		{ "SetAssignedTo", &LuaTicket::SetAssignedTo },
+		{ "SetResolvedBy", &LuaTicket::SetResolvedBy },
+		{ "SetCompleted", &LuaTicket::SetCompleted },
+		{ "SetMessage", &LuaTicket::SetMessage },
+		{ "SetComment", &LuaTicket::SetComment },
+		{ "SetViewed", &LuaTicket::SetViewed },
+		{ "SetUnassigned", &LuaTicket::SetUnassigned },
+		{ "SetPosition", &LuaTicket::SetPosition },
+		{ "AppendResponse", &LuaTicket::AppendResponse },
+		{ "DeleteResponse", &LuaTicket::DeleteResponse }
+	};
 };
 #endif
 
