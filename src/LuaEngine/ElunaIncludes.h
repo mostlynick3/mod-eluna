@@ -63,6 +63,7 @@ typedef Opcodes                 OpcodesList;
 #define CORE_NAME               "AzerothCore"
 
 #define CORE_VERSION            (GitRevision::GetFullVersion())
+#define eWorldSessionMgr        (sWorldSessionMgr)
 #define eWorld                  (sWorld)
 #define eMapMgr                 (sMapMgr)
 #define eGuildMgr               (sGuildMgr)

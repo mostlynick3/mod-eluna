@@ -3825,6 +3825,172 @@ namespace LuaPlayer
         return 0;
     }
 
+    /*int RemoveRewardedQuest(lua_State* L, Player* player)
+    {
+    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+    player->RemoveRewardedQuest(entry);
+    return 0;
+    }*/
+
+    /*int RemoveActiveQuest(lua_State* L, Player* player)
+    {
+    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+    player->RemoveActiveQuest(entry);
+    return 0;
+    }*/
+
+    /*int SummonPet(lua_State* L, Player* player)
+    {
+    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+    float x = Eluna::CHECKVAL<float>(L, 3);
+    float y = Eluna::CHECKVAL<float>(L, 4);
+    float z = Eluna::CHECKVAL<float>(L, 5);
+    float o = Eluna::CHECKVAL<float>(L, 6);
+    uint32 petType = Eluna::CHECKVAL<uint32>(L, 7);
+    uint32 despwtime = Eluna::CHECKVAL<uint32>(L, 8);
+
+    if (petType >= MAX_PET_TYPE)
+    return 0;
+
+    player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
+    return 0;
+    }*/
+
+    /*int RemovePet(lua_State* L, Player* player)
+    {
+    int mode = Eluna::CHECKVAL<int>(L, 2, PET_SAVE_AS_DELETED);
+    bool returnreagent = Eluna::CHECKVAL<bool>(L, 2, false);
+
+    if (!player->GetPet())
+    return 0;
+
+    player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
+    return 0;
+    }*/
+
+    /**
+     * Set bonus talent count to a specific count for the [Player]
+     *
+     * @param uint32 value : bonus talent points
+     */
+    int SetBonusTalentCount(lua_State* L, Player* player)
+    {
+        uint32 value = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->SetBonusTalentCount(value);
+        return 0;
+    }
+
+    /**
+     * Get bonus talents count from the [Player]
+     *
+     * @return uint32 bonusTalent
+     */
+    int GetBonusTalentCount(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetBonusTalentCount());
+        return 1;
+    }
+  
+    /**
+     *  Returns the [Player] spells list
+     *
+     * @return table playerSpells
+     */
+    int GetSpells(lua_State* L, Player* player)
+    {
+        std::list<uint32> list;
+        lua_createtable(L, list.size(), 0);
+        int tbl = lua_gettop(L);
+        uint32 i = 0;
+
+        PlayerSpellMap spellMap = player->GetSpellMap();
+        for (PlayerSpellMap::const_iterator itr = spellMap.begin(); itr != spellMap.end(); ++itr)
+        {
+            SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(itr->first);
+            Eluna::Push(L, spellInfo->Id);
+            lua_rawseti(L, tbl, ++i);
+        }
+
+        lua_settop(L, tbl);
+        return 1;
+    }
+
+    /**
+     * Add bonus talents count to the [Player]
+     *
+     * @param uint32 count = count of bonus talent
+     */
+    int AddBonusTalent(lua_State* L, Player* player)
+    {
+        uint32 count = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->AddBonusTalent(count);
+        return 0;
+    }
+
+    /**
+     * Remove bonus talents count to the [Player]
+     *
+     * @param uint32 count = count of bonus talent
+     */
+    int RemoveBonusTalent(lua_State* L, Player* player)
+    {
+        uint32 count = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->RemoveBonusTalent(count);
+        return 0;
+    }
+  
+    /**
+     *  Returns the [Player] homebind location.
+     *
+     *  @return table homebind : a table containing the player's homebind information:
+     *      - uint32 mapId: The ID of the map where the player is bound.
+     *      - float x: The X coordinate of the homebind location.
+     *      - float y: The Y coordinate of the homebind location.
+     *      - float z: The Z coordinate of the homebind location.
+     */
+    int GetHomebind(lua_State* L, Player* player)
+    {
+        lua_newtable(L);
+        lua_pushinteger(L, player->m_homebindMapId);
+        lua_setfield(L, -2, "mapId");
+
+        lua_pushnumber(L, player->m_homebindX);
+        lua_setfield(L, -2, "x");
+
+        lua_pushnumber(L, player->m_homebindY);
+        lua_setfield(L, -2, "y");
+
+        lua_pushnumber(L, player->m_homebindZ);
+        lua_setfield(L, -2, "z");
+
+        return 1;
+    }
+
+    /**
+     *  Teleports [Player] to a predefined location based on the teleport name.
+     *
+     *  @param string tele : The name of the predefined teleport location.
+     */
+    int TeleportTo(lua_State* L, Player* player)
+    {
+        std::string tele = Eluna::CHECKVAL<std::string>(L, 2);
+        const GameTele* game_tele = sObjectMgr->GetGameTele(tele);
+
+        if (player->IsInFlight())
+        {
+            player->GetMotionMaster()->MovementExpired();
+            player->m_taxi.ClearTaxiDestinations();
+        }
+
+        player->TeleportTo(game_tele->mapId, game_tele->position_x, game_tele->position_y, game_tele->position_z, game_tele->orientation);
+        return 0;
+    }
+
     ElunaRegister<Player> PlayerMethods[] =
     {
         // Getters
@@ -3900,6 +4066,9 @@ namespace LuaPlayer
         { "GetShieldBlockValue", &LuaPlayer::GetShieldBlockValue },
         { "GetPlayerSettingValue", &LuaPlayer::GetPlayerSettingValue },
         { "GetTrader", &LuaPlayer::GetTrader },
+        { "GetBonusTalentCount", &LuaPlayer::GetBonusTalentCount },
+        { "GetSpells", &LuaPlayer::GetSpells },
+        { "GetHomebind", &LuaPlayer::GetHomebind },
 
         // Setters
         { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
@@ -3932,6 +4101,7 @@ namespace LuaPlayer
         { "SetPlayerLock", &LuaPlayer::SetPlayerLock },
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
+        { "SetBonusTalentCount", &LuaPlayer::SetBonusTalentCount },
 
         // Boolean
         { "HasTankSpec", &LuaPlayer::HasTankSpec },
@@ -4083,9 +4253,11 @@ namespace LuaPlayer
         { "GroupCreate", &LuaPlayer::GroupCreate },
         { "SendCinematicStart", &LuaPlayer::SendCinematicStart },
         { "SendMovieStart", &LuaPlayer::SendMovieStart },
-        { "UpdatePlayerSetting", &LuaPlayer::UpdatePlayerSetting }
+        { "UpdatePlayerSetting", &LuaPlayer::UpdatePlayerSetting },
+        { "AddBonusTalent", &LuaPlayer::AddBonusTalent },
+        { "RemoveBonusTalent", &LuaPlayer::RemoveBonusTalent },
+        { "TeleportTo", &LuaPlayer::TeleportTo }
     };
-
 };
 #endif
 

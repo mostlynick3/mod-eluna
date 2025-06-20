@@ -363,7 +363,7 @@ namespace LuaMap
         for (const auto& pair : map->GetCreatureBySpawnIdStore())
         {
             Creature* creature = pair.second;
-            if (areaId == -1 || creature->GetAreaId() == areaId)
+            if (areaId == -1 || creature->GetAreaId() == (uint32)areaId)
             {
                 filteredCreatures.push_back(creature);
             }
