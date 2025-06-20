@@ -848,7 +848,7 @@ void Eluna::OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& v
         int r = CallOneFunction(n--, 5, 1);
         if (lua_isnumber(L, r))
         {
-            value = CHECKVAL<uint32>(L, r);
+            value = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
             ReplaceArgument(value, valueIndex);
         }

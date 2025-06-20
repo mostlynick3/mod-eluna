@@ -207,7 +207,7 @@ namespace LuaItemTemplate
         ItemDisplayInfoEntry const* displayInfo = sItemDisplayInfoStore.LookupEntry(display_id);       
         const char* icon = displayInfo->inventoryIcon;
 
-        Eluna->Push(icon);
+        E->Push(icon);
         return 1;
     }
 
