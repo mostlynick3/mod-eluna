@@ -3825,51 +3825,6 @@ namespace LuaPlayer
         return 0;
     }
 
-    /*int RemoveRewardedQuest(lua_State* L, Player* player)
-    {
-    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-
-    player->RemoveRewardedQuest(entry);
-    return 0;
-    }*/
-
-    /*int RemoveActiveQuest(lua_State* L, Player* player)
-    {
-    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-
-    player->RemoveActiveQuest(entry);
-    return 0;
-    }*/
-
-    /*int SummonPet(lua_State* L, Player* player)
-    {
-    uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
-    float x = Eluna::CHECKVAL<float>(L, 3);
-    float y = Eluna::CHECKVAL<float>(L, 4);
-    float z = Eluna::CHECKVAL<float>(L, 5);
-    float o = Eluna::CHECKVAL<float>(L, 6);
-    uint32 petType = Eluna::CHECKVAL<uint32>(L, 7);
-    uint32 despwtime = Eluna::CHECKVAL<uint32>(L, 8);
-
-    if (petType >= MAX_PET_TYPE)
-    return 0;
-
-    player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
-    return 0;
-    }*/
-
-    /*int RemovePet(lua_State* L, Player* player)
-    {
-    int mode = Eluna::CHECKVAL<int>(L, 2, PET_SAVE_AS_DELETED);
-    bool returnreagent = Eluna::CHECKVAL<bool>(L, 2, false);
-
-    if (!player->GetPet())
-    return 0;
-
-    player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
-    return 0;
-    }*/
-
     /**
      * Set bonus talent count to a specific count for the [Player]
      *
