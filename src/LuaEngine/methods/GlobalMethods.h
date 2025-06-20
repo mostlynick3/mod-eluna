@@ -1593,7 +1593,7 @@ namespace LuaGlobalFunctions
         // Validate the function reference
         if (funcRef == LUA_REFNIL || funcRef == LUA_NOREF)
         {
-            luaL_argerror(E->L, 2, "unable to create function reference");
+            luaL_argerror(E->L, 2, "unable to make a ref to function");
             return 0;
         }
 
