@@ -77,7 +77,6 @@ void Eluna::CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings
 {
     // Stack: [arguments]
 
-    int initial_stack_size = lua_gettop(L);
     int number_of_functions = SetupStack(bindings1, bindings2, key1, key2, number_of_arguments);
     if (number_of_functions < 0)
     {
@@ -86,12 +85,8 @@ void Eluna::CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings
     }
     // Stack: event_id, [arguments], [functions]
 
-    int stack_size_after_setup = lua_gettop(L);
-    int original_function_count = number_of_functions;
     while (number_of_functions > 0)
     {
-        int stack_before_call = lua_gettop(L);
-
         int result_index = CallOneFunction(number_of_functions, number_of_arguments, 0);
 
         if (result_index < 0)
@@ -102,7 +97,6 @@ void Eluna::CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings
 
         --number_of_functions;
 
-        int stack_after_call = lua_gettop(L);
         // Stack: event_id, [arguments], [functions - 1]
 
     }
@@ -111,8 +105,6 @@ void Eluna::CallAllFunctions(BindingMap<K1>* bindings1, BindingMap<K2>* bindings
         ELUNA_LOG_ERROR("[Eluna]: CallAllFunctions: Stopped early, {} functions remaining uncalled", number_of_functions);
 
     // Stack: event_id, [arguments]
-
-    int stack_before_cleanup = lua_gettop(L);
 
     CleanUpStack(number_of_arguments);
 
