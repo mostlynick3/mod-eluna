@@ -31,10 +31,7 @@ extern void RegisterMethods(Eluna* E);
 
 void Eluna::_ReloadEluna()
 {
-    LOCK_ELUNA;
-    ASSERT(IsInitialized());
-
-    if (eConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
+    if (sConfigMgr->GetOption<bool>("Eluna.PlayerAnnounceReload", false))
         eWorldSessionMgr->SendServerMessage(SERVER_MSG_STRING, "Reloading Eluna...");
     else
         ChatHandler(nullptr).SendGMText(SERVER_MSG_STRING, "Reloading Eluna...");
