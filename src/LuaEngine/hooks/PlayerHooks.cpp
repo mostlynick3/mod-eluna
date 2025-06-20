@@ -841,22 +841,22 @@ void Eluna::OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& v
     Push(max);
     Push(step);
 
-    int valueIndex = lua_gettop(L) -2;
+    int argument_count = tracker.GetArgumentCount();
+    int valueIndex = 2;
     int n = SetupStack(PlayerEventBindings, key, 5);
     while (n > 0)
     {
-        int r = CallOneFunction(n--, 5, 1);
+        int r = CallOneFunction(n--, argument_count, 1);
         if (lua_isnumber(L, r))
         {
             value = CHECKVAL<uint32>(r);
             // Update the stack for subsequent calls.
-            ReplaceArgument(value, valueIndex);
+            ReplaceArgument(value, valueIndex, argument_count);
         }
 
         lua_pop(L, 1);
     }
 
-    int argument_count = tracker.GetArgumentCount();
     CleanUpStack(argument_count);
 }
 
