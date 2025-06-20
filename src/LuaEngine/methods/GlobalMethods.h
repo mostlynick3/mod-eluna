@@ -1237,9 +1237,9 @@ namespace LuaGlobalFunctions
      * @param function function : function to register
      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
      */
-    int RegisterTicketEvent(lua_State* L)
+    int RegisterTicketEvent(Eluna* E)
     {
-        return RegisterEventHelper(L, Hooks::REGTYPE_TICKET);
+        return RegisterEventHelper(E, Hooks::REGTYPE_TICKET);
     }
 
     /**
@@ -3286,18 +3286,18 @@ namespace LuaGlobalFunctions
      * @proto (event_type)
      * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterTicketEvent]
      */
-    int ClearTicketEvents(lua_State* L)
+    int ClearTicketEvents(Eluna* E)
     {
         typedef EventKey<Hooks::TicketEvents> Key;
 
-        if (lua_isnoneornil(L, 1))
+        if (lua_isnoneornil(E->L, 1))
         {
-            Eluna::GetEluna(L)->TicketEventBindings->Clear();
+            E->TicketEventBindings->Clear();
         }
         else
         {
-            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
-            Eluna::GetEluna(L)->TicketEventBindings->Clear(Key((Hooks::TicketEvents)event_type));
+            uint32 event_type = E->CHECKVAL<uint32>(L, 1);
+            E->TicketEventBindings->Clear(Key((Hooks::TicketEvents)event_type));
         }
         return 0;
     }
@@ -3397,11 +3397,11 @@ namespace LuaGlobalFunctions
      *
      * @return string, string : The localized OptionText and BoxText for the gossip menu option, or the default text if no localization is found.
      */
-    int GetGossipMenuOptionLocale(lua_State* L)
+    int GetGossipMenuOptionLocale(Eluna* E)
     {
-        uint32 menuId = Eluna::CHECKVAL<uint32>(L, 1);
-        uint32 optionId = Eluna::CHECKVAL<uint32>(L, 2);
-        uint8 locale = Eluna::CHECKVAL<uint8>(L, 3);
+        uint32 menuId = E->CHECKVAL<uint32>(L, 1);
+        uint32 optionId = E->CHECKVAL<uint32>(L, 2);
+        uint8 locale = E->CHECKVAL<uint8>(L, 3);
 
         std::string strOptionText;
         std::string strBoxText;
@@ -3431,8 +3431,8 @@ namespace LuaGlobalFunctions
             }
         }
 
-        Eluna::Push(L, strOptionText);
-        Eluna::Push(L, strBoxText);
+        E->Push(L, strOptionText);
+        E->Push(L, strBoxText);
         return 2;
     }
 
@@ -3447,9 +3447,9 @@ namespace LuaGlobalFunctions
      * return uint32 pos_o
      * 
      */
-    int GetMapEntrance(lua_State* L)
+    int GetMapEntrance(Eluna* E)
     {
-        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 1);
+        uint32 mapId = E->CHECKVAL<uint32>(L, 1);
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId);
 
         if (!at)
@@ -3458,14 +3458,14 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-        Eluna::Push(L, at->target_X);
-        Eluna::Push(L, at->target_Y);
-        Eluna::Push(L, at->target_Z);
-        Eluna::Push(L, at->target_Orientation);
+        E->Push(at->target_X);
+        E->Push(at->target_Y);
+        E->Push(at->target_Z);
+        E->Push(at->target_Orientation);
 
         return 5;
     }
-      
+
     /**  
      * Get the [SpellInfo] for the specified [Spell] id
      *
@@ -3479,7 +3479,7 @@ namespace LuaGlobalFunctions
         return 1;
 
     }
-  
+
     /**
      * Returns the instance of the specified DBC (DatabaseClient) store.
      *
