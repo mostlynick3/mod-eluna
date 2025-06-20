@@ -3296,7 +3296,7 @@ namespace LuaGlobalFunctions
         }
         else
         {
-            uint32 event_type = E->CHECKVAL<uint32>(L, 1);
+            uint32 event_type = E->CHECKVAL<uint32>(1);
             E->TicketEventBindings->Clear(Key((Hooks::TicketEvents)event_type));
         }
         return 0;
@@ -3399,9 +3399,9 @@ namespace LuaGlobalFunctions
      */
     int GetGossipMenuOptionLocale(Eluna* E)
     {
-        uint32 menuId = E->CHECKVAL<uint32>(L, 1);
-        uint32 optionId = E->CHECKVAL<uint32>(L, 2);
-        uint8 locale = E->CHECKVAL<uint8>(L, 3);
+        uint32 menuId = E->CHECKVAL<uint32>(1);
+        uint32 optionId = E->CHECKVAL<uint32>(2);
+        uint8 locale = E->CHECKVAL<uint8>(3);
 
         std::string strOptionText;
         std::string strBoxText;
@@ -3431,8 +3431,8 @@ namespace LuaGlobalFunctions
             }
         }
 
-        E->Push(L, strOptionText);
-        E->Push(L, strBoxText);
+        E->Push(strOptionText);
+        E->Push(strBoxText);
         return 2;
     }
 
@@ -3449,12 +3449,12 @@ namespace LuaGlobalFunctions
      */
     int GetMapEntrance(Eluna* E)
     {
-        uint32 mapId = E->CHECKVAL<uint32>(L, 1);
+        uint32 mapId = E->CHECKVAL<uint32>(1);
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId);
 
         if (!at)
         {
-            lua_pushnil(L);
+            lua_pushnil(E->L);
             return 1;
         }
 
