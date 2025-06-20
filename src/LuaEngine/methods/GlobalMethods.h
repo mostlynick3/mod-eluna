@@ -1225,10 +1225,9 @@ namespace LuaGlobalFunctions
      * enum TicketEvents
      * {
      *     TICKET_EVENT_ON_CREATE                          = 1,    // (event, player, ticket)
-     *     TICKET_EVENT_ON_UPDATE                          = 2,    // (event, player, ticket, message)
+     *     TICKET_EVENT_ON_UPDATE_LAST_CHANGE              = 2,    // (event, player, ticket, message)
      *     TICKET_EVENT_ON_CLOSE                           = 3,    // (event, player, ticket)
-     *     TICKET_EVENT_STATUS_UPDATE                      = 4,    // (event, player, ticket)
-     *     TICKET_EVENT_ON_RESOLVE                         = 5,    // (event, player, ticket)
+     *     TICKET_EVENT_ON_RESOLVE                         = 4,    // (event, player, ticket)
      *     TICKET_EVENT_COUNT
      * };
      * </pre>
