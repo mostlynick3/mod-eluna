@@ -1081,22 +1081,26 @@ public:
 
     bool OnPlayerCanUpdateSkill(Player* player, uint32 skill_id) override
     {
-        return sEluna->OnPlayerCanUpdateSkill(player, skill_id);
+        if (Eluna* e = player->GetEluna()) 
+            return e->OnPlayerCanUpdateSkill(player, skill_id);
     }
 
     void OnPlayerBeforeUpdateSkill(Player* player, uint32 skill_id, uint32& value, uint32 max, uint32 step) override
     {
-        sEluna->OnPlayerBeforeUpdateSkill(player, skill_id, value, max, step);
+        if (Eluna* e = player->GetEluna()) 
+            e->OnPlayerBeforeUpdateSkill(player, skill_id, value, max, step);
     }
 
     void OnPlayerUpdateSkill(Player* player, uint32 skill_id, uint32 value, uint32 max, uint32 step, uint32 new_value) override
     {
-        sEluna->OnPlayerUpdateSkill(player, skill_id, value, max, step, new_value);
+        if (Eluna* e = player->GetEluna()) 
+            e->OnPlayerUpdateSkill(player, skill_id, value, max, step, new_value);
     }
     
     bool OnPlayerCanResurrect(Player* player) override
     {
-        return sEluna->CanPlayerResurrect(player);
+        if (Eluna* e = player->GetEluna()) 
+            return e->CanPlayerResurrect(player);
     }
 };
 
@@ -1363,22 +1367,26 @@ public:
 
     void OnTicketCreate(GmTicket* ticket) override
     {
-        sEluna->OnTicketCreate(ticket);
+        if (Eluna* e = sWorldSessionMgr->GetEluna()) 
+            e->OnTicketCreate(ticket);
     }
 
     void OnTicketUpdateLastChange(GmTicket* ticket) override
     {
-        sEluna->OnTicketUpdateLastChange(ticket);
+        if (Eluna* e = sWorldSessionMgr->GetEluna()) 
+            e->OnTicketUpdateLastChange(ticket);
     }
 
     void OnTicketClose(GmTicket* ticket) override
     {
-        sEluna->OnTicketClose(ticket);
+        if (Eluna* e = sWorldSessionMgr->GetEluna()) 
+            e->OnTicketClose(ticket);
     }
 
     void OnTicketResolve(GmTicket* ticket) override
     {
-        sEluna->OnTicketResolve(ticket);
+        if (Eluna* e = sWorldSessionMgr->GetEluna()) 
+            e->OnTicketResolve(ticket);
     }
 };
 
