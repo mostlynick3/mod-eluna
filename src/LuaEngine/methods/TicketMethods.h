@@ -8,7 +8,7 @@
 #define TICKETMETHODS_H
 
 /***
- * An instance of a spell, created when the spell is cast by a [Unit].
+ * An instance of a ticket, created when the ticket is opened by a [Player].
  *
  * Inherits all methods from: none
  */
@@ -19,9 +19,9 @@ namespace LuaTicket
      *
      * @return bool is_closed
      */
-    int IsClosed(lua_State* L, GmTicket* ticket)
+    int IsClosed(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->IsClosed());
+        E->Push(ticket->IsClosed());
         return 1;
     }
 
@@ -30,9 +30,9 @@ namespace LuaTicket
      *
      * @return bool is_completed
      */
-    int IsCompleted(lua_State* L, GmTicket* ticket)
+    int IsCompleted(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->IsCompleted());
+        E->Push(ticket->IsCompleted());
         return 1;
     }
 
@@ -43,11 +43,11 @@ namespace LuaTicket
      *
      * @return bool same_guid
      */
-    int IsFromPlayer(lua_State* L, GmTicket* ticket)
+    int IsFromPlayer(Eluna* E, GmTicket* ticket)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
-        Eluna::Push(L, ticket->IsFromPlayer(guid));
+        E->Push(ticket->IsFromPlayer(guid));
         return 1;
     }
 
@@ -56,9 +56,9 @@ namespace LuaTicket
      *
      * @return bool is_assigned
      */
-    int IsAssigned(lua_State* L, GmTicket* ticket)
+    int IsAssigned(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->IsAssigned());
+        E->Push(ticket->IsAssigned());
         return 1;
     }
 
@@ -69,11 +69,11 @@ namespace LuaTicket
      *
      * @return bool is_assigned_to
      */
-    int IsAssignedTo(lua_State* L, GmTicket* ticket)
+    int IsAssignedTo(Eluna* E, GmTicket* ticket)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
-        Eluna::Push(L, ticket->IsAssignedTo(guid));
+        E->Push(ticket->IsAssignedTo(guid));
         return 1;
     }
 
@@ -84,11 +84,11 @@ namespace LuaTicket
      *
      * @return bool is_assigned_not_to
      */
-    int IsAssignedNotTo(lua_State* L, GmTicket* ticket)
+    int IsAssignedNotTo(Eluna* E, GmTicket* ticket)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
 
-        Eluna::Push(L, ticket->IsAssignedNotTo(guid));
+        E->Push(ticket->IsAssignedNotTo(guid));
         return 1;
     }
 
@@ -97,9 +97,9 @@ namespace LuaTicket
      *
      * @return unint32 ticket_id
      */
-    int GetId(lua_State* L, GmTicket* ticket)
+    int GetId(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetId());
+        E->Push(ticket->GetId());
         return 1;
     }
 
@@ -108,9 +108,9 @@ namespace LuaTicket
      *
      * @return [Player] player
      */
-    int GetPlayer(lua_State* L, GmTicket* ticket)
+    int GetPlayer(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetPlayer());
+        E->Push(ticket->GetPlayer());
         return 1;
     }
 
@@ -119,9 +119,9 @@ namespace LuaTicket
      *
      * @return string player_name
      */
-    int GetPlayerName(lua_State* L, GmTicket* ticket)
+    int GetPlayerName(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetPlayerName());
+        E->Push(ticket->GetPlayerName());
         return 1;
     }
 
@@ -130,9 +130,9 @@ namespace LuaTicket
      *
      * @return string message
      */
-    int GetMessage(lua_State* L, GmTicket* ticket)
+    int GetMessage(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetMessage());
+        E->Push(ticket->GetMessage());
         return 1;
     }
 
@@ -141,9 +141,9 @@ namespace LuaTicket
      *
      * @return [Player] assigned_player
      */
-    int GetAssignedPlayer(lua_State* L, GmTicket* ticket)
+    int GetAssignedPlayer(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetAssignedPlayer());
+        E->Push(ticket->GetAssignedPlayer());
         return 1;
     }
 
@@ -152,9 +152,9 @@ namespace LuaTicket
      *
      * @return [ObjectGUID] assigned_guid
      */
-    int GetAssignedToGUID(lua_State* L, GmTicket* ticket)
+    int GetAssignedToGUID(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetAssignedToGUID());
+        E->Push(ticket->GetAssignedToGUID());
         return 1;
     }
 
@@ -163,9 +163,9 @@ namespace LuaTicket
      *
      * @return uint64 last_modified
      */
-    int GetLastModifiedTime(lua_State* L, GmTicket* ticket)
+    int GetLastModifiedTime(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetLastModifiedTime());
+        E->Push(ticket->GetLastModifiedTime());
         return 1;
     }
 
@@ -175,10 +175,10 @@ namespace LuaTicket
      * @param guid playerGuid : desired playerGuid
      * @param bool isAdmin : true if the guid is an Admin or false (default false)
      */
-    int SetAssignedTo(lua_State* L, GmTicket* ticket)
+    int SetAssignedTo(Eluna* E, GmTicket* ticket)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
-        bool is_admin = Eluna::CHECKVAL<bool>(L, 2, false);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
+        bool is_admin = E->CHECKVAL<bool>(2, false);
         ticket->SetAssignedTo(guid, is_admin);
         return 0;
     }
@@ -188,9 +188,9 @@ namespace LuaTicket
      *
      * @param guid playerGuid : desired playerGuid
      */
-    int SetResolvedBy(lua_State* L, GmTicket* ticket)
+    int SetResolvedBy(Eluna* E, GmTicket* ticket)
     {
-        ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
+        ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);
         ticket->SetResolvedBy(guid);
         return 0;
     }
@@ -199,7 +199,7 @@ namespace LuaTicket
      * Set [Ticket] completed.
      *
      */
-    int SetCompleted(lua_State* /*L*/, GmTicket* ticket)
+    int SetCompleted(Eluna* E, GmTicket* ticket)
     {
         ticket->SetCompleted();
         return 0;
@@ -211,9 +211,9 @@ namespace LuaTicket
      * @param string message: desired message
      *
      */
-    int SetMessage(lua_State* L, GmTicket* ticket)
+    int SetMessage(Eluna* E, GmTicket* ticket)
     {
-        std::string message = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string message = E->CHECKVAL<std::string>(2);
 
         ticket->SetMessage(message);
         return 0;
@@ -225,9 +225,9 @@ namespace LuaTicket
      * @param string comment: desired comment
      *
      */
-    int SetComment(lua_State* L, GmTicket* ticket)
+    int SetComment(Eluna* E, GmTicket* ticket)
     {
-        std::string comment = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string comment = E->CHECKVAL<std::string>(2);
 
         ticket->SetComment(comment);
         return 0;
@@ -237,7 +237,7 @@ namespace LuaTicket
      * Set [Ticket] is viewed.
      *
      */
-    int SetViewed(lua_State* /*L*/, GmTicket* ticket)
+    int SetViewed(Eluna* E, GmTicket* ticket)
     {
         ticket->SetViewed();
         return 0;
@@ -247,7 +247,7 @@ namespace LuaTicket
      * Set [Ticket] is unassigned.
      *
      */
-    int SetUnassigned(lua_State* /*L*/, GmTicket* ticket)
+    int SetUnassigned(Eluna* E, GmTicket* ticket)
     {
         ticket->SetUnassigned();
         return 0;
@@ -262,12 +262,12 @@ namespace LuaTicket
      * @param float z
      *
      */
-    int SetPosition(lua_State* L, GmTicket* ticket)
+    int SetPosition(Eluna* E, GmTicket* ticket)
     {
-        uint32 mapId = Eluna::CHECKVAL<uint32>(L, 2);
-        float x = Eluna::CHECKVAL<float>(L, 2);
-        float y = Eluna::CHECKVAL<float>(L, 2);
-        float z = Eluna::CHECKVAL<float>(L, 2);
+        uint32 mapId = Eluna::CHECKVAL<uint32>(2);
+        float x = E->CHECKVAL<float>(2);
+        float y = E->CHECKVAL<float>(2);
+        float z = E->CHECKVAL<float>(2);
 
         ticket->SetPosition(mapId, x, y, z);
         return 0;
@@ -279,9 +279,9 @@ namespace LuaTicket
      * @param string response: desired response
      *
      */
-    int AppendResponse(lua_State* L, GmTicket* ticket)
+    int AppendResponse(Eluna* E, GmTicket* ticket)
     {
-        std::string response = Eluna::CHECKVAL<std::string>(L, 2);
+        std::string response = E->CHECKVAL<std::string>(2);
 
         ticket->AppendResponse(response);
         return 0;
@@ -292,9 +292,9 @@ namespace LuaTicket
      *
      * @return string response
      */
-    int GetResponse(lua_State* L, GmTicket* ticket)
+    int GetResponse(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetResponse());
+        E->Push(ticket->GetResponse());
         return 1;
     }
 
@@ -302,7 +302,7 @@ namespace LuaTicket
      * Delete the [Ticket] response.
      *
      */
-    int DeleteResponse(lua_State* /*L*/, GmTicket* ticket)
+    int DeleteResponse(Eluna* E, GmTicket* ticket)
     {
         ticket->DeleteResponse();
         return 0;
@@ -313,9 +313,9 @@ namespace LuaTicket
      *
      * @return string chatlog
      */
-    int GetChatLog(lua_State* L, GmTicket* ticket)
+    int GetChatLog(Eluna* E, GmTicket* ticket)
     {
-        Eluna::Push(L, ticket->GetChatLog());
+        E->Push(ticket->GetChatLog());
         return 1;
     }
 };
