@@ -2655,9 +2655,9 @@ namespace LuaUnit
      *
      * @param [Unit] target
      */
-    int ClearThreat(lua_State* L, Unit* unit)
+    int ClearThreat(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
         unit->GetThreatMgr().ClearThreat(target);
         return 0;
@@ -2666,7 +2666,7 @@ namespace LuaUnit
     /**
      * Resets the [Unit]'s threat list, setting all threat targets' threat to 0.
      */
-    int ResetAllThreat(lua_State* /*L*/, Unit* unit)
+    int ResetAllThreat(Eluna* E, Unit* unit)
     {
         unit->GetThreatMgr().ResetAllThreat();
         return 0;
@@ -2678,11 +2678,11 @@ namespace LuaUnit
      * @param [Unit] target
      * @return float threat
      */
-    int GetThreat(lua_State* L, Unit* unit)
+    int GetThreat(Eluna* E, Unit* unit)
     {
-        Unit* target = Eluna::CHECKOBJ<Unit>(L, 2);
+        Unit* target = E->CHECKOBJ<Unit>(2);
 
-        Eluna::Push(L, unit->GetThreatMgr().GetThreat(target));
+        E->Push(unit->GetThreatMgr().GetThreat(target));
         return 1;
     }
 
