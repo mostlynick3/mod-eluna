@@ -2395,8 +2395,7 @@ namespace LuaGlobalFunctions
      */
     int IsCompatibilityMode(Eluna* E)
     {
-        // Until AC supports multistate, this will always return true
-        E->Push(true);
+        E->Push(E->GetCompatibilityMode());
         return 1;
     }
 
