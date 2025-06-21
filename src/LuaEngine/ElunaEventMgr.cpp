@@ -60,17 +60,15 @@ void GlobalEventMgr::ClearAllEvents()
 
 ElunaEventProcessor::ElunaEventProcessor(Eluna* _E, WorldObject* _obj) : m_time(0), obj(_obj), E(_E)
 {
-    if (obj)
+    if (obj && E && E->eventMgr)
         E->eventMgr->processors.insert(this);
 }
 
 ElunaEventProcessor::~ElunaEventProcessor()
 {
-    {
-        RemoveEvents_internal();
-    }
+    RemoveEvents_internal();
 
-    if (obj)
+    if (obj && E && E->eventMgr)
         E->eventMgr->processors.erase(this);
 }
 
