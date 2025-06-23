@@ -1313,5 +1313,17 @@ namespace LuaCreature
 
         return 1;
     }
+
+    int GetLoot(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, &creature->loot);
+        return 1;
+    }
+
+    int AllLootRemoved(lua_State* /*L*/, Creature* creature)
+    {
+        creature->AllLootRemovedFromCorpse();
+        return 0;
+    }
 };
 #endif
