@@ -146,5 +146,7 @@ void RegisterMethods(Eluna* E)
 
     // Register custom methods
     LuaCustom::RegisterCustomMethods(E);
+
+    LuaVal::Register(E->L);
 }
 
