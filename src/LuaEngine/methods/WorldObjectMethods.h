@@ -1103,6 +1103,32 @@ namespace LuaWorldObject
         return 0;
     }
 
+    /**
+     * Returns a runtime-persistent cache tied to the [WorldObject].
+     * This data will remain for as long as the [WorldObject] exists, or until a server restart.
+     *
+     * A reload of the Lua state will NOT clear this cache.
+     *
+     * This cache can be added to and read from with the following sub-methods.
+     * <pre>
+     * -- Sets the key-value pair in the cache
+     * WorldObject:Data():Set("key", val)
+     *
+     * -- Returns the value from the cache using the key
+     * local val = WorldObject:Data():Get("key")
+     *
+     * -- Removes the key-value pair from the cache
+     * WorldObject:Data():Set("key", nil)
+     *
+     * -- Returns all the key-value pairs as a Lua table indexed by the keys
+     * local table = WorldObject:Data():AsTable()
+     * </pre>
+     */
+    int Data(Eluna* E, WorldObject* obj)
+    {
+        return LuaVal::PushLuaVal(E->L, obj->lua_data);
+    }
+	
     ElunaRegister<WorldObject> WorldObjectMethods[] =
     {
         // Getters
@@ -1156,7 +1182,8 @@ namespace LuaWorldObject
         { "RemoveEvents", &LuaWorldObject::RemoveEvents },
         { "PlayMusic", &LuaWorldObject::PlayMusic },
         { "PlayDirectSound", &LuaWorldObject::PlayDirectSound },
-        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound }
+        { "PlayDistanceSound", &LuaWorldObject::PlayDistanceSound },
+        { "Data", &LuaWorldObject::Data }
     };
 };
 #endif
