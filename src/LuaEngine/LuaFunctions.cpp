@@ -1197,6 +1197,7 @@ ElunaRegister<WorldPacket> PacketMethods[] =
     { "ReadLong", &LuaPacket::ReadLong },
     { "ReadULong", &LuaPacket::ReadULong },
     { "ReadGUID", &LuaPacket::ReadGUID },
+    { "ReadPackedGUID", &LuaPacket::ReadPackedGUID },
     { "ReadString", &LuaPacket::ReadString },
     { "ReadFloat", &LuaPacket::ReadFloat },
     { "ReadDouble", &LuaPacket::ReadDouble },
