@@ -754,10 +754,25 @@ void Eluna::OnPlayerUpdateSkill(Player* player, uint32 skill_id, uint32 value, u
     CallAllFunctions(PlayerEventBindings, key);
 }
 
-
 bool Eluna::CanPlayerResurrect(Player* player)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_RESURRECT, true);
     Push(player);
     return CallAllFunctionsBool(PlayerEventBindings, key);
+}
+
+void Eluna::OnBattleRankChanged(Player* pPlayer, uint8 oldRank)
+{
+    START_HOOK(PLAYER_EVENT_ON_BATTLERANK_CHANGED);
+    Push(pPlayer);
+    Push(oldRank);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
+void Eluna::OnPrestigeChanged(Player* pPlayer, uint8 prestige)
+{
+    START_HOOK(PLAYER_EVENT_ON_PRESTIGE_CHANGED);
+    Push(pPlayer);
+    Push(prestige);
+    CallAllFunctions(PlayerEventBindings, key);
 }

@@ -4103,6 +4103,106 @@ namespace LuaPlayer
         player->TeleportTo(game_tele->mapId, game_tele->position_x, game_tele->position_y, game_tele->position_z, game_tele->orientation);
         return 0;
     }
+
+    // Battle Rank
+    int GetBattleRank(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetBattleRank());
+        return 1;
+    }
+
+    int SetBattleRank(lua_State* L, Player* player)
+	{
+		uint8 newRank = Eluna::CHECKVAL<uint8>(L, 2);
+
+		if (newRank < 0)
+			return 0;
+
+		if (newRank > 50)
+			return 0;
+
+		player->SetBattleRank(newRank);
+		return 0;
+	}
+
+    int GetPrestige(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetPrestige());
+        return 1;
+    }
+
+    int SetPrestige(lua_State* L, Player* player)
+    {
+        uint8 prestige = Eluna::CHECKVAL<uint8>(L, 2);
+
+        if (prestige < 0)
+            return 0;
+
+        if (prestige > 7)
+            return 0;
+
+        player->SetPrestige(prestige);
+        return 0;
+    }
+
+    int SetPrestigePlayerFrame(lua_State* L, Player* player)
+    {
+        uint32 entry = Eluna::CHECKVAL<uint32>(L, 2);
+
+        player->SetPrestigePlayerFrame(entry);
+        return 0;
+    }
+
+    int GetProgressPoints(lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetProgressPoints());
+		return 1;
+	}
+
+    int GiveProgressPoints(lua_State* L, Player* player)
+	{
+		uint32 progressPoints = Eluna::CHECKVAL<uint32>(L, 2);
+
+		if (player->IsPremium())
+			progressPoints *= 2;
+
+		uint32 currentProgressPoints = player->GetProgressPoints();
+
+		player->SetProgressPoints(currentProgressPoints + progressPoints);
+		return 0;
+	}
+
+	int GetProgressCap(lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetProgressPointCap());
+		return 1;
+	}
+
+    int GetPremiumDays(lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->GetPremiumDays());
+		return 1;
+	}
+
+	int SetPremiumDays(lua_State* L, Player* player)
+	{
+		int32 premiumDays = Eluna::CHECKVAL<int32>(L, 2);
+
+		player->SetPremiumDays(premiumDays);
+		return 1;
+	}
+
+	int IsPremium(lua_State* L, Player* player)
+	{
+		Eluna::Push(L, player->IsPremium());
+		return 1;
+	}
+
+    int SendCombatLogPPGain(lua_State* L, Player* player)
+    {
+        uint32 value = Eluna::CHECKVAL<uint32>(L, 2);
+        player->SendLogXPGain(value, nullptr, 0, false, 1.0f);
+        return 0;
+    }
 };
 #endif
-
