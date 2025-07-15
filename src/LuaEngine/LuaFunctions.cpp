@@ -757,19 +757,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "UpdatePlayerSetting", &LuaPlayer::UpdatePlayerSetting },
     { "TeleportTo", &LuaPlayer::TeleportTo },
 
-	{ "GetBattleRank", &LuaPlayer::GetBattleRank },
-	{ "SetBattleRank", &LuaPlayer::SetBattleRank },
-    { "GetPrestige", &LuaPlayer::GetPrestige },
-    { "SetPrestige", &LuaPlayer::SetPrestige },
-    { "SetPrestigePlayerFrame", &LuaPlayer::SetPrestigePlayerFrame },
-	{ "GetProgressPoints", &LuaPlayer::GetProgressPoints },
-	{ "GetProgressCap", &LuaPlayer::GetProgressCap },
-	{ "GiveProgressPoints", &LuaPlayer::GiveProgressPoints },
-	{ "GetPremiumDays", &LuaPlayer::GetPremiumDays },
-	{ "SetPremiumDays", &LuaPlayer::SetPremiumDays },
-	{ "IsPremium", &LuaPlayer::IsPremium },
-    { "SendCombatLogPPGain", &LuaPlayer::SendCombatLogPPGain },
-
     { NULL, NULL }
 };
 
@@ -944,7 +931,6 @@ ElunaRegister<Item> ItemMethods[] =
     { "GetItemSet", &LuaItem::GetItemSet },
     { "GetBagSize", &LuaItem::GetBagSize },
     { "GetItemTemplate", &LuaItem::GetItemTemplate },
-    { "GetRequiredBattleRank", &LuaItem::GetRequiredBattleRank },
 
     // Setters
     { "SetOwner", &LuaItem::SetOwner },
@@ -1001,7 +987,6 @@ ElunaRegister<ItemTemplate> ItemTemplateMethods[] =
     { "GetItemLevel", &LuaItemTemplate::GetItemLevel },
     { "GetRequiredLevel", &LuaItemTemplate::GetRequiredLevel },
     { "GetIcon", &LuaItemTemplate::GetIcon },
-    { "GetRequiredBattleRank", &LuaItemTemplate::GetRequiredBattleRank },
     { NULL, NULL }
 };
 
