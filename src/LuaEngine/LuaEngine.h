@@ -353,8 +353,6 @@ public:
     bool OnItemGossip(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
     bool OnExpire(Player* pPlayer, ItemTemplate const* pProto);
     bool OnRemove(Player* pPlayer, Item* item);
-    bool OnBuy(Player* pPlayer, uint32 item);
-    bool OnSell(Player* pPlayer, uint32 item);
     void HandleGossipSelectOption(Player* pPlayer, Item* item, uint32 sender, uint32 action, const std::string& code);
 
     /* Creature */
@@ -549,12 +547,6 @@ public:
     void OnSpellPrepare(Unit* caster, Spell* spell, SpellInfo const* spellInfo);
     void OnSpellCast(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool skipCheck);
     void OnSpellCastCancel(Unit* caster, Spell* spell, SpellInfo const* spellInfo, bool bySelf);
-
-    /* Customs */
-    void OnBattleRankChanged(Player* pPlayer, uint8 oldRank);
-    void OnPrestigeChanged(Player* pPlayer, uint8 prestige);
-    void OnBGObjectiveCaptured(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, Player* player, uint32 eventType);
-    void OnArenaEnd(Player* player, uint32 Own_MMRating, uint32 Opponent_MMRating, bool Won);
 };
 template<> Unit* Eluna::CHECKOBJ<Unit>(lua_State* L, int narg, bool error);
 template<> Object* Eluna::CHECKOBJ<Object>(lua_State* L, int narg, bool error);

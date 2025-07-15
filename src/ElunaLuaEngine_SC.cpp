@@ -221,18 +221,6 @@ public:
         return true;
     }
 
-    bool OnItemBuy(Player* player, uint32 item) override
-    {
-        sEluna->OnBuy(player, item);
-        return true;
-    }
-
-    bool OnItemSell(Player* player, uint32 item) override
-    {
-        sEluna->OnSell(player, item);
-        return true;
-    }
-
     void OnItemGossipSelect(Player* player, Item* item, uint32 sender, uint32 action) override
     {
         sEluna->HandleGossipSelectOption(player, item, sender, action, "");
@@ -353,16 +341,6 @@ public:
     void OnBattlegroundCreate(Battleground* bg) override
     {
         sEluna->OnBGCreate(bg, bg->GetBgTypeID(), bg->GetInstanceID());
-    }
-
-    void OnBattlegroundObjectiveCaptured(Battleground* bg, Player* player, uint32 eventType) override
-    {
-        sEluna->OnBGObjectiveCaptured(bg, bg->GetBgTypeID(), bg->GetInstanceID(), player, eventType);
-    }
-
-    void OnArenaGameEnd(Player* player, uint32 Own_MMRating, uint32 Opponent_MMRating, bool Won) override
-    {
-        sEluna->OnArenaEnd(player, Own_MMRating, Opponent_MMRating, Won);
     }
 };
 
@@ -645,9 +623,7 @@ public:
         PLAYERHOOK_ON_CAN_UPDATE_SKILL,
         PLAYERHOOK_ON_BEFORE_UPDATE_SKILL,
         PLAYERHOOK_ON_UPDATE_SKILL,
-        PLAYERHOOK_CAN_RESURRECT,
-        PLAYERHOOK_ON_BATTLERANK_CHANGED,
-        PLAYERHOOK_ON_PRESTIGE_CHANGED
+        PLAYERHOOK_CAN_RESURRECT
     }) { }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
@@ -963,16 +939,6 @@ public:
     bool OnPlayerCanResurrect(Player* player) override
     {
         return sEluna->CanPlayerResurrect(player);
-    }
-
-    void OnPlayerBattleRankChanged(Player* player, uint8 oldRank) override
-    {
-        sEluna->OnBattleRankChanged(player, oldRank);
-    }
-
-    void OnPlayerPrestigeChanged(Player* player, uint8 prestige) override
-    {
-        sEluna->OnPrestigeChanged(player, prestige);
     }
 };
 
