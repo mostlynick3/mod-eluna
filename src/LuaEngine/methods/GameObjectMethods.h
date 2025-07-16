@@ -217,14 +217,12 @@ namespace LuaGameObject
     }
 
     /**
-    * Adds an [Item] to the loot of a [GameObject]
-    * Requires an gameobject with loot_template set to 0.
+    * Adds an [Item] to the loot of a [GameObject].  Requires a gameobject with loot_template set to 0.
     *
     * @param uint32 entry : The entry of the [Item]
     * @param uint32 amount = 1 : amount of the [Item] to add to the loot
     * @return uint32 itemGUIDlow : low GUID of the [Item]
     */
-
     int AddLoot(lua_State* L, GameObject* go)
     {
         int i = 1;

@@ -853,10 +853,19 @@ namespace LuaCreature
     }
 
     /**
-    * Gets the [Creature]'s current ReactState.
-    *
-    * @return [ReactState] The current react state of the creature.
-    */
+     * Returns the [Creature]'s current ReactState.
+     *
+     * <pre>
+     * enum ReactState
+     * {
+     *     REACT_PASSIVE       = 0,
+     *     REACT_DEFENSIVE     = 1,
+     *     REACT_AGGRESSIVE    = 2
+     * };
+     * </pre>
+     *
+     * @return [ReactState] state
+     */
     int GetReactState(lua_State* L, Creature* creature)
     {
         ReactStates state = creature->GetReactState();
@@ -902,7 +911,16 @@ namespace LuaCreature
     }
 
     /**
-     * Sets the [Creature]'s ReactState to `state`.
+     * Sets the [Creature]'s current ReactState.
+     *
+     * <pre>
+     * enum ReactState
+     * {
+     *     REACT_PASSIVE       = 0,
+     *     REACT_DEFENSIVE     = 1,
+     *     REACT_AGGRESSIVE    = 2
+     * };
+     * </pre>
      *
      * @param [ReactState] state
      */
@@ -1337,12 +1355,20 @@ namespace LuaCreature
         return 1;
     }
 
+    /**
+     * Returns the [Loot] object associated with the [Creature]
+     *
+     * @return [Loot] loot
+     */
     int GetLoot(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, &creature->loot);
         return 1;
     }
 
+    /**
+     * Removes all loot from the [Creature]'s corpse
+     */
     int AllLootRemoved(lua_State* /*L*/, Creature* creature)
     {
         creature->AllLootRemovedFromCorpse();
