@@ -3366,10 +3366,10 @@ namespace LuaGlobalFunctions
      *
      * @param uint32 mapId
      *
-     * return uint32 pos_x
-     * return uint32 pos_y
-     * return uint32 pos_z
-     * return uint32 pos_o
+     * @return uint32 pos_x
+     * @return uint32 pos_y
+     * @return uint32 pos_z
+     * @return uint32 pos_o
      * 
      */
     int GetMapEntrance(lua_State* L)
@@ -3406,12 +3406,11 @@ namespace LuaGlobalFunctions
     }
   
     /**
-     * Returns the instance of the specified DBC (DatabaseClient) store.
+     * Returns an entry from the specified DBC (DatabaseClient) store.
      *
-     * This function retrieves the DBC store associated with the provided name 
-     * and pushes it onto the Lua stack.
+     * This function looks up an entry in a DBC file by name and ID, and pushes it onto the Lua stack.
      *
-     * @param const char* dbcName : The name of the DBC store to retrieve.
+     * @param [const char*] dbcName : The name of the DBC store (e.g., "ItemDisplayInfo")
      * @param uint32 id : The ID used to look up within the specified DBC store.
      *
      * @return [DBCStore] store : The requested DBC store instance.
