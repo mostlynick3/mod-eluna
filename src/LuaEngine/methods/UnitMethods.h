@@ -8,6 +8,8 @@
 #define UNITMETHODS_H
 
 /***
+ * Represents a non-[Player] controlled [Unit] (i.e. NPCs).
+ *
  * Inherits all methods from: [Object], [WorldObject]
  */
 namespace LuaUnit

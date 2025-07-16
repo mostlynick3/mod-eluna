@@ -7,6 +7,14 @@
 #ifndef SPELLINFOMETHODS_H
 #define SPELLINFOMETHODS_H
 
+/***
+ * Represents spell metadata used for behavior, targeting, attributes, mechanics, auras, and conditions.
+ *
+ * Unlike [SpellEntry], this class includes helper functions and logic used to determine spell behavior in-game.
+ * Used for checking if a spell is passive, area-targeted, profession-related, or has specific effects or auras.
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaSpellInfo
 {
 

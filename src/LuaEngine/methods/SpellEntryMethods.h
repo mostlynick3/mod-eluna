@@ -7,6 +7,13 @@
 #ifndef SPELLENTRYMETHODS_H
 #define SPELLENTRYMETHODS_H
 
+/***
+ * Represents spell data loaded from the DBCs, including effects, costs, attributes, and requirements.
+ *
+ * Used for inspecting the properties of any spell in the game, such as mana cost, targets, or effects.
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaSpellEntry
 {
     /**
