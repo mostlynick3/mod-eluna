@@ -1018,6 +1018,14 @@ namespace LuaSpellEntry
         return 1;
     }
 
+    /**
+     * Returns a table of [SpellFamilyFlags] for each effect of this [SpellEntry].
+     *
+     * These flags are used to categorize spell effects for use with spell group logic.
+     * The table contains up to 3 bitmask entries, one per effect.
+     *
+     * @return table effectSpellClassMask : table of [SpellFamilyFlags] per effect
+     */
     int GetEffectSpellClassMask(lua_State* L, SpellEntry* entry)
     {
         lua_newtable(L);
