@@ -7,7 +7,9 @@
 #ifndef GUILDMETHODS_H
 #define GUILDMETHODS_H
 
-/***
+/**
+ * Represents a player guild. Used to manage guild members, ranks, guild bank.
+ *
  * Inherits all methods from: none
  */
 namespace LuaGuild

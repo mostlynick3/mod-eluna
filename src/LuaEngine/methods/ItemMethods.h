@@ -8,6 +8,8 @@
 #define ITEMMETHODS_H
 
 /***
+ * Represents an instance of an item in the game world.
+ *
  * Inherits all methods from: [Object]
  */
 namespace LuaItem
