@@ -8,6 +8,8 @@
 #define LOOTMETHODS_H
 
 /***
+ * Represents loot data for items, gold, and other rewards dropped by creatures or objects.
+ *
  * Inherits all methods from: none
  */
 namespace LuaLoot
