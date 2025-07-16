@@ -1177,13 +1177,11 @@ namespace LuaUnit
         return 1;
     }
 
-    /*
-    int GetVehicle(lua_State* L, Unit* unit)
+    /*int GetVehicle(lua_State* L, Unit* unit)
     {
     Eluna::Push(L, unit->GetVehicle());
     return 1;
-    }
-    */
+    }*/
 
     /**
      * Returns the Critter Guid
