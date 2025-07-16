@@ -1793,6 +1793,13 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit]'s critter companion by GUID.
+     *
+     * This method assigns the specified [ObjectGuid] as the critter (non-combat pet) companion of the [Unit].
+     *
+     * @param [ObjectGuid] guid : The GUID of the critter to set
+     */
     int SetCritterGUID(lua_State* L, Unit* unit)
     {
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 2);
