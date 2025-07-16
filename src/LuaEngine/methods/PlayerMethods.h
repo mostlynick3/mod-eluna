@@ -17,16 +17,16 @@
 namespace LuaPlayer
 {
     /**
-     * Returns `true` if the [Player] can Titan Grip the specific [Item], `false` otherwise.
+     * Returns `true` if the [Player] can Titan Grip the given [Item], `false` otherwise.
      *
-     * @param [Item] item : an instance of an item
+     * @param [Item] item : the item to check for Titan Grip eligibility
      * @return bool canTitanGrip
      */
     int CanTitanGrip(lua_State* L, Player* player)
     {
         Item* item = Eluna::CHECKOBJ<Item>(L, 2);
-        
-        Eluna::Push(L, player->CanTitanGrip());
+
+        Eluna::Push(L, player->CanTitanGrip(item));
         return 1;
     }
 
@@ -1665,7 +1665,7 @@ namespace LuaPlayer
     /**
     * Returns known taxi nodes (flight paths) that the player has unlocked.
     *
-    * @return table<int> A table containing the IDs of the known taxi nodes.
+    * @return table nodes : A table containing the IDs of the known taxi nodes
     */
     int GetKnownTaxiNodes(lua_State* L, Player* player)
     {
@@ -1933,7 +1933,7 @@ namespace LuaPlayer
     /**
     * Sets the player's known taxi nodes (flight paths).
     *
-    * @param table<int> A table containing the taxi node IDs to set as known.
+    * @param table nodes : A table containing the taxi node IDs to set as known
     */
     int SetKnownTaxiNodes(lua_State* L, Player* player)
     {

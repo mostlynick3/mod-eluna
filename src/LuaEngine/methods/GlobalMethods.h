@@ -739,6 +739,9 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_BG_DESERTION            =     57,       // (event, player, type)
      *     PLAYER_EVENT_ON_PET_KILL                =     58,       // (event, player, killer)
      *     PLAYER_EVENT_ON_CAN_RESURRECT           =     59,       // (event, player)
+     *     PLAYER_EVENT_ON_CAN_UPDATE_SKILL        =     60,       // (event, player, skill_id) -- Can return true or false
+     *     PLAYER_EVENT_ON_BEFORE_UPDATE_SKILL     =     61,       // (event, player, skill_id, value, max, step) -- Can return new amount
+     *     PLAYER_EVENT_ON_UPDATE_SKILL            =     62,       // (event, player, skill_id, value, max, step, new_value)
      * };
      * </pre>
      *
@@ -831,10 +834,10 @@ namespace LuaGlobalFunctions
      * <pre>
      * enum BGEvents
      * {
-     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
-     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId)
+     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner)
+     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId)
+     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId)
      *     BG_EVENT_COUNT
      * };
      * </pre>
