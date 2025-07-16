@@ -391,13 +391,13 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Checks if the [SpellInfo] requires to be triggered by the caster of another specified spell.
+     * Checks if the [SpellInfo] requires to be triggered by the caster of another specified [SpellInfo].
      *
      * Certain spells or abilities can only be activated or become effective when they are triggered by the caster 
-     * of another specific spell (the triggeringSpell). This function examines if the spell or ability represented 
+     * of another specific spell (the `triggeringSpell`). This function examines if the spell or ability represented 
      * by [SpellInfo] has such requirement.
      *
-     * @param triggeringSpell The spell by the casting of which the ability or spell represented by [SpellInfo] is triggered.
+     * @param [SpellInfo] triggeringSpell : the spell by the casting of which the ability or spell represented by [SpellInfo] is triggered
      * @return [bool] needs_to_be_triggered_by_caster
      */
     int NeedsToBeTriggeredByCaster(lua_State* L, SpellInfo* spell_info)
