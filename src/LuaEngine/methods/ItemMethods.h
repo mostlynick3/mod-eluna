@@ -8,6 +8,8 @@
 #define ITEMMETHODS_H
 
 /***
+ * Represents an instance of an item in the game world.
+ *
  * Inherits all methods from: [Object]
  */
 namespace LuaItem
@@ -298,6 +300,12 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns the GUID of the [Player] who owns the specified [Item].
+     *
+     * @param [Item] item
+     * @return uint64 ownerGUID
+     */
     int GetOwnerGUID(Eluna* E, Item* item)
     {
         E->Push(item->GetOwnerGUID());
@@ -551,6 +559,12 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns the number of stat entries defined on the [Item]'s [ItemTemplate].  This reflects how many stat slots (e.g., Strength, Stamina, etc.) are defined for the item.
+     *
+     * @param [Item] item
+     * @return uint32 statsCount
+     */
     int GetStatsCount(Eluna* E, Item* item)
     {
         E->Push(item->GetTemplate()->StatsCount);
@@ -568,6 +582,12 @@ namespace LuaItem
         return 1;
     }
 
+    /**
+     * Returns the random suffix ID of the specified [Item].  This corresponds to the `RandomSuffix` field from the item's [ItemTemplate], which controls the applied suffix (e.g., "of the Bear", "of the Eagle").
+     *
+     * @param [Item] item
+     * @return uint32 randomSuffixId
+     */
     int GetRandomSuffix(Eluna* E, Item* item)
     {
         E->Push(item->GetTemplate()->RandomSuffix);
@@ -681,6 +701,30 @@ namespace LuaItem
         owner->ApplyEnchantment(item, slot, true);
         E->Push(true);
         return 1;
+    }
+
+    /**
+     * Sets the random properties for the [Item] from a given random property ID.
+     *
+     * @param uint32 randomPropId : The ID of the random property to be applied
+     */
+    int SetRandomProperty(lua_State* L, Item* item)
+    {
+        uint32 randomPropId = Eluna::CHECKVAL<uint32>(L, 2);
+        item->SetItemRandomProperties(randomPropId);
+        return 0;
+    }
+
+    /**
+     * Sets the random suffix for the [Item] from a given random suffix ID.
+     *
+     * @param uint32 randomSuffixId : The ID of the random suffix to be applied
+     */
+    int SetRandomSuffix(lua_State* L, Item* item)
+    {
+        uint32 randomPropId = Eluna::CHECKVAL<uint32>(L, 2);
+        item->SetItemRandomProperties(-randomPropId);
+        return 0;
     }
 
     /* OTHER */

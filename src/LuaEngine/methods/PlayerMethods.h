@@ -527,6 +527,13 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns `true` if the [Player] is in the same group and visible to the specified [Player], `false` otherwise.
+     *
+     * @param [Player] player : the source player
+     * @param [Player] target : the player to check visibility from
+     * @return bool isGroupVisible
+     */
     int IsGroupVisibleFor(Eluna* E, Player* player)
     {
         Player* target = E->CHECKOBJ<Player>(2);
@@ -588,6 +595,12 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns `true` if the [Player] is currently visible to other players, `false` if hidden via GM invisibility.
+     *
+     * @param [Player] player
+     * @return bool isVisible
+     */
     int IsGMVisible(Eluna* E, Player* player)
     {
         E->Push(player->isGMVisible());
@@ -605,6 +618,12 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Returns `true` if the [Player] has GM chat enabled, `false` otherwise.
+     *
+     * @param [Player] player
+     * @return bool isGMChat
+     */
     int IsGMChat(Eluna* E, Player* player)
     {
         E->Push(player->isGMChat());
@@ -1655,6 +1674,37 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+    * Returns known taxi nodes (flight paths) that the player has unlocked.
+    *
+    * @return table nodes : A table containing the IDs of the known taxi nodes
+    */
+    int GetKnownTaxiNodes(Eluna* E, Player* player)
+    {
+        if (!player)
+            return 0;
+            
+        lua_State* L = E->L;
+        lua_newtable(L);
+        ByteBuffer data;
+        player->m_taxi.AppendTaximaskTo(data, false);
+        for (uint8 i = 0; i < TaxiMaskSize; i++)
+        {
+            uint32 mask;
+            data >> mask;
+            for (uint8 bit = 0; bit < 32; bit++)
+            {
+                if (mask & (1 << bit))
+                {
+                    uint8 nodeId = (i * 32) + bit + 1;
+                    lua_pushinteger(L, nodeId);
+                    lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
+                }
+            }
+        }
+        return 1;
+    }
+
     /*int GetRecruiterId(Eluna* E, Player* player)
     {
         E->Push(player->GetSession()->GetRecruiterId());
@@ -1886,6 +1936,40 @@ namespace LuaPlayer
         bool on = E->CHECKVAL<bool>(2, true);
 
         player->SetGMVisible(on);
+        return 0;
+    }
+
+    /**
+    * Sets the player's known taxi nodes (flight paths).
+    *
+    * @param table nodes : A table containing the taxi node IDs to set as known
+    */
+    int SetKnownTaxiNodes(Eluna* E, Player* player)
+    {
+        if (!player)
+            return 0;
+
+        lua_State* L = E->L;
+        
+        if (!lua_istable(L, 2))
+        {
+            return 0;
+        }
+
+        lua_pushnil(L);
+
+        while (lua_next(L, 2) != 0)
+        {
+            uint32 nodeId = luaL_checkinteger(L, -1);
+
+            if (nodeId > 0) 
+            {
+                player->m_taxi.SetTaximaskNode(nodeId);
+            }
+
+            lua_pop(L, 1);
+        }
+
         return 0;
     }
 
@@ -2413,7 +2497,7 @@ namespace LuaPlayer
      *
      * @param bool takeCost = true
      * @param float discountMod = 1.0
-     * @param bool guidBank = false
+     * @param bool guildBank = false
      */
     int DurabilityRepairAll(Eluna* E, Player* player)
     {
@@ -3125,6 +3209,12 @@ namespace LuaPlayer
         return 1;
     }
 
+    /**
+     * Adds a specified number of lifetime honorable kills to the [Player].
+     *
+     * @param [Player] player
+     * @param uint32 kills
+     */
     int AddLifetimeKills(Eluna* E, Player* player)
     {
         uint32 val = E->CHECKVAL<uint32>(2);
@@ -3419,9 +3509,10 @@ namespace LuaPlayer
     }
 
     /**
-    * Get glyphId of the glyph slot specified by `slotIndex` off the [Player]'s current talent specialization.`
-    * @param uint32 slotIndex
-    * @return glyphId of the glyph in the selected glyph slot or 0 in case the glyph slot is empty
+    * Returns the glyph ID in the specified glyph slot of the [Player]'s current talent specialization.
+    *
+    * @param [uint32] slotIndex
+    * @return [uint32] glyphId
     */
     int GetGlyph(Eluna* E, Player* player)
     {
@@ -4023,6 +4114,7 @@ namespace LuaPlayer
         { "GetBonusTalentCount", &LuaPlayer::GetBonusTalentCount },
         { "GetSpells", &LuaPlayer::GetSpells },
         { "GetHomebind", &LuaPlayer::GetHomebind },
+        { "GetKnownTaxiNodes", &LuaPlayer::GetKnownTaxiNodes },
 
         // Setters
         { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
@@ -4056,6 +4148,7 @@ namespace LuaPlayer
         { "SetGender", &LuaPlayer::SetGender },
         { "SetSheath", &LuaPlayer::SetSheath },
         { "SetBonusTalentCount", &LuaPlayer::SetBonusTalentCount },
+        { "SetKnownTaxiNodes", &LuaPlayer::SetKnownTaxiNodes },
 
         // Boolean
         { "HasTankSpec", &LuaPlayer::HasTankSpec },
@@ -4214,4 +4307,3 @@ namespace LuaPlayer
     };
 };
 #endif
-

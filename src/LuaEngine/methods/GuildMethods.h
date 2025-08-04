@@ -8,6 +8,8 @@
 #define GUILDMETHODS_H
 
 /***
+ * Represents a player guild. Used to manage guild members, ranks, guild bank.
+ *
  * Inherits all methods from: none
  */
 namespace LuaGuild
@@ -275,25 +277,25 @@ namespace LuaGuild
      * Send message to [Guild] from specific [Player].
      * 
      * @param [Player] player : the [Player] is the author of the message
-     * @param bool officierOnly : send message only on officier channel
+     * @param bool officerOnly : send message only on officer channel
      * @param string msg : the message you need to send
      * @param uint32 lang : language the [Player] will speak
      */
     int SendMessage(Eluna* E, Guild* guild)
     {
         Player* player = E->CHECKOBJ<Player>(2);
-        bool officierOnly = E->CHECKVAL<bool>(3, false);
+        bool officerOnly = E->CHECKVAL<bool>(3, false);
         std::string msg = E->CHECKVAL<std::string>(4);
         uint32 language = E->CHECKVAL<uint32>(5, false);
 
-        guild->BroadcastToGuild(player->GetSession(), officierOnly, msg, language);
+        guild->BroadcastToGuild(player->GetSession(), officerOnly, msg, language);
         return 0;
     }
 
     /**
      * Invites [Guild] members to events based on level and rank filters.
      * 
-     * @param Player player : who sends the invitation
+     * @param [Player] player : who sends the invitation
      * @param uint32 minLevel : the required min level
      * @param uint32 maxLevel : the required max level
      * @param uint32 minRank : the required min rank

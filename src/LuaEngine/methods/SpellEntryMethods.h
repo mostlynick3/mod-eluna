@@ -7,6 +7,13 @@
 #ifndef SPELLENTRYMETHODS_H
 #define SPELLENTRYMETHODS_H
 
+/***
+ * Represents spell data loaded from the DBCs, including effects, costs, attributes, and requirements.
+ *
+ * Used for inspecting the properties of any spell in the game, such as mana cost, targets, or effects.
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaSpellEntry
 {
     /**
@@ -152,6 +159,13 @@ namespace LuaSpellEntry
         return 1;
     }
 
+    /**
+     * Returns the stance restriction bitmask for which the [SpellEntry] cannot be used.
+     *
+     * This mask indicates which shapeshift forms (stances) prevent the spell from being cast.
+     *
+     * @return uint32 stancesNotMask
+     */
     int GetStancesNot(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->StancesNot);
@@ -180,66 +194,143 @@ namespace LuaSpellEntry
         return 1;
     }
 
+    /**
+     * Returns the SpellFocus ID required to cast this [SpellEntry].
+     *
+     * Some spells require proximity to a specific game object (e.g., a brazier or altar).
+     *
+     * @return uint32 spellFocusId
+     */
     int GetRequiresSpellFocus(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->RequiresSpellFocus);
         return 1;
     }
 
+    /**
+     * Returns the facing flags for this [SpellEntry].
+     *
+     * Indicates whether the caster must be facing the target or meet other orientation constraints.
+     *
+     * @return uint32 facingFlags
+     */
     int GetFacingCasterFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->FacingCasterFlags);
         return 1;
     }
 
+    /**
+     * Returns the required caster aura state for this [SpellEntry].
+     *
+     * The spell can only be cast if the caster has a specific aura state active.
+     *
+     * @return uint32 casterAuraState
+     */
     int GetCasterAuraState(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->CasterAuraState);
         return 1;
     }
 
+    /**
+     * Returns the required target aura state for this [SpellEntry].
+     *
+     * The spell can only be cast if the target has a specific aura state active.
+     *
+     * @return uint32 targetAuraState
+     */
     int GetTargetAuraState(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->TargetAuraState);
         return 1;
     }
 
+    /**
+     * Returns the forbidden caster aura state for this [SpellEntry].
+     *
+     * The spell cannot be cast if the caster has this aura state active.
+     *
+     * @return uint32 casterAuraStateNot
+     */
     int GetCasterAuraStateNot(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->CasterAuraStateNot);
         return 1;
     }
 
+    /**
+     * Returns the forbidden target aura state for this [SpellEntry].
+     *
+     * The spell cannot be cast if the target has this aura state active.
+     *
+     * @return uint32 targetAuraStateNot
+     */
     int GetTargetAuraStateNot(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->TargetAuraStateNot);
         return 1;
     }
 
+    /**
+     * Returns the required aura spell ID that must be on the caster.
+     *
+     * The spell can only be cast if the caster has an aura from this spell.
+     *
+     * @return uint32 casterAuraSpellId
+     */
     int GetCasterAuraSpell(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->CasterAuraSpell);
         return 1;
     }
 
+    /**
+     * Returns the required aura spell ID that must be on the target.
+     *
+     * The spell can only be cast if the target has an aura from this spell.
+     *
+     * @return uint32 targetAuraSpellId
+     */
     int GetTargetAuraSpell(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->TargetAuraSpell);
         return 1;
     }
 
+    /**
+     * Returns the aura spell ID that must NOT be on the caster.
+     *
+     * The spell cannot be cast if the caster has an aura from this spell.
+     *
+     * @return uint32 excludeCasterAuraSpellId
+     */
     int GetExcludeCasterAuraSpell(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->ExcludeCasterAuraSpell);
         return 1;
     }
 
+    /**
+     * Returns the aura spell ID that must NOT be on the target.
+     *
+     * The spell cannot be cast if the target has an aura from this spell.
+     *
+     * @return uint32 excludeTargetAuraSpellId
+     */
     int GetExcludeTargetAuraSpell(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->ExcludeTargetAuraSpell);
         return 1;
     }
 
+    /**
+     * Returns the casting time index of this [SpellEntry].
+     *
+     * This index is used to look up the base casting time in SpellCastTimes.dbc.
+     *
+     * @return uint32 castingTimeIndex
+     */
     int GetCastingTimeIndex(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->CastingTimeIndex);
@@ -268,24 +359,52 @@ namespace LuaSpellEntry
         return 1;
     }
 
+    /**
+     * Returns the interrupt flags for this [SpellEntry].
+     *
+     * Determines what can interrupt this spell while casting (e.g., movement, taking damage).
+     *
+     * @return uint32 interruptFlags
+     */
     int GetInterruptFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->InterruptFlags);
         return 1;
     }
 
+    /**
+     * Returns the aura interrupt flags for this [SpellEntry].
+     *
+     * Indicates what actions will break or remove the aura applied by this spell.
+     *
+     * @return uint32 auraInterruptFlags
+     */
     int GetAuraInterruptFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->AuraInterruptFlags);
         return 1;
     }
 
+    /**
+     * Returns the channel interrupt flags for this [SpellEntry].
+     *
+     * Specifies conditions under which a channeled spell will be interrupted (e.g., moving or turning).
+     *
+     * @return uint32 channelInterruptFlags
+     */
     int GetChannelInterruptFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->ChannelInterruptFlags);
         return 1;
     }
 
+    /**
+     * Returns the proc flags for this [SpellEntry].
+     *
+     * Determines the types of actions or triggers that can cause this spell to proc.
+     *
+     * @return uint32 procFlags
+     */
     int GetProcFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->ProcFlags);
@@ -462,7 +581,7 @@ namespace LuaSpellEntry
             E->Push(entry->Totem[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -483,7 +602,7 @@ namespace LuaSpellEntry
             E->Push(entry->Reagent[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -504,7 +623,7 @@ namespace LuaSpellEntry
             E->Push(entry->ReagentCount[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -558,7 +677,7 @@ namespace LuaSpellEntry
             E->Push(entry->Effect[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -579,7 +698,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectDieSides[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -600,7 +719,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectRealPointsPerLevel[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -621,7 +740,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectBasePoints[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -642,7 +761,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectMechanic[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -663,7 +782,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectImplicitTargetA[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -684,7 +803,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectImplicitTargetB[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -705,7 +824,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectRadiusIndex[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -726,7 +845,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectApplyAuraName[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -747,7 +866,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectAmplitude[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -768,7 +887,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectValueMultiplier[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -789,7 +908,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectChainTarget[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -810,7 +929,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectItemType[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -831,7 +950,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectMiscValue[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -852,7 +971,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectMiscValueB[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -873,7 +992,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectTriggerSpell[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -894,11 +1013,19 @@ namespace LuaSpellEntry
             E->Push(entry->EffectPointsPerComboPoint[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
+    /**
+     * Returns a table of [SpellFamilyFlags] for each effect of this [SpellEntry].
+     *
+     * These flags are used to categorize spell effects for use with spell group logic.
+     * The table contains up to 3 bitmask entries, one per effect.
+     *
+     * @return table effectSpellClassMask : table of [SpellFamilyFlags] per effect
+     */
     int GetEffectSpellClassMask(Eluna* E, SpellEntry* entry)
     {
         lua_newtable(E->L);
@@ -910,7 +1037,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectSpellClassMask[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -931,7 +1058,7 @@ namespace LuaSpellEntry
             E->Push(entry->SpellVisual[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -985,7 +1112,7 @@ namespace LuaSpellEntry
             E->Push(entry->SpellName[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -1006,7 +1133,7 @@ namespace LuaSpellEntry
             E->Push(entry->Rank[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -1055,13 +1182,26 @@ namespace LuaSpellEntry
         return 1;
     }
 
-
+    /**
+     * Returns the spell family name of this [SpellEntry].
+     *
+     * This identifies the broader category or class of spells (e.g., Mage, Warrior, Rogue).
+     *
+     * @return uint32 spellFamilyName
+     */
     int GetSpellFamilyName(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->SpellFamilyName);
         return 1;
     }
 
+    /**
+     * Returns the spell family flags of this [SpellEntry].
+     *
+     * These bitflags represent specific characteristics or subcategories of spells within a family.
+     *
+     * @return uint64 spellFamilyFlags
+     */
     int GetSpellFamilyFlags(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->SpellFamilyFlags);
@@ -1117,7 +1257,7 @@ namespace LuaSpellEntry
             E->Push(entry->EffectDamageMultiplier[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
@@ -1138,11 +1278,18 @@ namespace LuaSpellEntry
             E->Push(entry->TotemCategory[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 
+    /**
+     * Returns the Area Group ID associated with this [SpellEntry].
+     *
+     * AreaGroupId is used to restrict spell usage to specific zones or areas.
+     *
+     * @return uint32 areaGroupId
+     */
     int GetAreaGroupId(Eluna* E, SpellEntry* entry)
     {
         E->Push(entry->AreaGroupId);
@@ -1187,11 +1334,10 @@ namespace LuaSpellEntry
             E->Push(entry->EffectBonusMultiplier[index]);
             lua_rawseti(E->L, tbl, ++i);
         }
-        
+
         lua_settop(E->L, tbl); // push table to top of stack
         return 1;
     }
 }
 
 #endif
-

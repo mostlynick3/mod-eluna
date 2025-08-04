@@ -8,6 +8,8 @@
 #define UNITMETHODS_H
 
 /***
+ * Represents a non-[Player] controlled [Unit] (i.e. NPCs).
+ *
  * Inherits all methods from: [Object], [WorldObject]
  */
 namespace LuaUnit
@@ -1157,6 +1159,12 @@ namespace LuaUnit
         return 1;
     }
 
+    /*int GetVehicle(lua_State* L, Unit* unit)
+    {
+    Eluna::Push(L, unit->GetVehicle());
+    return 1;
+    }*/
+
     /**
      * Returns the Critter Guid
      *
@@ -1767,6 +1775,13 @@ namespace LuaUnit
         return 0;
     }
 
+    /**
+     * Sets the [Unit]'s critter companion by GUID.
+     *
+     * This method assigns the specified [ObjectGuid] as the critter (non-combat pet) companion of the [Unit].
+     *
+     * @param [ObjectGuid] guid : The GUID of the critter to set
+     */
     int SetCritterGUID(Eluna* E, Unit* unit)
     {
         ObjectGuid guid = E->CHECKVAL<ObjectGuid>(2);

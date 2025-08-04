@@ -435,6 +435,17 @@ namespace LuaCreature
     }
 
     /**
+    * Returns the spawn ID for this [Creature].
+    *
+    * @return uint32 spawnId
+    */
+    int GetCreatureSpawnId(lua_State* L, Creature* creature)
+    {
+        Eluna::Push(L, creature->GetSpawnId());
+        return 1;
+    }
+
+    /**
      * Returns the default movement type for this [Creature].
      *
      * @return [MovementGeneratorType] defaultMovementType
@@ -824,6 +835,12 @@ namespace LuaCreature
         return 1;
     }
 
+    /**
+     * Returns the loot mode flags for the specified [Creature].
+     *
+     * @param [Creature] creature : the creature whose loot mode to get
+     * @return uint16 lootMode : the loot mode bitmask of the creature
+     */
     int GetLootMode(Eluna* E, Creature* creature) // TODO: Implement LootMode features
     {
         E->Push(creature->GetLootMode());
@@ -838,6 +855,27 @@ namespace LuaCreature
     int GetDBTableGUIDLow(Eluna* E, Creature* creature)
     {
         E->Push(creature->GetSpawnId());
+        return 1;
+    }
+
+    /**
+     * Returns the [Creature]'s current ReactState.
+     *
+     * <pre>
+     * enum ReactState
+     * {
+     *     REACT_PASSIVE       = 0,
+     *     REACT_DEFENSIVE     = 1,
+     *     REACT_AGGRESSIVE    = 2
+     * };
+     * </pre>
+     *
+     * @return [ReactState] state
+     */
+    int GetReactState(lua_State* L, Creature* creature)
+    {
+        ReactStates state = creature->GetReactState();
+        lua_pushinteger(L, (int)state);
         return 1;
     }
 
@@ -881,7 +919,16 @@ namespace LuaCreature
     }
 
     /**
-     * Sets the [Creature]'s ReactState to `state`.
+     * Sets the [Creature]'s current ReactState.
+     *
+     * <pre>
+     * enum ReactState
+     * {
+     *     REACT_PASSIVE       = 0,
+     *     REACT_DEFENSIVE     = 1,
+     *     REACT_AGGRESSIVE    = 2
+     * };
+     * </pre>
      *
      * @param [ReactState] state
      */
@@ -906,6 +953,12 @@ namespace LuaCreature
         return 0;
     }
 
+    /**
+     * Sets the loot mode flags for the specified [Creature].
+     *
+     * @param [Creature] creature : the creature whose loot mode to set
+     * @param uint16 lootMode : the loot mode bitmask to apply
+     */
     int SetLootMode(Eluna* E, Creature* creature) // TODO: Implement LootMode features
     {
         uint16 lootMode = E->CHECKVAL<uint16>(2);
@@ -1116,6 +1169,18 @@ namespace LuaCreature
     }
 
     /**
+     * Sets the time it takes for the [Creature]'s corpse to despawn when killed.
+     *
+     * @param uint32 delay : the delay, in seconds
+     */
+    int SetCorpseDelay(lua_State* L, Creature* creature)
+    {
+        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2);
+        creature->SetCorpseDelay(delay);
+        return 0;
+    }
+
+    /**
      * Make the [Creature] start following its waypoint path.
      */
     int MoveWaypoint(Eluna* /*E*/, Creature* creature)
@@ -1304,6 +1369,26 @@ namespace LuaCreature
         return 1;
     }
 
+    /**
+     * Returns the [Loot] object associated with the [Creature]
+     *
+     * @return [Loot] loot
+     */
+    int GetLoot(Eluna* E, Creature* creature)
+    {
+        E->Push(&creature->loot)
+        return 1;
+    }
+
+    /**
+     * Removes all loot from the [Creature]'s corpse
+     */
+    int AllLootRemoved(Eluna* /*E*/, Creature* creature)
+    {
+        creature->AllLootRemovedFromCorpse();
+        return 0;
+    }
+
     ElunaRegister<Creature> CreatureMethods[] =
     {
         // Getters
@@ -1333,6 +1418,7 @@ namespace LuaCreature
         { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
+        { "GetLoot", &LuaCreature::GetLoot },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
@@ -1400,6 +1486,7 @@ namespace LuaCreature
         { "SelectVictim", &LuaCreature::SelectVictim },
         { "MoveWaypoint", &LuaCreature::MoveWaypoint },
         { "UpdateEntry", &LuaCreature::UpdateEntry },
+        { "AllLootRemoved", &LuaCreature::AllLootRemoved },
     };
 };
 #endif

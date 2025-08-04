@@ -46,13 +46,34 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator's name.
      *
-     * The result will be either `MaNGOS`, `cMaNGOS`, or `TrinityCore`.
+     * The result will be either `MaNGOS`, `cMaNGOS`, `AzerothCore`, or `TrinityCore`.
      *
      * @return string coreName
      */
     int GetCoreName(Eluna* E)
     {
         E->Push(CORE_NAME);
+        return 1;
+    }
+
+    /**
+     * Returns config value as a string.
+     *
+     * @param string name : name of the value
+     * @return string value
+     */
+    int GetConfigValue(lua_State* L)
+    {
+        // The key we want from the config file.
+        const char* key = Eluna::CHECKVAL<const char*>(L, 1);
+
+        // Check if any of the arguments are missing.
+        if (!key)
+            return 0;
+
+		// Get config value and tell Eluna to push it.
+        auto optionFound = sConfigMgr->GetOption<std::string>(key, "", false);
+        Eluna::Push(L, optionFound);
         return 1;
     }
 
@@ -73,6 +94,7 @@ namespace LuaGlobalFunctions
     /**
      * Returns emulator version
      *
+     * - For AzerothCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
      * - For TrinityCore returns the date of the last revision, e.g. `2015-08-26 22:53:12 +0300`
      * - For cMaNGOS returns the date and time of the last revision, e.g. `2015-09-06 13:18:50`
      * - for MaNGOS returns the version number as string, e.g. `21000`
@@ -319,6 +341,12 @@ namespace LuaGlobalFunctions
         return 1;
     }
 
+    /**
+    * Returns the [ItemTemplate] for the specified item ID.  The ItemTemplate contains all static data about an item, such as name, quality, stats, required level, and more.
+    *
+    * @param uint32 itemID : the item entry ID from `item_template` to look up
+    * @return [ItemTemplate] itemTemplate
+    */
     int GetItemTemplate(Eluna* E)
     {
         uint32 entry = E->CHECKVAL<uint32>(1);
@@ -717,6 +745,9 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_BG_DESERTION            =     57,       // (event, player, type)
      *     PLAYER_EVENT_ON_PET_KILL                =     58,       // (event, player, killer)
      *     PLAYER_EVENT_ON_CAN_RESURRECT           =     59,       // (event, player)
+     *     PLAYER_EVENT_ON_CAN_UPDATE_SKILL        =     60,       // (event, player, skill_id) -- Can return true or false
+     *     PLAYER_EVENT_ON_BEFORE_UPDATE_SKILL     =     61,       // (event, player, skill_id, value, max, step) -- Can return new amount
+     *     PLAYER_EVENT_ON_UPDATE_SKILL            =     62,       // (event, player, skill_id, value, max, step, new_value)
      * };
      * </pre>
      *
@@ -809,10 +840,10 @@ namespace LuaGlobalFunctions
      * <pre>
      * enum BGEvents
      * {
-     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner) - Needs to be added to TC
-     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId) - Needs to be added to TC
-     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId) - Needs to be added to TC
+     *     BG_EVENT_ON_START                               = 1,    // (event, bg, bgId, instanceId)
+     *     BG_EVENT_ON_END                                 = 2,    // (event, bg, bgId, instanceId, winner)
+     *     BG_EVENT_ON_CREATE                              = 3,    // (event, bg, bgId, instanceId)
+     *     BG_EVENT_ON_PRE_DESTROY                         = 4,    // (event, bg, bgId, instanceId)
      *     BG_EVENT_COUNT
      * };
      * </pre>
@@ -1820,7 +1851,7 @@ namespace LuaGlobalFunctions
                 delete creature;
                 creature = new Creature();
 
-                if (!creature->LoadFromDB(db_guid, map, true))
+                if (!creature->LoadCreatureFromDB(db_guid, map, true, true))
                 {
                     delete creature;
                     E->Push();
@@ -1890,7 +1921,7 @@ namespace LuaGlobalFunctions
 
                 object = new GameObject();
                 // this will generate a new lowguid if the object is in an instance
-                if (!object->LoadFromDB(guidLow, map))
+                if (!object->LoadGameObjectFromDB(guidLow, map, true))
                 {
                     delete object;
                     E->Push();
@@ -3435,15 +3466,14 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Return the entrance position (x, y, z, o) of the specified dungeon map id
+     * Return the entrance position (x, y, z, o) of the specified dungeon map id.
      *
      * @param uint32 mapId
      *
-     * return uint32 pos_x
-     * return uint32 pos_y
-     * return uint32 pos_z
-     * return uint32 pos_o
-     * 
+     * @return uint32 pos_x
+     * @return uint32 pos_y
+     * @return uint32 pos_z
+     * @return uint32 pos_o
      */
     int GetMapEntrance(Eluna* E)
     {
@@ -3479,15 +3509,14 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the instance of the specified DBC (DatabaseClient) store.
+     * Returns an entry from the specified DBC (DatabaseClient) store.
      *
-     * This function retrieves the DBC store associated with the provided name 
-     * and pushes it onto the Lua stack.
+     * This function looks up an entry in a DBC file by name and ID, and pushes it onto the Lua stack.
      *
-     * @param const char* dbcName : The name of the DBC store to retrieve.
-     * @param uint32 id : The ID used to look up within the specified DBC store.
+     * @param string dbcName : The name of the DBC store (e.g., "ItemDisplayInfo")
+     * @param uint32 id : The ID used to look up within the specified DBC store
      *
-     * @return [DBCStore] store : The requested DBC store instance.
+     * @return [DBCStore] store : The requested DBC store instance
      */
     int LookupEntry(Eluna* E)
     {

@@ -8,7 +8,7 @@
 #define TICKETMETHODS_H
 
 /***
- * An instance of a ticket, created when the ticket is opened by a [Player].
+ * Represents a support ticket created by a [Player] using the in-game ticket system.
  *
  * Inherits all methods from: none
  */
@@ -17,7 +17,7 @@ namespace LuaTicket
     /**
      * Returns true if the [Ticket] is closed or false.
      *
-     * @return bool is_closed
+     * @return bool isClosed
      */
     int IsClosed(Eluna* E, GmTicket* ticket)
     {
@@ -28,7 +28,7 @@ namespace LuaTicket
     /**
      * Returns true if the [Ticket] is completed or false.
      *
-     * @return bool is_completed
+     * @return bool isCompleted
      */
     int IsCompleted(Eluna* E, GmTicket* ticket)
     {
@@ -39,9 +39,9 @@ namespace LuaTicket
     /**
      * Return true if this GUID is the same as the [Player] who created the [Ticket] or false.
      *
-     * @param guid playerGuid : desired playerGuid
+     * @param [Player] player
      *
-     * @return bool same_guid
+     * @return bool isSamePlayer
      */
     int IsFromPlayer(Eluna* E, GmTicket* ticket)
     {
@@ -54,7 +54,7 @@ namespace LuaTicket
     /**
      * Return true if the [Ticket] is assigned or false.
      *
-     * @return bool is_assigned
+     * @return bool isAssigned
      */
     int IsAssigned(Eluna* E, GmTicket* ticket)
     {
@@ -63,11 +63,11 @@ namespace LuaTicket
     }
 
     /**
-     * Return true if the [Ticket] is assigned to the GUID or false.
+     * Return true if the [Ticket] is assigned to the [Player] or false.
      *
-     * @param guid playerGuid : desired playerGuid
+     * @param [Player] player
      *
-     * @return bool is_assigned_to
+     * @return bool isAssignedTo
      */
     int IsAssignedTo(Eluna* E, GmTicket* ticket)
     {
@@ -78,11 +78,11 @@ namespace LuaTicket
     }
 
     /**
-     * Return true if the [Ticket] is not assigned to the GUID or false.
+     * Return true if the [Ticket] is not assigned to the [Player] or false.
      *
-     * @param guid playerGuid : desired playerGuid
+     * @param [Player] player
      *
-     * @return bool is_assigned_not_to
+     * @return bool isAssignedNotTo
      */
     int IsAssignedNotTo(Eluna* E, GmTicket* ticket)
     {
@@ -95,7 +95,7 @@ namespace LuaTicket
     /**
      * Return the [Ticket] id.
      *
-     * @return unint32 ticket_id
+     * @return [unint32] ticketId
      */
     int GetId(Eluna* E, GmTicket* ticket)
     {
@@ -117,7 +117,7 @@ namespace LuaTicket
     /**
      * Return the [Player] name from the [Ticket].
      *
-     * @return string player_name
+     * @return string playerName
      */
     int GetPlayerName(Eluna* E, GmTicket* ticket)
     {
@@ -139,7 +139,7 @@ namespace LuaTicket
     /**
      * Returns the assigned [Player].
      *
-     * @return [Player] assigned_player
+     * @return [Player] assignedPlayer
      */
     int GetAssignedPlayer(Eluna* E, GmTicket* ticket)
     {
@@ -150,7 +150,7 @@ namespace LuaTicket
     /**
      * Returns the assigned guid.
      *
-     * @return [ObjectGUID] assigned_guid
+     * @return [ObjectGUID] assignedGuid
      */
     int GetAssignedToGUID(Eluna* E, GmTicket* ticket)
     {
@@ -161,7 +161,7 @@ namespace LuaTicket
     /**
      * Returns the last modified time from the [Ticket].
      *
-     * @return uint64 last_modified
+     * @return uint64 lastModifiedTime
      */
     int GetLastModifiedTime(Eluna* E, GmTicket* ticket)
     {
@@ -172,8 +172,8 @@ namespace LuaTicket
     /**
      * Assign the [Ticket] to a player via his GUID.
      *
-     * @param guid playerGuid : desired playerGuid
-     * @param bool isAdmin : true if the guid is an Admin or false (default false)
+     * @param [Player] player
+     * @param bool isAdmin : true if the [Player] is an Admin or false (default false)
      */
     int SetAssignedTo(Eluna* E, GmTicket* ticket)
     {
@@ -186,7 +186,7 @@ namespace LuaTicket
     /**
      * Set [Ticket] resolved by player via his GUID.
      *
-     * @param guid playerGuid : desired playerGuid
+     * @param [Player] player
      */
     int SetResolvedBy(Eluna* E, GmTicket* ticket)
     {
@@ -234,7 +234,7 @@ namespace LuaTicket
     }
 
     /**
-     * Set [Ticket] is viewed.
+     * Set [Ticket] as viewed.
      *
      */
     int SetViewed(Eluna* E, GmTicket* ticket)
@@ -244,7 +244,7 @@ namespace LuaTicket
     }
 
     /**
-     * Set [Ticket] is unassigned.
+     * Set [Ticket] as unassigned.
      *
      */
     int SetUnassigned(Eluna* E, GmTicket* ticket)

@@ -6,7 +6,15 @@
 
 #ifndef ITEMTEMPLATEMETHODS_H
 #define ITEMTEMPLATEMETHODS_H
+#include "Chat.h"
 
+/***
+ * Represents item data defined in the database and DBCs, such as stats, quality, class restrictions, and display info.
+ *
+ * Used to access read-only metadata about items (not specific item instances in bags or equipment).
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaItemTemplate
 {
     /**

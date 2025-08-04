@@ -7,6 +7,14 @@
 #ifndef SPELLINFOMETHODS_H
 #define SPELLINFOMETHODS_H
 
+/***
+ * Represents spell metadata used for behavior, targeting, attributes, mechanics, auras, and conditions.
+ *
+ * Unlike [SpellEntry], this class includes helper functions and logic used to determine spell behavior in-game.
+ * Used for checking if a spell is passive, area-targeted, profession-related, or has specific effects or auras.
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaSpellInfo
 {
 
@@ -37,7 +45,7 @@ namespace LuaSpellInfo
         E->Push(spell_info->SpellName[static_cast<LocaleConstant>(locale)]);
         return 1;
     }
-    
+
     /**
      * Checks if the [SpellInfo] has a specific attribute.
      *
@@ -45,7 +53,7 @@ namespace LuaSpellInfo
      * Attributes are divided into different categories (from 0 to 8 in this context).
      *
      * Here is how each attribute is inspected:
-     * 
+     *
      * <pre>
      * 0 : SpellAttr0
      * 1 : SpellAttr1
@@ -65,13 +73,13 @@ namespace LuaSpellInfo
     int HasAttribute(Eluna* E, SpellInfo* spell_info)
     {
         int8 attributeType = E->CHECKVAL<int8>(2);
-        uint32 attribute    = E->CHECKVAL<uint32>(3);
+        uint32 attribute = E->CHECKVAL<uint32>(3);
 
         bool hasAttribute = false;
-        if ( attributeType == -1 ) {
-            hasAttribute = spell_info->HasAttribute(static_cast<SpellCustomAttributes>(attribute));           ;
-        }else{
-            switch(attributeType)
+        if (attributeType == -1) {
+            hasAttribute = spell_info->HasAttribute(static_cast<SpellCustomAttributes>(attribute));
+        } else {
+            switch (attributeType)
             {
                 case 0:
                     hasAttribute = spell_info->HasAttribute(static_cast<SpellAttr0>(attribute));
@@ -105,7 +113,7 @@ namespace LuaSpellInfo
         E->Push(hasAttribute);
         return 1;
     }
-    
+
     /**
      * Retrieves the attributes of the [SpellInfo] based on the attribute type.
      *
@@ -133,11 +141,11 @@ namespace LuaSpellInfo
         int8 attributeType = E->CHECKVAL<int8>(2);
         uint32 attributes;
 
-        if ( attributeType == -1 ) {
+        if (attributeType == -1) {
             attributes = spell_info->AttributesCu;
         }
         else {
-            switch(attributeType)
+            switch (attributeType)
             {
                 case 0:
                     attributes = spell_info->Attributes;
@@ -169,16 +177,16 @@ namespace LuaSpellInfo
         E->Push(attributes);
         return 1;
     }
-    
+
     /**
      * Determines whether the [SpellInfo] affects an area (AOE - Area of Effect)
      *
      * The affected area will depend upon the specifics of the spell.
      * A target can be an individual unit, player, or an area, and the spellInfo stores these details.
-     * 
+     *
      * The function checks the spell's attributes to determine if the spell is designed to affect an area or not.
      * The outcome relies on spell's attributes field.
-     * 
+     *
      * @return [bool] is_affecting_area
      */
     int IsAffectingArea(Eluna* E, SpellInfo* spell_info)
@@ -186,12 +194,12 @@ namespace LuaSpellInfo
         E->Push(spell_info->IsAffectingArea());
         return 1;
     }
-    
+
     /**
      * Retrieves the category of the [SpellInfo].
      *
      * A spell's category is a way of grouping similar spells together.
-     * It might define the spell's nature or its effect. 
+     * It might define the spell's nature or its effect.
      * For instance, damage spells, heal spells, and crowd-control spells might each have a different category.
      *
      * @return [uint32] category
@@ -201,7 +209,7 @@ namespace LuaSpellInfo
         E->Push(spell_info->GetCategory());
         return 1;
     }
-    
+
     /**
      * Checks if the [SpellInfo] has a specific effect.
      *
@@ -209,7 +217,7 @@ namespace LuaSpellInfo
      * These effects are identified by a predefined set of constants represented by the 'SpellEffects' enumeration.
      *
      * @param [uint8] effect : The specific effect to check.
-     * @return [bool] has_effect 
+     * @return [bool] has_effect
      */
     int HasEffect(Eluna* E, SpellInfo* spell_info)
     {
@@ -217,11 +225,11 @@ namespace LuaSpellInfo
         E->Push(spell_info->HasEffect(static_cast<SpellEffects>(effect)));
         return 1;
     }
-    
+
     /**
      * Checks if the [SpellInfo] has a specific aura.
      *
-     * An aura represents a status change or modification due to a spell or ability. 
+     * An aura represents a status change or modification due to a spell or ability.
      * These auras are identified by a predefined set of constants represented by the 'AuraType' enumeration.
      *
      * @param [uint32] aura : The specific aura to check.
@@ -233,12 +241,12 @@ namespace LuaSpellInfo
         E->Push(spell_info->HasAura(static_cast<AuraType>(aura)));
         return 1;
     }
-    
+
     /**
      * Checks if the [SpellInfo] has an area aura effect.
      *
      * Area aura is a type of spell effect that affects multiple targets within a certain area.
-     * 
+     *
      * @return [bool] has_area_aura_effect
      */
     int HasAreaAuraEffect(Eluna* E, SpellInfo* spell_info)
@@ -246,12 +254,11 @@ namespace LuaSpellInfo
         E->Push(spell_info->HasAreaAuraEffect());
         return 1;
     }
-    
-   
+
     /**
      * Checks if the [SpellInfo] is an explicit discovery.
      *
-     * An "explicit discovery" may refer to a spell that is not intuitive or is hidden and must be specifically 
+     * An "explicit discovery" may refer to a spell that is not intuitive or is hidden and must be specifically
      * discovered by the player through some sort of action or event.
      *
      * @return [bool] is_explicit_discovery
@@ -293,7 +300,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] is related to a profession skill.
      *
-     * Profession skills may refer to abilities related to a specific occupation or trade, 
+     * Profession skills may refer to abilities related to a specific occupation or trade,
      * such as blacksmithing, alchemy, fishing, etc.
      *
      * @return [bool] is_profession
@@ -307,7 +314,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] is related to a primary profession skill.
      *
-     * Primary profession skills usually refer to main occupations or trades of the player character, 
+     * Primary profession skills usually refer to main occupations or trades of the player character,
      * such as blacksmithing, alchemy, mining, etc.
      *
      * @return [bool] is_primary_profession
@@ -320,8 +327,8 @@ namespace LuaSpellInfo
 
     /**
      * Checks if the [SpellInfo] represents the first rank of a primary profession skill.
-     * 
-     * Primary profession skills usually refer to main occupations or trades of the player character. 
+     *
+     * Primary profession skills usually refer to main occupations or trades of the player character.
      * The first rank typically indicates the introductory level of the profession.
      *
      * @return [bool] is_primary_profession_first_rank
@@ -335,7 +342,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents an ability learned with a profession skill.
      *
-     * Certain abilities or skills (like crafting item or gathering materials) 
+     * Certain abilities or skills (like crafting item or gathering materials)
      * can be learned as part of a profession.
      *
      * @return [bool] is_ability_learned_with_profession
@@ -349,8 +356,8 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents an ability of a specific skill type.
      *
-     * This function allows checking if a spell or ability belongs to a specific skill type. 
-     * The skill type is often represented as an integral value (in this case, uint32), 
+     * This function allows checking if a spell or ability belongs to a specific skill type.
+     * The skill type is often represented as an integral value (in this case, uint32),
      * where each value may correspond to a different skill category such as crafting, combat, magic, etc.
      *
      * @param [uint32] skillType: The skill type to check against. Should be an integral value representing the skill type.
@@ -379,7 +386,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] requires an explicit unit target.
      *
-     * Certain spells or abilities can only be cast or used when a specific unit (like a player character, NPC, or enemy) is targeted. 
+     * Certain spells or abilities can only be cast or used when a specific unit (like a player character, NPC, or enemy) is targeted.
      * This function checks if the spell or ability represented by [SpellInfo] has this requirement.
      *
      * @return [bool] needs_explicit_unit_target
@@ -391,13 +398,13 @@ namespace LuaSpellInfo
     }
 
     /**
-     * Checks if the [SpellInfo] requires to be triggered by the caster of another specified spell.
+     * Checks if the [SpellInfo] requires to be triggered by the caster of another specified [SpellInfo].
      *
-     * Certain spells or abilities can only be activated or become effective when they are triggered by the caster 
-     * of another specific spell (the triggeringSpell). This function examines if the spell or ability represented 
+     * Certain spells or abilities can only be activated or become effective when they are triggered by the caster
+     * of another specific spell (the `triggeringSpell`). This function examines if the spell or ability represented
      * by [SpellInfo] has such requirement.
      *
-     * @param triggeringSpell The spell by the casting of which the ability or spell represented by [SpellInfo] is triggered.
+     * @param [SpellInfo] triggeringSpell : the spell by the casting of which the ability or spell represented by [SpellInfo] is triggered
      * @return [bool] needs_to_be_triggered_by_caster
      */
     int NeedsToBeTriggeredByCaster(Eluna* E, SpellInfo* spell_info)
@@ -410,8 +417,8 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents a self-casting spell or ability.
      *
-     * Self-casting spells or abilities are those that the casters use on themselves. This can include 
-     * defensive spells, healing spells, buffs, or any other type of effect that a player character or 
+     * Self-casting spells or abilities are those that the casters use on themselves. This can include
+     * defensive spells, healing spells, buffs, or any other type of effect that a player character or
      * NPC applies on themselves.
      *
      * @return [bool] is_self_cast
@@ -425,7 +432,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents a passive spell or ability.
      *
-     * Passive spells or abilities are those that are always in effect, without the need for the player or 
+     * Passive spells or abilities are those that are always in effect, without the need for the player or
      * NPC to manually activate them. They usually provide their bonus or effect as long as certain conditions are met.
      *
      * @return [bool] is_passive
@@ -439,8 +446,8 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents a spell or ability that can be set to autocast.
      *
-     * Autocasting is a feature that allows certain abilities or spells to be cast automatically by the game's 
-     * AI when certain conditions are met. This function checks if the spell or ability represented by [SpellInfo] 
+     * Autocasting is a feature that allows certain abilities or spells to be cast automatically by the game's
+     * AI when certain conditions are met. This function checks if the spell or ability represented by [SpellInfo]
      * can be set to autocast.
      *
      * @return [bool] is_autocastable
@@ -454,8 +461,8 @@ namespace LuaSpellInfo
     /**
      * Determines if the [SpellInfo] represents a spell or ability that stack with different ranks.
      *
-     * Some spells or abilities can accumulate or "stack" their effects with multiple activations 
-     * and these effects can sometimes vary based on the rank or level of the spell. This function checks 
+     * Some spells or abilities can accumulate or "stack" their effects with multiple activations
+     * and these effects can sometimes vary based on the rank or level of the spell. This function checks
      * if the spell represented by [SpellInfo] has this capacity.
      *
      * @return [bool] is_stackable_with_ranks
@@ -469,8 +476,8 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents a passive spell or ability that is stackable with different ranks.
      *
-     * Some passive spells or abilities are designed to stack their effects with multiple activations, and these effects 
-     * can also vary depending on the rank of the spell. This function assesses whether the spell or ability represented 
+     * Some passive spells or abilities are designed to stack their effects with multiple activations, and these effects
+     * can also vary depending on the rank of the spell. This function assesses whether the spell or ability represented
      * by [SpellInfo] has this property.
      *
      * @return [bool] is_passive_stackable_with_ranks
@@ -484,7 +491,7 @@ namespace LuaSpellInfo
     /**
      * Checks if the [SpellInfo] represents a multi-slot aura spell or effect.
      *
-     * A multi-slot aura is one that takes up more than one slot or position in the game's effect array or system. 
+     * A multi-slot aura is one that takes up more than one slot or position in the game's effect array or system.
      * This function checks if the spell or ability represented by [SpellInfo] has this property.
      *
      * @return [bool] is_multi_slot_aura
@@ -528,24 +535,45 @@ namespace LuaSpellInfo
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] allows casting on dead targets, `false` otherwise.
+     *
+     * @return bool allowsDeadTarget
+     */
     int IsAllowingDeadTarget(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsAllowingDeadTarget());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] can be cast while in combat, `false` otherwise.
+     *
+     * @return bool usableInCombat
+     */
     int CanBeUsedInCombat(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->CanBeUsedInCombat());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] is considered a positive (beneficial) spell, `false` otherwise.
+     *
+     * @return bool isPositive
+     */
     int IsPositive(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsPositive());
         return 1;
     }
 
+    /**
+     * Returns `true` if the specified effect index of the [SpellInfo] is positive, `false` otherwise.
+     *
+     * @param uint8 effIndex
+     * @return bool isPositiveEffect
+     */
     int IsPositiveEffect(Eluna* E, SpellInfo* spell_info)
     {
         uint8 effIndex = E->CHECKVAL<uint32>(2);
@@ -553,84 +581,158 @@ namespace LuaSpellInfo
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] is a channeled spell, `false` otherwise.
+     *
+     * @return bool isChanneled
+     */
     int IsChanneled(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsChanneled());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] requires combo points to cast, `false` otherwise.
+     *
+     * @return bool needsComboPoints
+     */
     int NeedsComboPoints(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->NeedsComboPoints());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] breaks stealth when cast, `false` otherwise.
+     *
+     * @return bool breaksStealth
+     */
     int IsBreakingStealth(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsBreakingStealth());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] is a ranged weapon attack (e.g., shoot, throw), `false` otherwise.
+     *
+     * @return bool isRangedWeaponSpell
+     */
     int IsRangedWeaponSpell(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsRangedWeaponSpell());
         return 1;
     }
 
+    /**
+     * Returns `true` if the [SpellInfo] is an auto-repeat ranged spell (e.g., auto-shot), `false` otherwise.
+     *
+     * @return bool isAutoRepeat
+     */
     int IsAutoRepeatRangedSpell(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsAutoRepeatRangedSpell());
         return 1;
-    }  
+    }
 
-    
+    /**
+     * Returns `true` if the [SpellInfo] is affected by spell modifiers (e.g., talents, auras), `false` otherwise.
+     *
+     * @return bool isAffectedByMods
+     */
     int IsAffectedBySpellMods(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsAffectedBySpellMods());
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can pierce through an immunity aura defined by the given [SpellInfo], `false` otherwise.
+     *
+     * @param [SpellInfo] auraSpellInfo : the spell representing the immunity aura
+     * @return bool canPierce
+     */
     int CanPierceImmuneAura(Eluna* E, SpellInfo* spell_info)
     {
         const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
         E->Push(spell_info->CanPierceImmuneAura(auraSpellInfo));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can dispel the specified aura [SpellInfo], `false` otherwise.
+     *
+     * @param [SpellInfo] auraSpellInfo : the aura spell to check
+     * @return bool canDispel
+     */
     int CanDispelAura(Eluna* E, SpellInfo* spell_info)
     {
         const SpellInfo* auraSpellInfo = E->CHECKOBJ<SpellInfo>(2);
         E->Push(spell_info->CanDispelAura(auraSpellInfo));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] only affects a single target, `false` if it affects multiple or area targets.
+     *
+     * @return bool isSingleTarget
+     */
     int IsSingleTarget(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->IsSingleTarget());
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] is mutually exclusive with the specified [SpellInfo] due to specific aura exclusivity rules.
+     *
+     * @param [SpellInfo] otherSpellInfo : the spell to compare exclusivity with
+     * @return bool isExclusive
+     */
     int IsAuraExclusiveBySpecificWith(Eluna* E, SpellInfo* spell_info)
     {
         const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
         E->Push(spell_info->IsAuraExclusiveBySpecificWith(spellInfo));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] is exclusive with the specified [SpellInfo] per caster, based on aura exclusivity rules.
+     *
+     * @param [SpellInfo] otherSpellInfo : the spell to compare exclusivity with
+     * @return bool isExclusivePerCaster
+     */
     int IsAuraExclusiveBySpecificPerCasterWith(Eluna* E, SpellInfo* spell_info)
     {
         const SpellInfo* spellInfo = E->CHECKOBJ<SpellInfo>(2);
         E->Push(spell_info->IsAuraExclusiveBySpecificPerCasterWith(spellInfo));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can be cast while in the specified shapeshift form.
+     *
+     * @param uint32 form : the shapeshift form to check
+     * @return bool isAllowed
+     */
     int CheckShapeshift(Eluna* E, SpellInfo* spell_info)
     {
         uint32 form = E->CHECKVAL<uint32>(2);
         E->Push(spell_info->CheckShapeshift(form));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can be cast in the specified location.
+     *
+     * @param uint32 map_id : required map ID
+     * @param uint32 zone_id : required zone ID
+     * @param uint32 area_id : required area ID
+     * @param [Player] player : the [Player] casting the spell
+     * @param bool strict = false : whether all conditions must strictly match
+     * @return bool isAllowed
+     */
     int CheckLocation(Eluna* E, SpellInfo* spell_info)
     {
         uint32 map_id = E->CHECKVAL<uint32>(2);
@@ -642,7 +744,15 @@ namespace LuaSpellInfo
         E->Push(spell_info->CheckLocation(map_id, zone_id, area_id, player, strict));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the target is valid for the [SpellInfo].
+     *
+     * @param [Unit] caster : the [Unit] casting the spell
+     * @param [WorldObject] target : the intended target
+     * @param bool implicit = true : whether implicit target checks should apply
+     * @return bool isValid
+     */
     int CheckTarget(Eluna* E, SpellInfo* spell_info)
     {
         const Unit* caster = E->CHECKOBJ<Unit>(2);
@@ -652,7 +762,15 @@ namespace LuaSpellInfo
         E->Push(spell_info->CheckTarget(caster, target, implicit));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can be explicitly cast on the given [target] with the optional [Item].
+     *
+     * @param [Unit] caster : the [Unit] attempting to cast the spell
+     * @param [WorldObject] target : the intended target of the spell
+     * @param [Item] item : optional item used in the cast
+     * @return bool isValid
+     */
     int CheckExplicitTarget(Eluna* E, SpellInfo* spell_info)
     {
         const Unit* caster = E->CHECKOBJ<Unit>(2);
@@ -662,7 +780,13 @@ namespace LuaSpellInfo
         E->Push(spell_info->CheckExplicitTarget(caster, target, item));
         return 1;
     }
-    
+
+    /**
+     * Returns `true` if the [SpellInfo] can affect the [Unit] based on its creature type.
+     *
+     * @param [Unit] target : the [Unit] whose creature type is evaluated
+     * @return bool isValid
+     */
     int CheckTargetCreatureType(Eluna* E, SpellInfo* spell_info)
     {
         const Unit* target = E->CHECKOBJ<Unit>(2);
@@ -670,27 +794,53 @@ namespace LuaSpellInfo
         E->Push(spell_info->CheckTargetCreatureType(target));
         return 1;
     }
-    
+
+    /**
+     * Returns the school mask of the [SpellInfo].
+     *
+     * The school mask is a bitmask representing the spell's school(s), such as arcane, fire, frost, etc.
+     *
+     * @return uint32 schoolMask
+     */
     int GetSchoolMask(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->GetSchoolMask());
         return 1;
     }
-    
+
+    /**
+     * Returns a combined mechanic mask of all effects for the [SpellInfo].
+     *
+     * The mechanic mask is a bitmask representing all mechanics applied by the spell’s effects.
+     *
+     * @return uint32 mechanicMask
+     */
     int GetAllEffectsMechanicMask(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->GetAllEffectsMechanicMask());
         return 1;
     }
-    
+
+    /**
+     * Returns the mechanic mask of a specific effect of the [SpellInfo].
+     *
+     * @param uint32 effIndex
+     * @return uint32 mechanicMask
+     */
     int GetEffectMechanicMask(Eluna* E, SpellInfo* spell_info)
     {
         uint32 effIndex = E->CHECKVAL<uint32>(2);
-        
+
         E->Push(spell_info->GetEffectMechanicMask(static_cast<SpellEffIndex>(effIndex)));
         return 1;
     }
-    
+
+    /**
+     * Returns the mechanic mask for the [SpellInfo] based on an effect bitmask.
+     *
+     * @param uint32 effectmask : bitmask of effects to include
+     * @return uint32 mechanicMask
+     */
     int GetSpellMechanicMaskByEffectMask(Eluna* E, SpellInfo* spell_info)
     {
         uint32 effectmask = E->CHECKVAL<uint32>(2);
@@ -698,7 +848,13 @@ namespace LuaSpellInfo
         E->Push(spell_info->GetSpellMechanicMaskByEffectMask(effectmask));
         return 1;
     }
-    
+
+    /**
+     * Returns the mechanic of the specified effect index in the [SpellInfo].
+     *
+     * @param uint32 effIndex
+     * @return uint32 mechanic
+     */
     int GetEffectMechanic(Eluna* E, SpellInfo* spell_info)
     {
         uint32 effIndex = E->CHECKVAL<uint32>(2);
@@ -706,7 +862,15 @@ namespace LuaSpellInfo
         E->Push(spell_info->GetEffectMechanic(static_cast<SpellEffIndex>(effIndex)));
         return 1;
     }
-    
+
+    /**
+     * Returns the dispel mask for the [SpellInfo].
+     *
+     * The dispel mask is a bitmask representing the types of dispels that can remove the spell's effects.
+     *
+     * @param uint32 type : optional type of dispel to check. If not provided, uses the spell's own dispel type.
+     * @return uint32 dispelMask
+     */
     int GetDispelMask(Eluna* E, SpellInfo* spell_info)
     {
         uint32 type = E->CHECKVAL<uint32>(2, false);
@@ -714,19 +878,40 @@ namespace LuaSpellInfo
         E->Push(type != 0 ? spell_info->GetDispelMask(static_cast<DispelType>(type)) : spell_info->GetDispelMask());
         return 1;
     }
-    
+
+    /**
+     * Returns the explicit target mask of the [SpellInfo].
+     *
+     * This mask defines what types of targets the spell can explicitly target.
+     *
+     * @return uint32 targetMask
+     */
     int GetExplicitTargetMask(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->GetExplicitTargetMask());
         return 1;
     }
-    
+
+    /**
+     * Returns the aura state requirement for the [SpellInfo].
+     *
+     * Used to check whether a specific aura state must be active to cast the spell.
+     *
+     * @return uint32 auraState
+     */
     int GetAuraState(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->GetAuraState());
         return 1;
     }
-    
+
+    /**
+     * Returns the spell specific type of the [SpellInfo].
+     *
+     * Useful for identifying special types such as food, bandages, portals, etc.
+     *
+     * @return uint32 spellSpecific
+     */
     int GetSpellSpecific(Eluna* E, SpellInfo* spell_info)
     {
         E->Push(spell_info->GetSpellSpecific());
@@ -802,4 +987,3 @@ namespace LuaSpellInfo
     };
 };
 #endif
-

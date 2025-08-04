@@ -7,6 +7,15 @@
 #ifndef CHATHANDLERMETHODS_H
 #define CHATHANDLERMETHODS_H
 
+#include "Chat.h"
+
+/***
+ * Provides access to in-game and console chat commands, messages, and selection context for command execution.
+ *
+ * Used primarily in GM scripts or command handlers to send messages, check permissions, and access selected targets.
+ *
+ * Inherits all methods from: none
+ */
 namespace LuaChatHandler
 {
     /**
