@@ -439,9 +439,9 @@ namespace LuaCreature
     *
     * @return uint32 spawnId
     */
-    int GetCreatureSpawnId(lua_State* L, Creature* creature)
+    int GetCreatureSpawnId(Eluna* E, Creature* creature)
     {
-        Eluna::Push(L, creature->GetSpawnId());
+        E->Push(creature->GetSpawnId());
         return 1;
     }
 
@@ -872,10 +872,10 @@ namespace LuaCreature
      *
      * @return [ReactState] state
      */
-    int GetReactState(lua_State* L, Creature* creature)
+    int GetReactState(Eluna* E, Creature* creature)
     {
         ReactStates state = creature->GetReactState();
-        lua_pushinteger(L, (int)state);
+        E->Push((int)state);
         return 1;
     }
 
@@ -1173,9 +1173,9 @@ namespace LuaCreature
      *
      * @param uint32 delay : the delay, in seconds
      */
-    int SetCorpseDelay(lua_State* L, Creature* creature)
+    int SetCorpseDelay(Eluna* E, Creature* creature)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, 2);
         creature->SetCorpseDelay(delay);
         return 0;
     }
@@ -1419,6 +1419,8 @@ namespace LuaCreature
         { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
         { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
         { "GetLoot", &LuaCreature::GetLoot },
+        { "GetCreatureSpawnId", &LuaCreature::GetCreatureSpawnId },
+        { "GetReactState", &LuaCreature::GetReactState },
 
         // Setters
         { "SetRegeneratingHealth", &LuaCreature::SetRegeneratingHealth },
@@ -1441,6 +1443,7 @@ namespace LuaCreature
         { "SetWalk", &LuaCreature::SetWalk },
         { "SetHomePosition", &LuaCreature::SetHomePosition },
         { "SetEquipmentSlots", &LuaCreature::SetEquipmentSlots },
+        { "SetCorpseDelay", &LuaCreature::SetCorpseDelay },
 
         // Boolean
         { "IsRegeneratingHealth", &LuaCreature::IsRegeneratingHealth },

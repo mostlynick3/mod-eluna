@@ -708,9 +708,9 @@ namespace LuaItem
      *
      * @param uint32 randomPropId : The ID of the random property to be applied
      */
-    int SetRandomProperty(lua_State* L, Item* item)
+    int SetRandomProperty(Eluna* E, Item* item)
     {
-        uint32 randomPropId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 randomPropId = Eluna::CHECKVAL<uint32>(E->L, 2);
         item->SetItemRandomProperties(randomPropId);
         return 0;
     }
@@ -720,9 +720,9 @@ namespace LuaItem
      *
      * @param uint32 randomSuffixId : The ID of the random suffix to be applied
      */
-    int SetRandomSuffix(lua_State* L, Item* item)
+    int SetRandomSuffix(Eluna* E, Item* item)
     {
-        uint32 randomPropId = Eluna::CHECKVAL<uint32>(L, 2);
+        uint32 randomPropId = Eluna::CHECKVAL<uint32>(E->L, 2);
         item->SetItemRandomProperties(-randomPropId);
         return 0;
     }
@@ -806,6 +806,8 @@ namespace LuaItem
         { "SetOwner", &LuaItem::SetOwner },
         { "SetBinding", &LuaItem::SetBinding },
         { "SetCount", &LuaItem::SetCount },
+        { "SetRandomProperty", &LuaItem::SetRandomProperty },
+        { "SetRandomSuffix", &LuaItem::SetRandomSuffix },
 
         // Boolean
         { "IsSoulBound", &LuaItem::IsSoulBound },

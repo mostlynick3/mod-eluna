@@ -62,10 +62,10 @@ namespace LuaGlobalFunctions
      * @param string name : name of the value
      * @return string value
      */
-    int GetConfigValue(lua_State* L)
+    int GetConfigValue(Eluna* E)
     {
         // The key we want from the config file.
-        const char* key = Eluna::CHECKVAL<const char*>(L, 1);
+        const char* key = Eluna::CHECKVAL<const char*>(E->L, 1);
 
         // Check if any of the arguments are missing.
         if (!key)
@@ -73,7 +73,7 @@ namespace LuaGlobalFunctions
 
 		// Get config value and tell Eluna to push it.
         auto optionFound = sConfigMgr->GetOption<std::string>(key, "", false);
-        Eluna::Push(L, optionFound);
+        E->Push(optionFound);
         return 1;
     }
 
@@ -3618,6 +3618,7 @@ namespace LuaGlobalFunctions
         { "PrintError", &LuaGlobalFunctions::PrintError },
         { "PrintDebug", &LuaGlobalFunctions::PrintDebug },
         { "GetActiveGameEvents", &LuaGlobalFunctions::GetActiveGameEvents },
+        { "GetConfigValue", &LuaGlobalFunctions::GetConfigValue },
 
         // Boolean
         { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
