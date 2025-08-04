@@ -2503,7 +2503,7 @@ namespace LuaPlayer
      *
      * @param bool takeCost = true
      * @param float discountMod = 1.0
-     * @param bool guidBank = false
+     * @param bool guildBank = false
      */
     int DurabilityRepairAll(lua_State* L, Player* player)
     {
