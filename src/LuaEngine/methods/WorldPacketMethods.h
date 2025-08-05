@@ -178,12 +178,12 @@ namespace LuaPacket
      *
      * @return ObjectGuid value : value returned as string
      */
-    int ReadPackedGUID(lua_State* L, WorldPacket* packet)
+    int ReadPackedGUID(Eluna* E, WorldPacket* packet)
     {
-        uint64 guid;
-        packet->readPackGUID(guid);
-        Eluna::Push(L, guid);
-        return 1;
+       uint64 guid;
+       packet->readPackGUID(guid);
+       E->Push(guid);
+       return 1;
     }
 
     /**
@@ -336,6 +336,7 @@ namespace LuaPacket
         { "ReadLong", &LuaPacket::ReadLong },
         { "ReadULong", &LuaPacket::ReadULong },
         { "ReadGUID", &LuaPacket::ReadGUID },
+        { "ReadPackedGUID", &LuaPacket::ReadPackedGUID },
         { "ReadString", &LuaPacket::ReadString },
         { "ReadFloat", &LuaPacket::ReadFloat },
         { "ReadDouble", &LuaPacket::ReadDouble },

@@ -1159,10 +1159,10 @@ namespace LuaUnit
         return 1;
     }
 
-    /*int GetVehicle(lua_State* L, Unit* unit)
+    /*int GetVehicle(Eluna* E, Unit* unit)
     {
-    Eluna::Push(L, unit->GetVehicle());
-    return 1;
+       E->Push(unit->GetVehicle());
+       return 1;
     }*/
 
     /**
