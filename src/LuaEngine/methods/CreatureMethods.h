@@ -1175,7 +1175,7 @@ namespace LuaCreature
      */
     int SetCorpseDelay(Eluna* E, Creature* creature)
     {
-        uint32 delay = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 delay = E->CHECKVAL<uint32>(2);
         creature->SetCorpseDelay(delay);
         return 0;
     }
@@ -1376,7 +1376,7 @@ namespace LuaCreature
      */
     int GetLoot(Eluna* E, Creature* creature)
     {
-        E->Push(&creature->loot)
+        E->Push(&creature->loot);
         return 1;
     }
 

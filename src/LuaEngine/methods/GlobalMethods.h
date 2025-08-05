@@ -65,7 +65,7 @@ namespace LuaGlobalFunctions
     int GetConfigValue(Eluna* E)
     {
         // The key we want from the config file.
-        const char* key = Eluna::CHECKVAL<const char*>(E->L, 1);
+        const char* key = E->CHECKVAL<const char*>(1);
 
         // Check if any of the arguments are missing.
         if (!key)

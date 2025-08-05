@@ -38,16 +38,16 @@ namespace LuaLoot
      */
     int AddItem(Eluna* E, Loot* loot)
     {
-        uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 itemid = E->CHECKVAL<uint32>(2);
 
-        float chance = Eluna::CHECKVAL<float>(E->L, 3);
-        bool needs_quest = Eluna::CHECKVAL<bool>(E->L, 4, false);
+        float chance = E->CHECKVAL<float>(3);
+        bool needs_quest = E->CHECKVAL<bool>(4, false);
 
-        uint16 loot_mode = Eluna::CHECKVAL<uint16>(E->L, 5);
-        uint8 groupid = Eluna::CHECKVAL<uint8>(E->L, 6);
+        uint16 loot_mode = E->CHECKVAL<uint16>(5);
+        uint8 groupid = E->CHECKVAL<uint8>(6);
 
-        uint8 min_count = Eluna::CHECKVAL<uint8>(E->L, 7);
-        uint8 max_count = Eluna::CHECKVAL<uint8>(E->L, 8);
+        uint8 min_count = E->CHECKVAL<uint8>(7);
+        uint8 max_count = E->CHECKVAL<uint8>(8);
 
         for (LootItem &lootitem : loot->items)
         {
@@ -73,8 +73,8 @@ namespace LuaLoot
      */
     int HasItem(Eluna* E, Loot* loot)
     {
-        uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2, false);
-        uint32 count = Eluna::CHECKVAL<uint32>(E->L, 3, false);
+        uint32 itemid = E->CHECKVAL<uint32>(2, false);
+        uint32 count = E->CHECKVAL<uint32>(3, false);
         bool has_item = false;
 
         if (itemid)
@@ -112,9 +112,9 @@ namespace LuaLoot
      */
     int RemoveItem(Eluna* E, Loot* loot)
     {
-        uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
-        bool isCountSpecified = Eluna::CHECKVAL<uint32>(E->L, 3, false);
-        uint32 count = isCountSpecified ? Eluna::CHECKVAL<uint32>(E->L, 4) : 0;
+        uint32 itemid = E->CHECKVAL<uint32>(2);
+        bool isCountSpecified = E->CHECKVAL<uint32>(3, false);
+        uint32 count = isCountSpecified ? E->CHECKVAL<uint32>(4) : 0;
 
         for (auto it = loot->items.begin(); it != loot->items.end();)
         {
@@ -162,7 +162,7 @@ namespace LuaLoot
      */
     int SetMoney(Eluna* E, Loot* loot)
     {
-        uint32 money = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 money = E->CHECKVAL<uint32>(2);
 
         loot->gold = money;
         return 0;
@@ -176,8 +176,8 @@ namespace LuaLoot
      */
     int GenerateMoney(Eluna* E, Loot* loot)
     {
-        uint32 min = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 max = Eluna::CHECKVAL<uint32>(E->L, 3);
+        uint32 min = E->CHECKVAL<uint32>(2);
+        uint32 max = E->CHECKVAL<uint32>(3);
 
         loot->generateMoneyLoot(min, max);
         return 0;
@@ -199,7 +199,7 @@ namespace LuaLoot
      */
     int SetUnlootedCount(Eluna* E, Loot* loot)
     {
-        uint32 count = Eluna::CHECKVAL<uint32>(E->L, 2);
+        uint32 count = E->CHECKVAL<uint32>(2);
 
         loot->unlootedCount = count;
         return 0;
@@ -277,9 +277,9 @@ namespace LuaLoot
      */
     int SetItemLooted(Eluna* E, Loot* loot)
     {
-        uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
-        uint32 count = Eluna::CHECKVAL<uint32>(E->L, 3);
-        bool looted = Eluna::CHECKVAL<uint32>(E->L, 4, true);
+        uint32 itemid = E->CHECKVAL<uint32>(2);
+        uint32 count = E->CHECKVAL<uint32>(3);
+        bool looted = E->CHECKVAL<uint32>(4, true);
 
         for (auto &lootItem : loot->items)
         {
