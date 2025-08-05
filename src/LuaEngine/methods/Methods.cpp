@@ -25,14 +25,15 @@
 #include "GuildMethods.h"
 #include "ItemMethods.h"
 #include "ItemTemplateMethods.h"
+#include "LootMethods.h"
 #include "MapMethods.h"
 #include "ObjectMethods.h"
 #include "PlayerMethods.h"
 #include "QuestMethods.h"
 #include "RollMethods.h"
-#include "TicketMethods.h"
 #include "SpellMethods.h"
 #include "SpellInfoMethods.h"
+#include "TicketMethods.h"
 #include "UnitMethods.h"
 #include "VehicleMethods.h"
 #include "WorldObjectMethods.h"
@@ -96,6 +97,9 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<ItemTemplate>::Register(E, "ItemTemplate");
     ElunaTemplate<ItemTemplate>::SetMethods(E, LuaItemTemplate::ItemTemplateMethods);
 
+    ElunaTemplate<Loot>::Register(E, "Loot");
+    ElunaTemplate<Loot>::SetMethods(E, LuaLoot::LootMethods);
+
     ElunaTemplate<Map>::Register(E, "Map");
     ElunaTemplate<Map>::SetMethods(E, LuaMap::MapMethods);
 
@@ -114,14 +118,14 @@ void RegisterMethods(Eluna* E)
     ElunaTemplate<Roll>::Register(E, "Roll");
     ElunaTemplate<Roll>::SetMethods(E, LuaRoll::RollMethods);
 
-    ElunaTemplate<GmTicket>::Register(E, "Ticket");
-    ElunaTemplate<GmTicket>::SetMethods(E, LuaTicket::TicketMethods);
-
     ElunaTemplate<Spell>::Register(E, "Spell");
     ElunaTemplate<Spell>::SetMethods(E, LuaSpell::SpellMethods);
 
     ElunaTemplate<SpellInfo>::Register(E, "SpellInfo");
     ElunaTemplate<SpellInfo>::SetMethods(E, LuaSpellInfo::SpellInfoMethods);
+
+    ElunaTemplate<GmTicket>::Register(E, "Ticket");
+    ElunaTemplate<GmTicket>::SetMethods(E, LuaTicket::TicketMethods);
 
     ElunaTemplate<Unit>::Register(E, "Unit");
     ElunaTemplate<Unit>::SetMethods(E, LuaObject::ObjectMethods);
