@@ -15,10 +15,10 @@
 namespace LuaLoot
 {
     /**
-    * Returns 'true' if the [Loot] has been looted, 'false' otherwise
-    *
-    * @return bool isLooted
-    */
+     * Returns 'true' if the [Loot] has been looted, 'false' otherwise
+     *
+     * @return bool isLooted
+     */
     int IsLooted(Eluna* E, Loot* loot)
     {
         E->Push(loot->isLooted());
@@ -26,16 +26,16 @@ namespace LuaLoot
     }
 
     /**
-    * Adds an [Item] to the [Loot] with specified parameters
-    *
-    * @param uint32 itemid
-    * @param float chance
-    * @param bool needs_quest = false
-    * @param uint16 loot_mode
-    * @param uint8 groupid
-    * @param uint8 min_count
-    * @param uint8 max_count
-    */
+     * Adds an [Item] to the [Loot] with specified parameters
+     *
+     * @param uint32 itemid
+     * @param float chance
+     * @param bool needs_quest = false
+     * @param uint16 loot_mode
+     * @param uint8 groupid
+     * @param uint8 min_count
+     * @param uint8 max_count
+     */
     int AddItem(Eluna* E, Loot* loot)
     {
         uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
@@ -65,12 +65,12 @@ namespace LuaLoot
     }
 
     /**
-    * Returns 'true' if the [Loot] contains the specified [Item], 'false' otherwise
-    *
-    * @param uint32 itemid
-    * @param uint32 count
-    * @return bool hasItem
-    */
+     * Returns 'true' if the [Loot] contains the specified [Item], 'false' otherwise
+     *
+     * @param uint32 itemid
+     * @param uint32 count
+     * @return bool hasItem
+     */
     int HasItem(Eluna* E, Loot* loot)
     {
         uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2, false);
@@ -104,12 +104,12 @@ namespace LuaLoot
     }
 
     /**
-    * Removes an [Item] from the [Loot], optionally reducing count
-    *
-    * @param uint32 itemid
-    * @param bool isCountSpecified
-    * @param uint32 count : required only if isCountSpecified is true
-    */
+     * Removes an [Item] from the [Loot], optionally reducing count
+     *
+     * @param uint32 itemid
+     * @param bool isCountSpecified
+     * @param uint32 count : required only if isCountSpecified is true
+     */
     int RemoveItem(Eluna* E, Loot* loot)
     {
         uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
@@ -145,10 +145,10 @@ namespace LuaLoot
     }
 
     /**
-    * Returns the amount of gold in the [Loot]
-    *
-    * @return uint32 gold
-    */
+     * Returns the amount of gold in the [Loot]
+     *
+     * @return uint32 gold
+     */
     int GetMoney(Eluna* E, Loot* loot)
     {
         E->Push(loot->gold);
@@ -156,10 +156,10 @@ namespace LuaLoot
     }
 
     /**
-    * Sets the amount of gold in the [Loot]
-    *
-    * @param uint32 money
-    */
+     * Sets the amount of gold in the [Loot]
+     *
+     * @param uint32 money
+     */
     int SetMoney(Eluna* E, Loot* loot)
     {
         uint32 money = Eluna::CHECKVAL<uint32>(E->L, 2);
@@ -169,11 +169,11 @@ namespace LuaLoot
     }
 
     /**
-    * Generates a random gold value for the [Loot] between min and max
-    *
-    * @param uint32 min
-    * @param uint32 max
-    */
+     * Generates a random gold value for the [Loot] between min and max
+     *
+     * @param uint32 min
+     * @param uint32 max
+     */
     int GenerateMoney(Eluna* E, Loot* loot)
     {
         uint32 min = Eluna::CHECKVAL<uint32>(E->L, 2);
@@ -184,8 +184,8 @@ namespace LuaLoot
     }
 
     /**
-    * Clears all items and gold from the [Loot]
-    */
+     * Clears all items and gold from the [Loot]
+     */
     int Clear(Eluna* /*E*/, Loot* loot)
     {
         loot->clear();
@@ -193,10 +193,10 @@ namespace LuaLoot
     }
 
     /**
-    * Sets the unlooted count for the [Loot]
-    *
-    * @param uint32 count
-    */
+     * Sets the unlooted count for the [Loot]
+     *
+     * @param uint32 count
+     */
     int SetUnlootedCount(Eluna* E, Loot* loot)
     {
         uint32 count = Eluna::CHECKVAL<uint32>(E->L, 2);
@@ -206,10 +206,10 @@ namespace LuaLoot
     }
 
     /**
-    * Returns the number of unlooted items in the [Loot]
-    *
-    * @return uint32 unlootedCount
-    */
+     * Returns the number of unlooted items in the [Loot]
+     *
+     * @return uint32 unlootedCount
+     */
     int GetUnlootedCount(Eluna* E, Loot* loot)
     {
         E->Push(loot->unlootedCount);
@@ -217,11 +217,11 @@ namespace LuaLoot
     }
 
     /**
-    * Returns a table of items in the [Loot] with keys:
-    * id, index, count, needs_quest, is_looted, roll_winner_guid
-    *
-    * @return table items
-    */
+     * Returns a table of items in the [Loot] with keys:
+     * id, index, count, needs_quest, is_looted, roll_winner_guid
+     *
+     * @return table items
+     */
     int GetItems(Eluna* E, Loot* loot)
     {
         lua_State* L = E->L;
@@ -258,8 +258,8 @@ namespace LuaLoot
     }
 
     /**
-    * Updates each item's index in the [Loot] to match its current order
-    */
+     * Updates each item's index in the [Loot] to match its current order
+     */
     int UpdateItemIndex(Eluna* /*E*/, Loot* loot)
     {
         for (unsigned int i = 0; i < loot->items.size(); i++)
@@ -269,12 +269,12 @@ namespace LuaLoot
     }
 
     /**
-    * Sets the 'looted' flag on an [Item] in the [Loot]
-    *
-    * @param uint32 itemid
-    * @param uint32 count
-    * @param bool looted = true
-    */
+     * Sets the 'looted' flag on an [Item] in the [Loot]
+     *
+     * @param uint32 itemid
+     * @param uint32 count
+     * @param bool looted = true
+     */
     int SetItemLooted(Eluna* E, Loot* loot)
     {
         uint32 itemid = Eluna::CHECKVAL<uint32>(E->L, 2);
