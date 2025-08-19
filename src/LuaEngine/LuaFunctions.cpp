@@ -1204,6 +1204,7 @@ ElunaRegister<WorldPacket> PacketMethods[] =
     { "WriteLong", &LuaPacket::WriteLong },
     { "WriteULong", &LuaPacket::WriteULong },
     { "WriteGUID", &LuaPacket::WriteGUID },
+    { "WritePackedGUID", &LuaPacket::WritePackedGUID },
     { "WriteString", &LuaPacket::WriteString },
     { "WriteFloat", &LuaPacket::WriteFloat },
     { "WriteDouble", &LuaPacket::WriteDouble },
