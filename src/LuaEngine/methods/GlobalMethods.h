@@ -478,7 +478,7 @@ namespace LuaGlobalFunctions
     {
         ObjectGuid guid = Eluna::CHECKVAL<ObjectGuid>(L, 1);
         PackedGuid packedGuid(guid);
-        Eluna::Push(L, packedGuid.size());
+        Eluna::Push(L, static_cast<int>(packedGuid.size()));
         return 1;
     }
 
