@@ -113,6 +113,7 @@ luaL_Reg GlobalMethods[] =
     { "GetGUIDLow", &LuaGlobalFunctions::GetGUIDLow },
     { "GetGUIDType", &LuaGlobalFunctions::GetGUIDType },
     { "GetGUIDEntry", &LuaGlobalFunctions::GetGUIDEntry },
+    { "GetPackedGUIDSize", &LuaGlobalFunctions::GetPackedGUIDSize },
     { "GetAreaName", &LuaGlobalFunctions::GetAreaName },
     { "GetOwnerHalaa", &LuaGlobalFunctions::GetOwnerHalaa },
     { "bit_not", &LuaGlobalFunctions::bit_not },
@@ -1179,6 +1180,7 @@ ElunaRegister<WorldPacket> PacketMethods[] =
     // Getters
     { "GetOpcode", &LuaPacket::GetOpcode },
     { "GetSize", &LuaPacket::GetSize },
+    { "GetPackedGUIDSize", &LuaPacket::GetPackedGUIDSize },
 
     // Setters
     { "SetOpcode", &LuaPacket::SetOpcode },
