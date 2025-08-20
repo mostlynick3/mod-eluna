@@ -1180,7 +1180,6 @@ ElunaRegister<WorldPacket> PacketMethods[] =
     // Getters
     { "GetOpcode", &LuaPacket::GetOpcode },
     { "GetSize", &LuaPacket::GetSize },
-    { "GetPackedGUIDSize", &LuaPacket::GetPackedGUIDSize },
 
     // Setters
     { "SetOpcode", &LuaPacket::SetOpcode },
