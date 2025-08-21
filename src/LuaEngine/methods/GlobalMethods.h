@@ -469,10 +469,10 @@ namespace LuaGlobalFunctions
     }
 
     /**
-     * Returns the byte size of the ObjectGuid when packed.
+     * Returns the byte size in bytes (2-9) of the ObjectGuid when packed.
      *
      * @param ObjectGuid guid : the ObjectGuid to get packed size for
-     * @return number : size in bytes (2-9)
+     * @return number size
      */
     int GetPackedGUIDSize(lua_State* L)
     {
